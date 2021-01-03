@@ -1,0 +1,48 @@
+
+
+mybatis:
+  mapperLocations: classpath*:/mybatis/mapper/*.xml
+  configLocation: classpath:/mybatis/mybatis-config.xml
+
+defaultsql:
+  datasource:
+    url: jdbc:mysql://${mysql.host}:${mysql.port}/exam?useSSL=false&allowMultiQueries=true
+    username: ${mysql.user}
+    password: ${mysql.password}
+    driver-class-name: com.mysql.jdbc.Driver
+    minIdle: 5
+    maxActive: 100
+    initialSize: 10
+    maxWait: 60000
+    timeBetweenEvictionRunsMillis: 60000
+    minEvictableIdleTimeMillis: 300000
+    validationQuery: select 'x'
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+    poolPreparedStatements: true
+    maxPoolPreparedStatementPerConnectionSize: 50
+    removeAbandoned: true
+    filters: wall,stat,slf4j
+    connectionInitSqls: set names utf8mb4;
+  slave1:
+    datasource:
+      url: jdbc:mysql://${mysql_slave1.host}:${mysql_slave1.port}/exam?useSSL=false
+      username: ${mysql_slave1.user}
+      password: ${mysql_slave1.password}
+      driver-class-name: com.mysql.jdbc.Driver
+      minIdle: 5
+      maxActive: 100
+      initialSize: 10
+      maxWait: 60000
+      timeBetweenEvictionRunsMillis: 60000
+      minEvictableIdleTimeMillis: 300000
+      validationQuery: select 'x'
+      testWhileIdle: true
+      testOnBorrow: false
+      testOnReturn: false
+      poolPreparedStatements: true
+      maxPoolPreparedStatementPerConnectionSize: 50
+      removeAbandoned: true
+      filters: wall,stat,slf4j
+      connectionInitSqls: set names utf8mb4;
