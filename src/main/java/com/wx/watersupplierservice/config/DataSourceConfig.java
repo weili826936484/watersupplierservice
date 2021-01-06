@@ -18,6 +18,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -39,7 +40,7 @@ import java.util.Map;
  * 数据库配置 weili
  */
 @Configuration
-@MapperScan(basePackages="com.wx.watersupplierservice.dao")
+@MapperScan(basePackages="com.wx.watersupplierservice.dao",sqlSessionTemplateRef = "sqlSessionTemplate")
 public class DataSourceConfig {
 
     private Logger log = LoggerFactory.getLogger(DataSourceConfig.class);
@@ -141,6 +142,7 @@ public class DataSourceConfig {
     }
 
     @Bean(name = "sqlSessionTemplate")
+    @Primary
     public SqlSessionTemplate sqlSessionTemplate(@Qualifier("sqlSessionFactory") SqlSessionFactory sqlSessionFactory) {
         return new SqlSessionTemplate(sqlSessionFactory);
     }

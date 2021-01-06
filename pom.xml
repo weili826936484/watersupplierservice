@@ -95,11 +95,6 @@
             <version>5.0.8.RELEASE</version>
         </dependency>
 
-        <dependency>
-            <groupId>org.mybatis</groupId>
-            <artifactId>mybatis</artifactId>
-            <version>3.4.6</version>
-        </dependency>
 
         <dependency>
             <groupId>mysql</groupId>

@@ -3,6 +3,7 @@ package com.wx.watersupplierservice;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceTransactionManagerAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
@@ -10,7 +11,7 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 @ComponentScan("com.wx")
 @EnableConfigurationProperties
 @EnableAspectJAutoProxy(exposeProxy = true)
-@SpringBootApplication(exclude= {DataSourceAutoConfiguration.class})
+@SpringBootApplication(exclude= {DataSourceAutoConfiguration.class, DataSourceTransactionManagerAutoConfiguration.class})
 public class WatersupplierserviceApplication {
 
     public static void main(String[] args) {
