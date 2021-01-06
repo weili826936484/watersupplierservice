@@ -39,7 +39,7 @@ import java.util.Map;
  * 数据库配置 weili
  */
 @Configuration
-@MapperScan(basePackages="com.wx.watersupplierservice.dao",sqlSessionTemplateRef = "sqlSessionTemplate")
+@MapperScan(basePackages="com.wx.watersupplierservice.dao")
 public class DataSourceConfig {
 
     private Logger log = LoggerFactory.getLogger(DataSourceConfig.class);
@@ -67,7 +67,7 @@ public class DataSourceConfig {
      * 写库 数据源配置
      * @return
      */
-    @Bean(name = "examDataSource")
+    @Bean(name = "dataSource")
     @Primary
     @ConfigurationProperties(prefix = "defaultsql.datasource")
     public DataSource writeDataSource() {
@@ -85,7 +85,7 @@ public class DataSourceConfig {
      * 从库配置
      * @return
      */
-    @Bean(name = "examSlave1DataSource")
+    @Bean(name = "slave1DataSource")
     @ConfigurationProperties(prefix = "defaultsql.slave1.datasource")
     public DataSource readDataSourceOne() {
         log.info("-------------------- slave1 DataSourceOne init ---------------------");
@@ -94,9 +94,9 @@ public class DataSourceConfig {
         return dataSource;
     }
 
-    @Bean(name="examSqlSessionFactory")
-    public SqlSessionFactory sqlSessionFactorys(@Qualifier("examDataSource") DataSource masterDataSource,
-                                                @Qualifier("examSlave1DataSource") DataSource slave1DataSource) throws Exception {
+    @Bean(name="sqlSessionFactory")
+    public SqlSessionFactory sqlSessionFactorys(@Qualifier("dataSource") DataSource masterDataSource,
+                                                @Qualifier("slave1DataSource") DataSource slave1DataSource) throws Exception {
         log.info("--------------------  sqlSessionFactory init --------------------- {} {} {}",
                 ((DruidDataSource)masterDataSource).getRawJdbcUrl(),((DruidDataSource)slave1DataSource).getRawJdbcUrl());
         try {
@@ -124,8 +124,8 @@ public class DataSourceConfig {
      * @return
      */
     @Bean(name="roundRobinDataSouceProxy")
-    public DynamicDataSource roundRobinDataSouceProxy(@Qualifier("examDataSource") DataSource masterDataSource,
-                                                      @Qualifier("examSlave1DataSource") DataSource slave1DataSource) {
+    public DynamicDataSource roundRobinDataSouceProxy(@Qualifier("dataSource") DataSource masterDataSource,
+                                                      @Qualifier("slave1DataSource") DataSource slave1DataSource) {
 
         Map<Object, Object> targetDataSources = new HashMap<Object, Object>();
         //把所有数据库都放在targetDataSources中,注意key值要和determineCurrentLookupKey()中代码写的一至，
@@ -141,7 +141,7 @@ public class DataSourceConfig {
     }
 
     @Bean(name = "sqlSessionTemplate")
-    public SqlSessionTemplate sqlSessionTemplate(@Qualifier("examSqlSessionFactory") SqlSessionFactory sqlSessionFactory) {
+    public SqlSessionTemplate sqlSessionTemplate(@Qualifier("sqlSessionFactory") SqlSessionFactory sqlSessionFactory) {
         return new SqlSessionTemplate(sqlSessionFactory);
     }
     @Bean("platformTransactionManager")
