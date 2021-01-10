@@ -163,37 +163,6 @@
         </foreach>
     </insert>
 
-    <!-- 根据主键更新 -->
-    <update id="update" parameterType="com.wx.watersupplierservice.po.SysSitePo">
-        update
-        <include refid="Table_Name"/>
-        <set>
-            <if test="siteName != null">
-                 site_name=#{siteName},
-            </if>
-            <if test="siteAddress != null">
-                 site_address=#{siteAddress},
-            </if>
-            <if test="siteLeader != null">
-                 site_leader=#{siteLeader},
-            </if>
-            <if test="siteTel != null">
-                 site_tel=#{siteTel},
-            </if>
-            <if test="siteStatus != null">
-                 site_status=#{siteStatus},
-            </if>
-            <if test="createBy != null">
-                 create_by=#{createBy},
-            </if>
-            <if test="updateBy != null">
-                 update_by=#{updateBy},
-            </if>
-        </set>
-        where
-            site_id=#{siteId}
-    </update>
-
     <!-- 根据主键批量更新 -->
     <update id="updateList" parameterType="java.util.List">
         <foreach collection="list" item="item" separator=";">

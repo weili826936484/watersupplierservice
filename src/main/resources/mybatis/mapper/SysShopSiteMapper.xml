@@ -88,22 +88,6 @@
         </foreach>
     </insert>
 
-    <!-- 根据主键更新 -->
-    <update id="update" parameterType="com.wx.watersupplierservice.po.SysShopSitePo">
-        update
-        <include refid="Table_Name"/>
-        <set>
-            <if test="shopId != null">
-                 shop_id=#{shopId},
-            </if>
-            <if test="siteId != null">
-                 site_id=#{siteId},
-            </if>
-        </set>
-        where
-            shop_site_id=#{shopSiteId}
-    </update>
-
     <!-- 根据主键批量更新 -->
     <update id="updateList" parameterType="java.util.List">
         <foreach collection="list" item="item" separator=";">

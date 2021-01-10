@@ -215,49 +215,6 @@
         </foreach>
     </insert>
 
-    <!-- 根据主键更新 -->
-    <update id="update" parameterType="com.wx.watersupplierservice.po.WaterOrderDiscountPo">
-        update
-        <include refid="Table_Name"/>
-        <set>
-            <if test="orderid != null">
-                 orderid=#{orderid},
-            </if>
-            <if test="adjustid != null">
-                 adjustid=#{adjustid},
-            </if>
-            <if test="skuids != null">
-                 skuids=#{skuids},
-            </if>
-            <if test="discounttype != null">
-                 discounttype=#{discounttype},
-            </if>
-            <if test="discountdetailtype != null">
-                 discountdetailtype=#{discountdetailtype},
-            </if>
-            <if test="discountcode != null">
-                 discountcode=#{discountcode},
-            </if>
-            <if test="discountprice != null">
-                 discountprice=#{discountprice},
-            </if>
-            <if test="venderpaymoney != null">
-                 venderpaymoney=#{venderpaymoney},
-            </if>
-            <if test="platpaymoney != null">
-                 platpaymoney=#{platpaymoney},
-            </if>
-            <if test="createBy != null">
-                 create_by=#{createBy},
-            </if>
-            <if test="updateBy != null">
-                 update_by=#{updateBy},
-            </if>
-        </set>
-        where
-            discount_id=#{discountId}
-    </update>
-
     <!-- 根据主键批量更新 -->
     <update id="updateList" parameterType="java.util.List">
         <foreach collection="list" item="item" separator=";">

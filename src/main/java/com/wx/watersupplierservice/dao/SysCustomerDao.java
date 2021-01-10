@@ -20,8 +20,6 @@ public interface  SysCustomerDao extends BaseMapper {
 
     int updateList(List<SysCustomerPo> list);
 
-	int update(SysCustomerPo record);
-
     int count(SysCustomerPo record);
 
 	SysCustomerPo selectOne(SysCustomerPo record);

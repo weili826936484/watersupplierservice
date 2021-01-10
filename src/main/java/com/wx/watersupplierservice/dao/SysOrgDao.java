@@ -20,8 +20,6 @@ public interface  SysOrgDao extends BaseMapper {
 
     int updateList(List<SysOrgPo> list);
 
-	int update(SysOrgPo record);
-
     int count(SysOrgPo record);
 
 	SysOrgPo selectOne(SysOrgPo record);

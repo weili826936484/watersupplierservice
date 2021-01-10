@@ -20,8 +20,6 @@ public interface  SysShopSiteDao extends BaseMapper {
 
     int updateList(List<SysShopSitePo> list);
 
-	int update(SysShopSitePo record);
-
     int count(SysShopSitePo record);
 
 	SysShopSitePo selectOne(SysShopSitePo record);

@@ -75,19 +75,6 @@
         </foreach>
     </insert>
 
-    <!-- 根据主键更新 -->
-    <update id="update" parameterType="com.wx.watersupplierservice.po.SysCustomerShopPo">
-        update
-        <include refid="Table_Name"/>
-        <set>
-            <if test="shopId != null">
-                 shop_id=#{shopId},
-            </if>
-        </set>
-        where
-            customer_id=#{customerId}
-    </update>
-
     <!-- 根据主键批量更新 -->
     <update id="updateList" parameterType="java.util.List">
         <foreach collection="list" item="item" separator=";">

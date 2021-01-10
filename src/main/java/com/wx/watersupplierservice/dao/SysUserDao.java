@@ -20,8 +20,6 @@ public interface  SysUserDao extends BaseMapper {
 
     int updateList(List<SysUserPo> list);
 
-	int update(SysUserPo record);
-
     int count(SysUserPo record);
 
 	SysUserPo selectOne(SysUserPo record);
