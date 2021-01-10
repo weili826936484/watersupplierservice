@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wx.watersupplierservice.dao.SysShopSiteDao">
+    <resultMap id="BaseResultMap" type="com.wx.watersupplierservice.po.SysShopSitePo">
+        <id column="shop_site_id" property="shopSiteId"/>
+        <result column="shop_id" property="shopId"/>
+        <result column="site_id" property="siteId"/>
+    </resultMap>
+
+    <sql id="Table_Name">
+        water_supplier.sys_shop_site
+    </sql>
+
+    <sql id="Base_Column">
+        shop_site_id,
+        shop_id,
+        site_id
+    </sql>
+
+    <sql id="Base_Where">
+        <trim suffixOverrides="AND">
+            <if test="shopSiteId != null">
+                AND shop_site_id=#{shopSiteId}
+            </if>
+            <if test="shopId != null">
+                AND shop_id=#{shopId}
+            </if>
+            <if test="siteId != null">
+                AND site_id=#{siteId}
+            </if>
+        </trim>
+    </sql>
+
+    <sql id="Base_Select">
+        select
+        <include refid="Base_Column"/>
+        from
+        <include refid="Table_Name"/>
+        <where>
+            <include refid="Base_Where"/>
+        </where>
+    </sql>
+
+    <!-- 单条插入 -->
+    <insert id="insert" parameterType="com.wx.watersupplierservice.po.SysShopSitePo" useGeneratedKeys="true"
+            keyProperty="shopSiteId">
+        insert into
+        <include refid="Table_Name"/>
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="shopSiteId != null">
+                shop_site_id,
+            </if>
+            <if test="shopId != null">
+                shop_id,
+            </if>
+            <if test="siteId != null">
+                site_id,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="shopSiteId != null">
+                #{shopSiteId},
+            </if>
+            <if test="shopId != null">
+                #{shopId},
+            </if>
+            <if test="siteId != null">
+                #{siteId},
+            </if>
+        </trim>
+    </insert>
+
+    <!-- 批量插入 -->
+    <insert id="insertList" parameterType="java.util.List">
+        insert into
+        <include refid="Table_Name"/>
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            shop_id,
+            site_id,
+        </trim>
+        values
+        <foreach collection="list" item="item" separator=",">
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                #{item.shopId},
+                #{item.siteId},
+            </trim>
+        </foreach>
+    </insert>
+
+    <!-- 根据主键更新 -->
+    <update id="update" parameterType="com.wx.watersupplierservice.po.SysShopSitePo">
+        update
+        <include refid="Table_Name"/>
+        <set>
+            <if test="shopId != null">
+                 shop_id=#{shopId},
+            </if>
+            <if test="siteId != null">
+                 site_id=#{siteId},
+            </if>
+        </set>
+        where
+            shop_site_id=#{shopSiteId}
+    </update>
+
+    <!-- 根据主键批量更新 -->
+    <update id="updateList" parameterType="java.util.List">
+        <foreach collection="list" item="item" separator=";">
+            update
+            <include refid="Table_Name"/>
+            <set>
+                <if test="item.shopId != null">
+                    shop_id=#{item.shopId},
+                </if>
+                <if test="item.siteId != null">
+                    site_id=#{item.siteId},
+                </if>
+            </set>
+            where
+                shop_site_id=#{item.shopSiteId}
+        </foreach>
+    </update>
+
+    <!-- 查询单表符合条件总条数 -->
+    <select id="count" parameterType="com.wx.watersupplierservice.po.SysShopSitePo" resultType="int">
+        select count(1) from
+        <include refid="Table_Name"/>
+        <where>
+            <include refid="Base_Where"/>
+        </where>
+    </select>
+
+    <!-- 查询符合条件的一条记录 -->
+    <select id="selectOne" parameterType="com.wx.watersupplierservice.po.SysShopSitePo" resultMap="BaseResultMap">
+        <include refid="Base_Select"/>
+        limit 1
+    </select>
+
+    <!-- 查询符合条件的记录 -->
+    <select id="selectList" parameterType="com.wx.watersupplierservice.po.SysShopSitePo" resultMap="BaseResultMap">
+        <include refid="Base_Select"/>
+    </select>
+
+    <!-- 查询符合条件的记录  锁定符合条件的行-->
+    <select id="selectForUpdate" parameterType="com.wx.watersupplierservice.po.SysShopSitePo" resultMap="BaseResultMap">
+        <include refid="Base_Select"/>
+        for update
+    </select>
+
+</mapper>

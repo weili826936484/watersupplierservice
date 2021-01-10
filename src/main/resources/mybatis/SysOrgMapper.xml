@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wx.watersupplierservice.dao.SysOrgDao">
+    <resultMap id="BaseResultMap" type="com.wx.watersupplierservice.po.SysOrgPo">
+        <id column="org_id" property="orgId"/>
+        <result column="platform" property="platform"/>
+        <result column="orgcode" property="orgcode"/>
+        <result column="org_leader" property="orgLeader"/>
+        <result column="token" property="token"/>
+        <result column="app_key" property="appKey"/>
+        <result column="app_secret" property="appSecret"/>
+        <result column="org_tel" property="orgTel"/>
+        <result column="org_mail" property="orgMail"/>
+        <result column="create_by" property="createBy"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_by" property="updateBy"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <sql id="Table_Name">
+        water_supplier.sys_org
+    </sql>
+
+    <sql id="Base_Column">
+        org_id,
+        platform,
+        orgcode,
+        org_leader,
+        token,
+        app_key,
+        app_secret,
+        org_tel,
+        org_mail,
+        create_by,
+        create_time,
+        update_by,
+        update_time
+    </sql>
+
+    <sql id="Base_Where">
+        <trim suffixOverrides="AND">
+            <if test="orgId != null">
+                AND org_id=#{orgId}
+            </if>
+            <if test="platform != null">
+                AND platform=#{platform}
+            </if>
+            <if test="orgcode != null">
+                AND orgcode=#{orgcode}
+            </if>
+            <if test="orgLeader != null">
+                AND org_leader=#{orgLeader}
+            </if>
+            <if test="token != null">
+                AND token=#{token}
+            </if>
+            <if test="appKey != null">
+                AND app_key=#{appKey}
+            </if>
+            <if test="appSecret != null">
+                AND app_secret=#{appSecret}
+            </if>
+            <if test="orgTel != null">
+                AND org_tel=#{orgTel}
+            </if>
+            <if test="orgMail != null">
+                AND org_mail=#{orgMail}
+            </if>
+            <if test="createBy != null">
+                AND create_by=#{createBy}
+            </if>
+            <if test="createTime != null">
+                AND create_time=#{createTime}
+            </if>
+            <if test="updateBy != null">
+                AND update_by=#{updateBy}
+            </if>
+            <if test="updateTime != null">
+                AND update_time=#{updateTime}
+            </if>
+        </trim>
+    </sql>
+
+    <sql id="Base_Select">
+        select
+        <include refid="Base_Column"/>
+        from
+        <include refid="Table_Name"/>
+        <where>
+            <include refid="Base_Where"/>
+        </where>
+    </sql>
+
+    <!-- 单条插入 -->
+    <insert id="insert" parameterType="com.wx.watersupplierservice.po.SysOrgPo" useGeneratedKeys="true"
+            keyProperty="orgId">
+        insert into
+        <include refid="Table_Name"/>
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="orgId != null">
+                org_id,
+            </if>
+            <if test="platform != null">
+                platform,
+            </if>
+            <if test="orgcode != null">
+                orgcode,
+            </if>
+            <if test="orgLeader != null">
+                org_leader,
+            </if>
+            <if test="token != null">
+                token,
+            </if>
+            <if test="appKey != null">
+                app_key,
+            </if>
+            <if test="appSecret != null">
+                app_secret,
+            </if>
+            <if test="orgTel != null">
+                org_tel,
+            </if>
+            <if test="orgMail != null">
+                org_mail,
+            </if>
+            <if test="createBy != null">
+                create_by,
+            </if>
+            <if test="updateBy != null">
+                update_by,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="orgId != null">
+                #{orgId},
+            </if>
+            <if test="platform != null">
+                #{platform},
+            </if>
+            <if test="orgcode != null">
+                #{orgcode},
+            </if>
+            <if test="orgLeader != null">
+                #{orgLeader},
+            </if>
+            <if test="token != null">
+                #{token},
+            </if>
+            <if test="appKey != null">
+                #{appKey},
+            </if>
+            <if test="appSecret != null">
+                #{appSecret},
+            </if>
+            <if test="orgTel != null">
+                #{orgTel},
+            </if>
+            <if test="orgMail != null">
+                #{orgMail},
+            </if>
+            <if test="createBy != null">
+                #{createBy},
+            </if>
+            <if test="updateBy != null">
+                #{updateBy},
+            </if>
+        </trim>
+    </insert>
+
+    <!-- 批量插入 -->
+    <insert id="insertList" parameterType="java.util.List">
+        insert into
+        <include refid="Table_Name"/>
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            platform,
+            orgcode,
+            org_leader,
+            token,
+            app_key,
+            app_secret,
+            org_tel,
+            org_mail,
+            create_by,
+            update_by,
+        </trim>
+        values
+        <foreach collection="list" item="item" separator=",">
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                #{item.platform},
+                #{item.orgcode},
+                #{item.orgLeader},
+                #{item.token},
+                #{item.appKey},
+                #{item.appSecret},
+                #{item.orgTel},
+                #{item.orgMail},
+                #{item.createBy},
+                #{item.updateBy},
+            </trim>
+        </foreach>
+    </insert>
+
+    <!-- 根据主键更新 -->
+    <update id="update" parameterType="com.wx.watersupplierservice.po.SysOrgPo">
+        update
+        <include refid="Table_Name"/>
+        <set>
+            <if test="platform != null">
+                 platform=#{platform},
+            </if>
+            <if test="orgcode != null">
+                 orgcode=#{orgcode},
+            </if>
+            <if test="orgLeader != null">
+                 org_leader=#{orgLeader},
+            </if>
+            <if test="token != null">
+                 token=#{token},
+            </if>
+            <if test="appKey != null">
+                 app_key=#{appKey},
+            </if>
+            <if test="appSecret != null">
+                 app_secret=#{appSecret},
+            </if>
+            <if test="orgTel != null">
+                 org_tel=#{orgTel},
+            </if>
+            <if test="orgMail != null">
+                 org_mail=#{orgMail},
+            </if>
+            <if test="createBy != null">
+                 create_by=#{createBy},
+            </if>
+            <if test="updateBy != null">
+                 update_by=#{updateBy},
+            </if>
+        </set>
+        where
+            org_id=#{orgId}
+    </update>
+
+    <!-- 根据主键批量更新 -->
+    <update id="updateList" parameterType="java.util.List">
+        <foreach collection="list" item="item" separator=";">
+            update
+            <include refid="Table_Name"/>
+            <set>
+                <if test="item.platform != null">
+                    platform=#{item.platform},
+                </if>
+                <if test="item.orgcode != null">
+                    orgcode=#{item.orgcode},
+                </if>
+                <if test="item.orgLeader != null">
+                    org_leader=#{item.orgLeader},
+                </if>
+                <if test="item.token != null">
+                    token=#{item.token},
+                </if>
+                <if test="item.appKey != null">
+                    app_key=#{item.appKey},
+                </if>
+                <if test="item.appSecret != null">
+                    app_secret=#{item.appSecret},
+                </if>
+                <if test="item.orgTel != null">
+                    org_tel=#{item.orgTel},
+                </if>
+                <if test="item.orgMail != null">
+                    org_mail=#{item.orgMail},
+                </if>
+                <if test="item.createBy != null">
+                    create_by=#{item.createBy},
+                </if>
+                <if test="item.updateBy != null">
+                    update_by=#{item.updateBy},
+                </if>
+            </set>
+            where
+                org_id=#{item.orgId}
+        </foreach>
+    </update>
+
+    <!-- 查询单表符合条件总条数 -->
+    <select id="count" parameterType="com.wx.watersupplierservice.po.SysOrgPo" resultType="int">
+        select count(1) from
+        <include refid="Table_Name"/>
+        <where>
+            <include refid="Base_Where"/>
+        </where>
+    </select>
+
+    <!-- 查询符合条件的一条记录 -->
+    <select id="selectOne" parameterType="com.wx.watersupplierservice.po.SysOrgPo" resultMap="BaseResultMap">
+        <include refid="Base_Select"/>
+        limit 1
+    </select>
+
+    <!-- 查询符合条件的记录 -->
+    <select id="selectList" parameterType="com.wx.watersupplierservice.po.SysOrgPo" resultMap="BaseResultMap">
+        <include refid="Base_Select"/>
+    </select>
+
+    <!-- 查询符合条件的记录  锁定符合条件的行-->
+    <select id="selectForUpdate" parameterType="com.wx.watersupplierservice.po.SysOrgPo" resultMap="BaseResultMap">
+        <include refid="Base_Select"/>
+        for update
+    </select>
+
+</mapper>

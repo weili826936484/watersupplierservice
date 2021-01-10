@@ -1,0 +1,332 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wx.watersupplierservice.dao.WaterOrderDiscountDao">
+    <resultMap id="BaseResultMap" type="com.wx.watersupplierservice.po.WaterOrderDiscountPo">
+        <id column="discount_id" property="discountId"/>
+        <result column="orderid" property="orderid"/>
+        <result column="adjustid" property="adjustid"/>
+        <result column="skuids" property="skuids"/>
+        <result column="discounttype" property="discounttype"/>
+        <result column="discountdetailtype" property="discountdetailtype"/>
+        <result column="discountcode" property="discountcode"/>
+        <result column="discountprice" property="discountprice"/>
+        <result column="venderpaymoney" property="venderpaymoney"/>
+        <result column="platpaymoney" property="platpaymoney"/>
+        <result column="create_by" property="createBy"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_by" property="updateBy"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <sql id="Table_Name">
+        water_supplier.water_order_discount
+    </sql>
+
+    <sql id="Base_Column">
+        discount_id,
+        orderid,
+        adjustid,
+        skuids,
+        discounttype,
+        discountdetailtype,
+        discountcode,
+        discountprice,
+        venderpaymoney,
+        platpaymoney,
+        create_by,
+        create_time,
+        update_by,
+        update_time
+    </sql>
+
+    <sql id="Base_Where">
+        <trim suffixOverrides="AND">
+            <if test="discountId != null">
+                AND discount_id=#{discountId}
+            </if>
+            <if test="orderid != null">
+                AND orderid=#{orderid}
+            </if>
+            <if test="adjustid != null">
+                AND adjustid=#{adjustid}
+            </if>
+            <if test="skuids != null">
+                AND skuids=#{skuids}
+            </if>
+            <if test="discounttype != null">
+                AND discounttype=#{discounttype}
+            </if>
+            <if test="discountdetailtype != null">
+                AND discountdetailtype=#{discountdetailtype}
+            </if>
+            <if test="discountcode != null">
+                AND discountcode=#{discountcode}
+            </if>
+            <if test="discountprice != null">
+                AND discountprice=#{discountprice}
+            </if>
+            <if test="venderpaymoney != null">
+                AND venderpaymoney=#{venderpaymoney}
+            </if>
+            <if test="platpaymoney != null">
+                AND platpaymoney=#{platpaymoney}
+            </if>
+            <if test="createBy != null">
+                AND create_by=#{createBy}
+            </if>
+            <if test="createTime != null">
+                AND create_time=#{createTime}
+            </if>
+            <if test="updateBy != null">
+                AND update_by=#{updateBy}
+            </if>
+            <if test="updateTime != null">
+                AND update_time=#{updateTime}
+            </if>
+        </trim>
+    </sql>
+
+    <sql id="Base_Select">
+        select
+        <include refid="Base_Column"/>
+        from
+        <include refid="Table_Name"/>
+        <where>
+            <include refid="Base_Where"/>
+        </where>
+    </sql>
+
+    <!-- 单条插入 -->
+    <insert id="insert" parameterType="com.wx.watersupplierservice.po.WaterOrderDiscountPo" useGeneratedKeys="true"
+            keyProperty="discountId">
+        insert into
+        <include refid="Table_Name"/>
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="discountId != null">
+                discount_id,
+            </if>
+            <if test="orderid != null">
+                orderid,
+            </if>
+            <if test="adjustid != null">
+                adjustid,
+            </if>
+            <if test="skuids != null">
+                skuids,
+            </if>
+            <if test="discounttype != null">
+                discounttype,
+            </if>
+            <if test="discountdetailtype != null">
+                discountdetailtype,
+            </if>
+            <if test="discountcode != null">
+                discountcode,
+            </if>
+            <if test="discountprice != null">
+                discountprice,
+            </if>
+            <if test="venderpaymoney != null">
+                venderpaymoney,
+            </if>
+            <if test="platpaymoney != null">
+                platpaymoney,
+            </if>
+            <if test="createBy != null">
+                create_by,
+            </if>
+            <if test="updateBy != null">
+                update_by,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="discountId != null">
+                #{discountId},
+            </if>
+            <if test="orderid != null">
+                #{orderid},
+            </if>
+            <if test="adjustid != null">
+                #{adjustid},
+            </if>
+            <if test="skuids != null">
+                #{skuids},
+            </if>
+            <if test="discounttype != null">
+                #{discounttype},
+            </if>
+            <if test="discountdetailtype != null">
+                #{discountdetailtype},
+            </if>
+            <if test="discountcode != null">
+                #{discountcode},
+            </if>
+            <if test="discountprice != null">
+                #{discountprice},
+            </if>
+            <if test="venderpaymoney != null">
+                #{venderpaymoney},
+            </if>
+            <if test="platpaymoney != null">
+                #{platpaymoney},
+            </if>
+            <if test="createBy != null">
+                #{createBy},
+            </if>
+            <if test="updateBy != null">
+                #{updateBy},
+            </if>
+        </trim>
+    </insert>
+
+    <!-- 批量插入 -->
+    <insert id="insertList" parameterType="java.util.List">
+        insert into
+        <include refid="Table_Name"/>
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            orderid,
+            adjustid,
+            skuids,
+            discounttype,
+            discountdetailtype,
+            discountcode,
+            discountprice,
+            venderpaymoney,
+            platpaymoney,
+            create_by,
+            update_by,
+        </trim>
+        values
+        <foreach collection="list" item="item" separator=",">
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                #{item.orderid},
+                #{item.adjustid},
+                #{item.skuids},
+                #{item.discounttype},
+                #{item.discountdetailtype},
+                #{item.discountcode},
+                #{item.discountprice},
+                #{item.venderpaymoney},
+                #{item.platpaymoney},
+                #{item.createBy},
+                #{item.updateBy},
+            </trim>
+        </foreach>
+    </insert>
+
+    <!-- 根据主键更新 -->
+    <update id="update" parameterType="com.wx.watersupplierservice.po.WaterOrderDiscountPo">
+        update
+        <include refid="Table_Name"/>
+        <set>
+            <if test="orderid != null">
+                 orderid=#{orderid},
+            </if>
+            <if test="adjustid != null">
+                 adjustid=#{adjustid},
+            </if>
+            <if test="skuids != null">
+                 skuids=#{skuids},
+            </if>
+            <if test="discounttype != null">
+                 discounttype=#{discounttype},
+            </if>
+            <if test="discountdetailtype != null">
+                 discountdetailtype=#{discountdetailtype},
+            </if>
+            <if test="discountcode != null">
+                 discountcode=#{discountcode},
+            </if>
+            <if test="discountprice != null">
+                 discountprice=#{discountprice},
+            </if>
+            <if test="venderpaymoney != null">
+                 venderpaymoney=#{venderpaymoney},
+            </if>
+            <if test="platpaymoney != null">
+                 platpaymoney=#{platpaymoney},
+            </if>
+            <if test="createBy != null">
+                 create_by=#{createBy},
+            </if>
+            <if test="updateBy != null">
+                 update_by=#{updateBy},
+            </if>
+        </set>
+        where
+            discount_id=#{discountId}
+    </update>
+
+    <!-- 根据主键批量更新 -->
+    <update id="updateList" parameterType="java.util.List">
+        <foreach collection="list" item="item" separator=";">
+            update
+            <include refid="Table_Name"/>
+            <set>
+                <if test="item.orderid != null">
+                    orderid=#{item.orderid},
+                </if>
+                <if test="item.adjustid != null">
+                    adjustid=#{item.adjustid},
+                </if>
+                <if test="item.skuids != null">
+                    skuids=#{item.skuids},
+                </if>
+                <if test="item.discounttype != null">
+                    discounttype=#{item.discounttype},
+                </if>
+                <if test="item.discountdetailtype != null">
+                    discountdetailtype=#{item.discountdetailtype},
+                </if>
+                <if test="item.discountcode != null">
+                    discountcode=#{item.discountcode},
+                </if>
+                <if test="item.discountprice != null">
+                    discountprice=#{item.discountprice},
+                </if>
+                <if test="item.venderpaymoney != null">
+                    venderpaymoney=#{item.venderpaymoney},
+                </if>
+                <if test="item.platpaymoney != null">
+                    platpaymoney=#{item.platpaymoney},
+                </if>
+                <if test="item.createBy != null">
+                    create_by=#{item.createBy},
+                </if>
+                <if test="item.updateBy != null">
+                    update_by=#{item.updateBy},
+                </if>
+            </set>
+            where
+                discount_id=#{item.discountId}
+        </foreach>
+    </update>
+
+    <!-- 查询单表符合条件总条数 -->
+    <select id="count" parameterType="com.wx.watersupplierservice.po.WaterOrderDiscountPo" resultType="int">
+        select count(1) from
+        <include refid="Table_Name"/>
+        <where>
+            <include refid="Base_Where"/>
+        </where>
+    </select>
+
+    <!-- 查询符合条件的一条记录 -->
+    <select id="selectOne" parameterType="com.wx.watersupplierservice.po.WaterOrderDiscountPo" resultMap="BaseResultMap">
+        <include refid="Base_Select"/>
+        limit 1
+    </select>
+
+    <!-- 查询符合条件的记录 -->
+    <select id="selectList" parameterType="com.wx.watersupplierservice.po.WaterOrderDiscountPo" resultMap="BaseResultMap">
+        <include refid="Base_Select"/>
+    </select>
+
+    <!-- 查询符合条件的记录  锁定符合条件的行-->
+    <select id="selectForUpdate" parameterType="com.wx.watersupplierservice.po.WaterOrderDiscountPo" resultMap="BaseResultMap">
+        <include refid="Base_Select"/>
+        for update
+    </select>
+
+</mapper>

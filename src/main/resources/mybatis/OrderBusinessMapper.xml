@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wx.watersupplierservice.dao.OrderBusinessDao">
+    <resultMap id="BaseResultMap" type="com.wx.watersupplierservice.po.OrderBusinessPo">
+        <id column="business_id" property="businessId"/>
+        <result column="order_id" property="orderId"/>
+        <result column="opt_code" property="optCode"/>
+        <result column="site_id" property="siteId"/>
+        <result column="send_by" property="sendBy"/>
+        <result column="create_by" property="createBy"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_by" property="updateBy"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <sql id="Table_Name">
+        water_supplier.order_business
+    </sql>
+
+    <sql id="Base_Column">
+        business_id,
+        order_id,
+        opt_code,
+        site_id,
+        send_by,
+        create_by,
+        create_time,
+        update_by,
+        update_time
+    </sql>
+
+    <sql id="Base_Where">
+        <trim suffixOverrides="AND">
+            <if test="businessId != null">
+                AND business_id=#{businessId}
+            </if>
+            <if test="orderId != null">
+                AND order_id=#{orderId}
+            </if>
+            <if test="optCode != null">
+                AND opt_code=#{optCode}
+            </if>
+            <if test="siteId != null">
+                AND site_id=#{siteId}
+            </if>
+            <if test="sendBy != null">
+                AND send_by=#{sendBy}
+            </if>
+            <if test="createBy != null">
+                AND create_by=#{createBy}
+            </if>
+            <if test="createTime != null">
+                AND create_time=#{createTime}
+            </if>
+            <if test="updateBy != null">
+                AND update_by=#{updateBy}
+            </if>
+            <if test="updateTime != null">
+                AND update_time=#{updateTime}
+            </if>
+        </trim>
+    </sql>
+
+    <sql id="Base_Select">
+        select
+        <include refid="Base_Column"/>
+        from
+        <include refid="Table_Name"/>
+        <where>
+            <include refid="Base_Where"/>
+        </where>
+    </sql>
+
+    <!-- 单条插入 -->
+    <insert id="insert" parameterType="com.wx.watersupplierservice.po.OrderBusinessPo" useGeneratedKeys="true"
+            keyProperty="businessId">
+        insert into
+        <include refid="Table_Name"/>
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="businessId != null">
+                business_id,
+            </if>
+            <if test="orderId != null">
+                order_id,
+            </if>
+            <if test="optCode != null">
+                opt_code,
+            </if>
+            <if test="siteId != null">
+                site_id,
+            </if>
+            <if test="sendBy != null">
+                send_by,
+            </if>
+            <if test="createBy != null">
+                create_by,
+            </if>
+            <if test="updateBy != null">
+                update_by,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="businessId != null">
+                #{businessId},
+            </if>
+            <if test="orderId != null">
+                #{orderId},
+            </if>
+            <if test="optCode != null">
+                #{optCode},
+            </if>
+            <if test="siteId != null">
+                #{siteId},
+            </if>
+            <if test="sendBy != null">
+                #{sendBy},
+            </if>
+            <if test="createBy != null">
+                #{createBy},
+            </if>
+            <if test="updateBy != null">
+                #{updateBy},
+            </if>
+        </trim>
+    </insert>
+
+    <!-- 批量插入 -->
+    <insert id="insertList" parameterType="java.util.List">
+        insert into
+        <include refid="Table_Name"/>
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            order_id,
+            opt_code,
+            site_id,
+            send_by,
+            create_by,
+            update_by,
+        </trim>
+        values
+        <foreach collection="list" item="item" separator=",">
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                #{item.orderId},
+                #{item.optCode},
+                #{item.siteId},
+                #{item.sendBy},
+                #{item.createBy},
+                #{item.updateBy},
+            </trim>
+        </foreach>
+    </insert>
+
+    <!-- 根据主键更新 -->
+    <update id="update" parameterType="com.wx.watersupplierservice.po.OrderBusinessPo">
+        update
+        <include refid="Table_Name"/>
+        <set>
+            <if test="orderId != null">
+                 order_id=#{orderId},
+            </if>
+            <if test="optCode != null">
+                 opt_code=#{optCode},
+            </if>
+            <if test="siteId != null">
+                 site_id=#{siteId},
+            </if>
+            <if test="sendBy != null">
+                 send_by=#{sendBy},
+            </if>
+            <if test="createBy != null">
+                 create_by=#{createBy},
+            </if>
+            <if test="updateBy != null">
+                 update_by=#{updateBy},
+            </if>
+        </set>
+        where
+            business_id=#{businessId}
+    </update>
+
+    <!-- 根据主键批量更新 -->
+    <update id="updateList" parameterType="java.util.List">
+        <foreach collection="list" item="item" separator=";">
+            update
+            <include refid="Table_Name"/>
+            <set>
+                <if test="item.orderId != null">
+                    order_id=#{item.orderId},
+                </if>
+                <if test="item.optCode != null">
+                    opt_code=#{item.optCode},
+                </if>
+                <if test="item.siteId != null">
+                    site_id=#{item.siteId},
+                </if>
+                <if test="item.sendBy != null">
+                    send_by=#{item.sendBy},
+                </if>
+                <if test="item.createBy != null">
+                    create_by=#{item.createBy},
+                </if>
+                <if test="item.updateBy != null">
+                    update_by=#{item.updateBy},
+                </if>
+            </set>
+            where
+                business_id=#{item.businessId}
+        </foreach>
+    </update>
+
+    <!-- 查询单表符合条件总条数 -->
+    <select id="count" parameterType="com.wx.watersupplierservice.po.OrderBusinessPo" resultType="int">
+        select count(1) from
+        <include refid="Table_Name"/>
+        <where>
+            <include refid="Base_Where"/>
+        </where>
+    </select>
+
+    <!-- 查询符合条件的一条记录 -->
+    <select id="selectOne" parameterType="com.wx.watersupplierservice.po.OrderBusinessPo" resultMap="BaseResultMap">
+        <include refid="Base_Select"/>
+        limit 1
+    </select>
+
+    <!-- 查询符合条件的记录 -->
+    <select id="selectList" parameterType="com.wx.watersupplierservice.po.OrderBusinessPo" resultMap="BaseResultMap">
+        <include refid="Base_Select"/>
+    </select>
+
+    <!-- 查询符合条件的记录  锁定符合条件的行-->
+    <select id="selectForUpdate" parameterType="com.wx.watersupplierservice.po.OrderBusinessPo" resultMap="BaseResultMap">
+        <include refid="Base_Select"/>
+        for update
+    </select>
+
+</mapper>

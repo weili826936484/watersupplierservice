@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wx.watersupplierservice.dao.SysSiteDao">
+    <resultMap id="BaseResultMap" type="com.wx.watersupplierservice.po.SysSitePo">
+        <id column="site_id" property="siteId"/>
+        <result column="site_name" property="siteName"/>
+        <result column="site_address" property="siteAddress"/>
+        <result column="site_leader" property="siteLeader"/>
+        <result column="site_tel" property="siteTel"/>
+        <result column="site_status" property="siteStatus"/>
+        <result column="create_by" property="createBy"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_by" property="updateBy"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <sql id="Table_Name">
+        water_supplier.sys_site
+    </sql>
+
+    <sql id="Base_Column">
+        site_id,
+        site_name,
+        site_address,
+        site_leader,
+        site_tel,
+        site_status,
+        create_by,
+        create_time,
+        update_by,
+        update_time
+    </sql>
+
+    <sql id="Base_Where">
+        <trim suffixOverrides="AND">
+            <if test="siteId != null">
+                AND site_id=#{siteId}
+            </if>
+            <if test="siteName != null">
+                AND site_name=#{siteName}
+            </if>
+            <if test="siteAddress != null">
+                AND site_address=#{siteAddress}
+            </if>
+            <if test="siteLeader != null">
+                AND site_leader=#{siteLeader}
+            </if>
+            <if test="siteTel != null">
+                AND site_tel=#{siteTel}
+            </if>
+            <if test="siteStatus != null">
+                AND site_status=#{siteStatus}
+            </if>
+            <if test="createBy != null">
+                AND create_by=#{createBy}
+            </if>
+            <if test="createTime != null">
+                AND create_time=#{createTime}
+            </if>
+            <if test="updateBy != null">
+                AND update_by=#{updateBy}
+            </if>
+            <if test="updateTime != null">
+                AND update_time=#{updateTime}
+            </if>
+        </trim>
+    </sql>
+
+    <sql id="Base_Select">
+        select
+        <include refid="Base_Column"/>
+        from
+        <include refid="Table_Name"/>
+        <where>
+            <include refid="Base_Where"/>
+        </where>
+    </sql>
+
+    <!-- 单条插入 -->
+    <insert id="insert" parameterType="com.wx.watersupplierservice.po.SysSitePo" useGeneratedKeys="true"
+            keyProperty="siteId">
+        insert into
+        <include refid="Table_Name"/>
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="siteId != null">
+                site_id,
+            </if>
+            <if test="siteName != null">
+                site_name,
+            </if>
+            <if test="siteAddress != null">
+                site_address,
+            </if>
+            <if test="siteLeader != null">
+                site_leader,
+            </if>
+            <if test="siteTel != null">
+                site_tel,
+            </if>
+            <if test="siteStatus != null">
+                site_status,
+            </if>
+            <if test="createBy != null">
+                create_by,
+            </if>
+            <if test="updateBy != null">
+                update_by,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="siteId != null">
+                #{siteId},
+            </if>
+            <if test="siteName != null">
+                #{siteName},
+            </if>
+            <if test="siteAddress != null">
+                #{siteAddress},
+            </if>
+            <if test="siteLeader != null">
+                #{siteLeader},
+            </if>
+            <if test="siteTel != null">
+                #{siteTel},
+            </if>
+            <if test="siteStatus != null">
+                #{siteStatus},
+            </if>
+            <if test="createBy != null">
+                #{createBy},
+            </if>
+            <if test="updateBy != null">
+                #{updateBy},
+            </if>
+        </trim>
+    </insert>
+
+    <!-- 批量插入 -->
+    <insert id="insertList" parameterType="java.util.List">
+        insert into
+        <include refid="Table_Name"/>
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            site_name,
+            site_address,
+            site_leader,
+            site_tel,
+            site_status,
+            create_by,
+            update_by,
+        </trim>
+        values
+        <foreach collection="list" item="item" separator=",">
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                #{item.siteName},
+                #{item.siteAddress},
+                #{item.siteLeader},
+                #{item.siteTel},
+                #{item.siteStatus},
+                #{item.createBy},
+                #{item.updateBy},
+            </trim>
+        </foreach>
+    </insert>
+
+    <!-- 根据主键更新 -->
+    <update id="update" parameterType="com.wx.watersupplierservice.po.SysSitePo">
+        update
+        <include refid="Table_Name"/>
+        <set>
+            <if test="siteName != null">
+                 site_name=#{siteName},
+            </if>
+            <if test="siteAddress != null">
+                 site_address=#{siteAddress},
+            </if>
+            <if test="siteLeader != null">
+                 site_leader=#{siteLeader},
+            </if>
+            <if test="siteTel != null">
+                 site_tel=#{siteTel},
+            </if>
+            <if test="siteStatus != null">
+                 site_status=#{siteStatus},
+            </if>
+            <if test="createBy != null">
+                 create_by=#{createBy},
+            </if>
+            <if test="updateBy != null">
+                 update_by=#{updateBy},
+            </if>
+        </set>
+        where
+            site_id=#{siteId}
+    </update>
+
+    <!-- 根据主键批量更新 -->
+    <update id="updateList" parameterType="java.util.List">
+        <foreach collection="list" item="item" separator=";">
+            update
+            <include refid="Table_Name"/>
+            <set>
+                <if test="item.siteName != null">
+                    site_name=#{item.siteName},
+                </if>
+                <if test="item.siteAddress != null">
+                    site_address=#{item.siteAddress},
+                </if>
+                <if test="item.siteLeader != null">
+                    site_leader=#{item.siteLeader},
+                </if>
+                <if test="item.siteTel != null">
+                    site_tel=#{item.siteTel},
+                </if>
+                <if test="item.siteStatus != null">
+                    site_status=#{item.siteStatus},
+                </if>
+                <if test="item.createBy != null">
+                    create_by=#{item.createBy},
+                </if>
+                <if test="item.updateBy != null">
+                    update_by=#{item.updateBy},
+                </if>
+            </set>
+            where
+                site_id=#{item.siteId}
+        </foreach>
+    </update>
+
+    <!-- 查询单表符合条件总条数 -->
+    <select id="count" parameterType="com.wx.watersupplierservice.po.SysSitePo" resultType="int">
+        select count(1) from
+        <include refid="Table_Name"/>
+        <where>
+            <include refid="Base_Where"/>
+        </where>
+    </select>
+
+    <!-- 查询符合条件的一条记录 -->
+    <select id="selectOne" parameterType="com.wx.watersupplierservice.po.SysSitePo" resultMap="BaseResultMap">
+        <include refid="Base_Select"/>
+        limit 1
+    </select>
+
+    <!-- 查询符合条件的记录 -->
+    <select id="selectList" parameterType="com.wx.watersupplierservice.po.SysSitePo" resultMap="BaseResultMap">
+        <include refid="Base_Select"/>
+    </select>
+
+    <!-- 查询符合条件的记录  锁定符合条件的行-->
+    <select id="selectForUpdate" parameterType="com.wx.watersupplierservice.po.SysSitePo" resultMap="BaseResultMap">
+        <include refid="Base_Select"/>
+        for update
+    </select>
+
+</mapper>

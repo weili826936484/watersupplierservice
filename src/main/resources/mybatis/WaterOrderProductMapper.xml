@@ -1,0 +1,522 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wx.watersupplierservice.dao.WaterOrderProductDao">
+    <resultMap id="BaseResultMap" type="com.wx.watersupplierservice.po.WaterOrderProductPo">
+        <id column="product_id" property="productId"/>
+        <result column="orderid" property="orderid"/>
+        <result column="skuid" property="skuid"/>
+        <result column="skucostumeproperty" property="skucostumeproperty"/>
+        <result column="adjustid" property="adjustid"/>
+        <result column="skuname" property="skuname"/>
+        <result column="skuidisv" property="skuidisv"/>
+        <result column="skujdprice" property="skujdprice"/>
+        <result column="skucount" property="skucount"/>
+        <result column="adjustmode" property="adjustmode"/>
+        <result column="upccode" property="upccode"/>
+        <result column="skustoreprice" property="skustoreprice"/>
+        <result column="skucostprice" property="skucostprice"/>
+        <result column="promotiontype" property="promotiontype"/>
+        <result column="skutaxrate" property="skutaxrate"/>
+        <result column="promotionid" property="promotionid"/>
+        <result column="relatedskus" property="relatedskus"/>
+        <result column="skuweight" property="skuweight"/>
+        <result column="canteenmoney" property="canteenmoney"/>
+        <result column="productextendinfomap" property="productextendinfomap"/>
+        <result column="create_by" property="createBy"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_by" property="updateBy"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <sql id="Table_Name">
+        water_supplier.water_order_product
+    </sql>
+
+    <sql id="Base_Column">
+        product_id,
+        orderid,
+        skuid,
+        skucostumeproperty,
+        adjustid,
+        skuname,
+        skuidisv,
+        skujdprice,
+        skucount,
+        adjustmode,
+        upccode,
+        skustoreprice,
+        skucostprice,
+        promotiontype,
+        skutaxrate,
+        promotionid,
+        relatedskus,
+        skuweight,
+        canteenmoney,
+        productextendinfomap,
+        create_by,
+        create_time,
+        update_by,
+        update_time
+    </sql>
+
+    <sql id="Base_Where">
+        <trim suffixOverrides="AND">
+            <if test="productId != null">
+                AND product_id=#{productId}
+            </if>
+            <if test="orderid != null">
+                AND orderid=#{orderid}
+            </if>
+            <if test="skuid != null">
+                AND skuid=#{skuid}
+            </if>
+            <if test="skucostumeproperty != null">
+                AND skucostumeproperty=#{skucostumeproperty}
+            </if>
+            <if test="adjustid != null">
+                AND adjustid=#{adjustid}
+            </if>
+            <if test="skuname != null">
+                AND skuname=#{skuname}
+            </if>
+            <if test="skuidisv != null">
+                AND skuidisv=#{skuidisv}
+            </if>
+            <if test="skujdprice != null">
+                AND skujdprice=#{skujdprice}
+            </if>
+            <if test="skucount != null">
+                AND skucount=#{skucount}
+            </if>
+            <if test="adjustmode != null">
+                AND adjustmode=#{adjustmode}
+            </if>
+            <if test="upccode != null">
+                AND upccode=#{upccode}
+            </if>
+            <if test="skustoreprice != null">
+                AND skustoreprice=#{skustoreprice}
+            </if>
+            <if test="skucostprice != null">
+                AND skucostprice=#{skucostprice}
+            </if>
+            <if test="promotiontype != null">
+                AND promotiontype=#{promotiontype}
+            </if>
+            <if test="skutaxrate != null">
+                AND skutaxrate=#{skutaxrate}
+            </if>
+            <if test="promotionid != null">
+                AND promotionid=#{promotionid}
+            </if>
+            <if test="relatedskus != null">
+                AND relatedskus=#{relatedskus}
+            </if>
+            <if test="skuweight != null">
+                AND skuweight=#{skuweight}
+            </if>
+            <if test="canteenmoney != null">
+                AND canteenmoney=#{canteenmoney}
+            </if>
+            <if test="productextendinfomap != null">
+                AND productextendinfomap=#{productextendinfomap}
+            </if>
+            <if test="createBy != null">
+                AND create_by=#{createBy}
+            </if>
+            <if test="createTime != null">
+                AND create_time=#{createTime}
+            </if>
+            <if test="updateBy != null">
+                AND update_by=#{updateBy}
+            </if>
+            <if test="updateTime != null">
+                AND update_time=#{updateTime}
+            </if>
+        </trim>
+    </sql>
+
+    <sql id="Base_Select">
+        select
+        <include refid="Base_Column"/>
+        from
+        <include refid="Table_Name"/>
+        <where>
+            <include refid="Base_Where"/>
+        </where>
+    </sql>
+
+    <!-- 单条插入 -->
+    <insert id="insert" parameterType="com.wx.watersupplierservice.po.WaterOrderProductPo" useGeneratedKeys="true"
+            keyProperty="productId">
+        insert into
+        <include refid="Table_Name"/>
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="productId != null">
+                product_id,
+            </if>
+            <if test="orderid != null">
+                orderid,
+            </if>
+            <if test="skuid != null">
+                skuid,
+            </if>
+            <if test="skucostumeproperty != null">
+                skucostumeproperty,
+            </if>
+            <if test="adjustid != null">
+                adjustid,
+            </if>
+            <if test="skuname != null">
+                skuname,
+            </if>
+            <if test="skuidisv != null">
+                skuidisv,
+            </if>
+            <if test="skujdprice != null">
+                skujdprice,
+            </if>
+            <if test="skucount != null">
+                skucount,
+            </if>
+            <if test="adjustmode != null">
+                adjustmode,
+            </if>
+            <if test="upccode != null">
+                upccode,
+            </if>
+            <if test="skustoreprice != null">
+                skustoreprice,
+            </if>
+            <if test="skucostprice != null">
+                skucostprice,
+            </if>
+            <if test="promotiontype != null">
+                promotiontype,
+            </if>
+            <if test="skutaxrate != null">
+                skutaxrate,
+            </if>
+            <if test="promotionid != null">
+                promotionid,
+            </if>
+            <if test="relatedskus != null">
+                relatedskus,
+            </if>
+            <if test="skuweight != null">
+                skuweight,
+            </if>
+            <if test="canteenmoney != null">
+                canteenmoney,
+            </if>
+            <if test="productextendinfomap != null">
+                productextendinfomap,
+            </if>
+            <if test="createBy != null">
+                create_by,
+            </if>
+            <if test="updateBy != null">
+                update_by,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="productId != null">
+                #{productId},
+            </if>
+            <if test="orderid != null">
+                #{orderid},
+            </if>
+            <if test="skuid != null">
+                #{skuid},
+            </if>
+            <if test="skucostumeproperty != null">
+                #{skucostumeproperty},
+            </if>
+            <if test="adjustid != null">
+                #{adjustid},
+            </if>
+            <if test="skuname != null">
+                #{skuname},
+            </if>
+            <if test="skuidisv != null">
+                #{skuidisv},
+            </if>
+            <if test="skujdprice != null">
+                #{skujdprice},
+            </if>
+            <if test="skucount != null">
+                #{skucount},
+            </if>
+            <if test="adjustmode != null">
+                #{adjustmode},
+            </if>
+            <if test="upccode != null">
+                #{upccode},
+            </if>
+            <if test="skustoreprice != null">
+                #{skustoreprice},
+            </if>
+            <if test="skucostprice != null">
+                #{skucostprice},
+            </if>
+            <if test="promotiontype != null">
+                #{promotiontype},
+            </if>
+            <if test="skutaxrate != null">
+                #{skutaxrate},
+            </if>
+            <if test="promotionid != null">
+                #{promotionid},
+            </if>
+            <if test="relatedskus != null">
+                #{relatedskus},
+            </if>
+            <if test="skuweight != null">
+                #{skuweight},
+            </if>
+            <if test="canteenmoney != null">
+                #{canteenmoney},
+            </if>
+            <if test="productextendinfomap != null">
+                #{productextendinfomap},
+            </if>
+            <if test="createBy != null">
+                #{createBy},
+            </if>
+            <if test="updateBy != null">
+                #{updateBy},
+            </if>
+        </trim>
+    </insert>
+
+    <!-- 批量插入 -->
+    <insert id="insertList" parameterType="java.util.List">
+        insert into
+        <include refid="Table_Name"/>
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            orderid,
+            skuid,
+            skucostumeproperty,
+            adjustid,
+            skuname,
+            skuidisv,
+            skujdprice,
+            skucount,
+            adjustmode,
+            upccode,
+            skustoreprice,
+            skucostprice,
+            promotiontype,
+            skutaxrate,
+            promotionid,
+            relatedskus,
+            skuweight,
+            canteenmoney,
+            productextendinfomap,
+            create_by,
+            update_by,
+        </trim>
+        values
+        <foreach collection="list" item="item" separator=",">
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                #{item.orderid},
+                #{item.skuid},
+                #{item.skucostumeproperty},
+                #{item.adjustid},
+                #{item.skuname},
+                #{item.skuidisv},
+                #{item.skujdprice},
+                #{item.skucount},
+                #{item.adjustmode},
+                #{item.upccode},
+                #{item.skustoreprice},
+                #{item.skucostprice},
+                #{item.promotiontype},
+                #{item.skutaxrate},
+                #{item.promotionid},
+                #{item.relatedskus},
+                #{item.skuweight},
+                #{item.canteenmoney},
+                #{item.productextendinfomap},
+                #{item.createBy},
+                #{item.updateBy},
+            </trim>
+        </foreach>
+    </insert>
+
+    <!-- 根据主键更新 -->
+    <update id="update" parameterType="com.wx.watersupplierservice.po.WaterOrderProductPo">
+        update
+        <include refid="Table_Name"/>
+        <set>
+            <if test="orderid != null">
+                 orderid=#{orderid},
+            </if>
+            <if test="skuid != null">
+                 skuid=#{skuid},
+            </if>
+            <if test="skucostumeproperty != null">
+                 skucostumeproperty=#{skucostumeproperty},
+            </if>
+            <if test="adjustid != null">
+                 adjustid=#{adjustid},
+            </if>
+            <if test="skuname != null">
+                 skuname=#{skuname},
+            </if>
+            <if test="skuidisv != null">
+                 skuidisv=#{skuidisv},
+            </if>
+            <if test="skujdprice != null">
+                 skujdprice=#{skujdprice},
+            </if>
+            <if test="skucount != null">
+                 skucount=#{skucount},
+            </if>
+            <if test="adjustmode != null">
+                 adjustmode=#{adjustmode},
+            </if>
+            <if test="upccode != null">
+                 upccode=#{upccode},
+            </if>
+            <if test="skustoreprice != null">
+                 skustoreprice=#{skustoreprice},
+            </if>
+            <if test="skucostprice != null">
+                 skucostprice=#{skucostprice},
+            </if>
+            <if test="promotiontype != null">
+                 promotiontype=#{promotiontype},
+            </if>
+            <if test="skutaxrate != null">
+                 skutaxrate=#{skutaxrate},
+            </if>
+            <if test="promotionid != null">
+                 promotionid=#{promotionid},
+            </if>
+            <if test="relatedskus != null">
+                 relatedskus=#{relatedskus},
+            </if>
+            <if test="skuweight != null">
+                 skuweight=#{skuweight},
+            </if>
+            <if test="canteenmoney != null">
+                 canteenmoney=#{canteenmoney},
+            </if>
+            <if test="productextendinfomap != null">
+                 productextendinfomap=#{productextendinfomap},
+            </if>
+            <if test="createBy != null">
+                 create_by=#{createBy},
+            </if>
+            <if test="updateBy != null">
+                 update_by=#{updateBy},
+            </if>
+        </set>
+        where
+            product_id=#{productId}
+    </update>
+
+    <!-- 根据主键批量更新 -->
+    <update id="updateList" parameterType="java.util.List">
+        <foreach collection="list" item="item" separator=";">
+            update
+            <include refid="Table_Name"/>
+            <set>
+                <if test="item.orderid != null">
+                    orderid=#{item.orderid},
+                </if>
+                <if test="item.skuid != null">
+                    skuid=#{item.skuid},
+                </if>
+                <if test="item.skucostumeproperty != null">
+                    skucostumeproperty=#{item.skucostumeproperty},
+                </if>
+                <if test="item.adjustid != null">
+                    adjustid=#{item.adjustid},
+                </if>
+                <if test="item.skuname != null">
+                    skuname=#{item.skuname},
+                </if>
+                <if test="item.skuidisv != null">
+                    skuidisv=#{item.skuidisv},
+                </if>
+                <if test="item.skujdprice != null">
+                    skujdprice=#{item.skujdprice},
+                </if>
+                <if test="item.skucount != null">
+                    skucount=#{item.skucount},
+                </if>
+                <if test="item.adjustmode != null">
+                    adjustmode=#{item.adjustmode},
+                </if>
+                <if test="item.upccode != null">
+                    upccode=#{item.upccode},
+                </if>
+                <if test="item.skustoreprice != null">
+                    skustoreprice=#{item.skustoreprice},
+                </if>
+                <if test="item.skucostprice != null">
+                    skucostprice=#{item.skucostprice},
+                </if>
+                <if test="item.promotiontype != null">
+                    promotiontype=#{item.promotiontype},
+                </if>
+                <if test="item.skutaxrate != null">
+                    skutaxrate=#{item.skutaxrate},
+                </if>
+                <if test="item.promotionid != null">
+                    promotionid=#{item.promotionid},
+                </if>
+                <if test="item.relatedskus != null">
+                    relatedskus=#{item.relatedskus},
+                </if>
+                <if test="item.skuweight != null">
+                    skuweight=#{item.skuweight},
+                </if>
+                <if test="item.canteenmoney != null">
+                    canteenmoney=#{item.canteenmoney},
+                </if>
+                <if test="item.productextendinfomap != null">
+                    productextendinfomap=#{item.productextendinfomap},
+                </if>
+                <if test="item.createBy != null">
+                    create_by=#{item.createBy},
+                </if>
+                <if test="item.updateBy != null">
+                    update_by=#{item.updateBy},
+                </if>
+            </set>
+            where
+                product_id=#{item.productId}
+        </foreach>
+    </update>
+
+    <!-- 查询单表符合条件总条数 -->
+    <select id="count" parameterType="com.wx.watersupplierservice.po.WaterOrderProductPo" resultType="int">
+        select count(1) from
+        <include refid="Table_Name"/>
+        <where>
+            <include refid="Base_Where"/>
+        </where>
+    </select>
+
+    <!-- 查询符合条件的一条记录 -->
+    <select id="selectOne" parameterType="com.wx.watersupplierservice.po.WaterOrderProductPo" resultMap="BaseResultMap">
+        <include refid="Base_Select"/>
+        limit 1
+    </select>
+
+    <!-- 查询符合条件的记录 -->
+    <select id="selectList" parameterType="com.wx.watersupplierservice.po.WaterOrderProductPo" resultMap="BaseResultMap">
+        <include refid="Base_Select"/>
+    </select>
+
+    <!-- 查询符合条件的记录  锁定符合条件的行-->
+    <select id="selectForUpdate" parameterType="com.wx.watersupplierservice.po.WaterOrderProductPo" resultMap="BaseResultMap">
+        <include refid="Base_Select"/>
+        for update
+    </select>
+
+</mapper>
