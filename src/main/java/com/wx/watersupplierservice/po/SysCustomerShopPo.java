@@ -1,6 +1,9 @@
 package com.wx.watersupplierservice.po;
 
 
+import com.xdf.pscommon.annotation.alias.ID;
+import com.xdf.pscommon.annotation.alias.Identity;
+import com.xdf.pscommon.annotation.alias.Table;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -12,8 +15,8 @@ import java.io.Serializable;
  * @date 2021年01月10日
  */
 @ApiModel
+@Table(name = "sys_customer_shop")
 public class SysCustomerShopPo implements Serializable {
-	private static final long serialVersionUID = 1L;
 
     @ApiModelProperty(value = "消费者")
     private Integer customerId;
