@@ -20,8 +20,6 @@ public interface  WaterOrderProductDao extends BaseMapper {
 
     int updateList(List<WaterOrderProductPo> list);
 
-	int update(WaterOrderProductPo record);
-
     int count(WaterOrderProductPo record);
 
 	WaterOrderProductPo selectOne(WaterOrderProductPo record);

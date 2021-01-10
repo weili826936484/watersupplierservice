@@ -20,8 +20,6 @@ public interface  SysWeixinDao extends BaseMapper {
 
     int updateList(List<SysWeixinPo> list);
 
-	int update(SysWeixinPo record);
-
     int count(SysWeixinPo record);
 
 	SysWeixinPo selectOne(SysWeixinPo record);

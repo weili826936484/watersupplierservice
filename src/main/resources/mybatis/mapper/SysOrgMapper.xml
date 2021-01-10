@@ -202,46 +202,6 @@
         </foreach>
     </insert>
 
-    <!-- 根据主键更新 -->
-    <update id="update" parameterType="com.wx.watersupplierservice.po.SysOrgPo">
-        update
-        <include refid="Table_Name"/>
-        <set>
-            <if test="platform != null">
-                 platform=#{platform},
-            </if>
-            <if test="orgcode != null">
-                 orgcode=#{orgcode},
-            </if>
-            <if test="orgLeader != null">
-                 org_leader=#{orgLeader},
-            </if>
-            <if test="token != null">
-                 token=#{token},
-            </if>
-            <if test="appKey != null">
-                 app_key=#{appKey},
-            </if>
-            <if test="appSecret != null">
-                 app_secret=#{appSecret},
-            </if>
-            <if test="orgTel != null">
-                 org_tel=#{orgTel},
-            </if>
-            <if test="orgMail != null">
-                 org_mail=#{orgMail},
-            </if>
-            <if test="createBy != null">
-                 create_by=#{createBy},
-            </if>
-            <if test="updateBy != null">
-                 update_by=#{updateBy},
-            </if>
-        </set>
-        where
-            org_id=#{orgId}
-    </update>
-
     <!-- 根据主键批量更新 -->
     <update id="updateList" parameterType="java.util.List">
         <foreach collection="list" item="item" separator=";">

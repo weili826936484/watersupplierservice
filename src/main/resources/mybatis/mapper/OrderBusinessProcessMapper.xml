@@ -137,31 +137,6 @@
         </foreach>
     </insert>
 
-    <!-- 根据主键更新 -->
-    <update id="update" parameterType="com.wx.watersupplierservice.po.OrderBusinessProcessPo">
-        update
-        <include refid="Table_Name"/>
-        <set>
-            <if test="businessId != null">
-                 business_id=#{businessId},
-            </if>
-            <if test="optCode != null">
-                 opt_code=#{optCode},
-            </if>
-            <if test="resultInfo != null">
-                 result_info=#{resultInfo},
-            </if>
-            <if test="createBy != null">
-                 create_by=#{createBy},
-            </if>
-            <if test="updateBy != null">
-                 update_by=#{updateBy},
-            </if>
-        </set>
-        where
-            process_id=#{processId}
-    </update>
-
     <!-- 根据主键批量更新 -->
     <update id="updateList" parameterType="java.util.List">
         <foreach collection="list" item="item" separator=";">

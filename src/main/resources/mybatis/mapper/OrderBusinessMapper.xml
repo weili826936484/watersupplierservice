@@ -150,34 +150,6 @@
         </foreach>
     </insert>
 
-    <!-- 根据主键更新 -->
-    <update id="update" parameterType="com.wx.watersupplierservice.po.OrderBusinessPo">
-        update
-        <include refid="Table_Name"/>
-        <set>
-            <if test="orderId != null">
-                 order_id=#{orderId},
-            </if>
-            <if test="optCode != null">
-                 opt_code=#{optCode},
-            </if>
-            <if test="siteId != null">
-                 site_id=#{siteId},
-            </if>
-            <if test="sendBy != null">
-                 send_by=#{sendBy},
-            </if>
-            <if test="createBy != null">
-                 create_by=#{createBy},
-            </if>
-            <if test="updateBy != null">
-                 update_by=#{updateBy},
-            </if>
-        </set>
-        where
-            business_id=#{businessId}
-    </update>
-
     <!-- 根据主键批量更新 -->
     <update id="updateList" parameterType="java.util.List">
         <foreach collection="list" item="item" separator=";">

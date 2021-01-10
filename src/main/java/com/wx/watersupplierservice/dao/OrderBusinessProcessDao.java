@@ -20,8 +20,6 @@ public interface  OrderBusinessProcessDao extends BaseMapper {
 
     int updateList(List<OrderBusinessProcessPo> list);
 
-	int update(OrderBusinessProcessPo record);
-
     int count(OrderBusinessProcessPo record);
 
 	OrderBusinessProcessPo selectOne(OrderBusinessProcessPo record);

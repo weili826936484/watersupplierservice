@@ -189,43 +189,6 @@
         </foreach>
     </insert>
 
-    <!-- 根据主键更新 -->
-    <update id="update" parameterType="com.wx.watersupplierservice.po.SysCustomerPo">
-        update
-        <include refid="Table_Name"/>
-        <set>
-            <if test="customerName != null">
-                 customer_name=#{customerName},
-            </if>
-            <if test="customerTel != null">
-                 customer_tel=#{customerTel},
-            </if>
-            <if test="customerAddress != null">
-                 customer_address=#{customerAddress},
-            </if>
-            <if test="consumeCount != null">
-                 consume_count=#{consumeCount},
-            </if>
-            <if test="consumeMoney != null">
-                 consume_money=#{consumeMoney},
-            </if>
-            <if test="platformSource != null">
-                 platform_source=#{platformSource},
-            </if>
-            <if test="platformUserid != null">
-                 platform_userid=#{platformUserid},
-            </if>
-            <if test="createBy != null">
-                 create_by=#{createBy},
-            </if>
-            <if test="updateBy != null">
-                 update_by=#{updateBy},
-            </if>
-        </set>
-        where
-            customer_id=#{customerId}
-    </update>
-
     <!-- 根据主键批量更新 -->
     <update id="updateList" parameterType="java.util.List">
         <foreach collection="list" item="item" separator=";">
