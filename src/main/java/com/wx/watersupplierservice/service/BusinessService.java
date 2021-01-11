@@ -1,6 +1,6 @@
 package com.wx.watersupplierservice.service;
 
-import com.wx.watersupplierservice.dto.WatersDto;
+import com.wx.watersupplierservice.dto.WatersPageDto;
 import com.wx.watersupplierservice.req.SendWatersReq;
 
 import java.util.List;
@@ -15,5 +15,5 @@ import java.util.List;
  */
 public interface BusinessService {
 
-    List<WatersDto> getSendWaterList(SendWatersReq sendWatersReq);
+    WatersPageDto getSendWaterList(SendWatersReq sendWatersReq);
 }

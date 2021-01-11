@@ -8,7 +8,7 @@ package com.wx.watersupplierservice.service.impl;/**
  */
 
 import com.wx.watersupplierservice.dao.SysShopSiteDao;
-import com.wx.watersupplierservice.dto.WatersDto;
+import com.wx.watersupplierservice.dto.WatersPageDto;
 import com.wx.watersupplierservice.exception.PublicException;
 import com.wx.watersupplierservice.req.SendWatersReq;
 import com.wx.watersupplierservice.service.BusinessService;
@@ -33,14 +33,20 @@ public class BusinessServiceImpl implements BusinessService {
     @Autowired
     private SysShopSiteDao sysShopSiteDao;
     @Override
-    public List<WatersDto> getSendWaterList(SendWatersReq sendWatersReq) {
+    public WatersPageDto getSendWaterList(SendWatersReq sendWatersReq) {
         if (Objects.isNull(sendWatersReq) || Objects.isNull(sendWatersReq.getPageIndex())
                 || Objects.isNull(sendWatersReq.getSiteId()) || Objects.isNull(sendWatersReq.getPageSize())){
             throw new PublicException("参数不全...");
         }
         int offset = (sendWatersReq.getPageIndex()-1) * sendWatersReq.getPageSize();
         sendWatersReq.setOffset(offset);
-        List<WatersDto> list = sysShopSiteDao.getSendWaterList(sendWatersReq);
-        return list;
+        int count = sysShopSiteDao.getSendWaterCount(sendWatersReq);
+        List<WatersPageDto.WatersDto> list = sysShopSiteDao.getSendWaterList(sendWatersReq);
+        WatersPageDto watersPageDto = new WatersPageDto();
+        watersPageDto.setCount(count);
+        watersPageDto.setList(list);
+        watersPageDto.setPageIndex(sendWatersReq.getPageIndex());
+        watersPageDto.setPageSize(sendWatersReq.getPageSize());
+        return watersPageDto;
     }
 }

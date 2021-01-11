@@ -132,7 +132,7 @@
         for update
     </select>
 
-    <select id="getSendWaterList" parameterType="com.wx.watersupplierservice.req.SendWatersReq" resultType="com.wx.watersupplierservice.dto.WatersDto">
+    <select id="getSendWaterList" parameterType="com.wx.watersupplierservice.req.SendWatersReq" resultType="com.wx.watersupplierservice.dto.WatersPageDto$WatersDto">
         SELECT
             ssu.site_user_id AS siteUserId,
             ssu.user_id AS userId,
@@ -146,5 +146,16 @@
         AND user_status = 1
         AND role_code = 'SITE_SENDER'
         LIMIT #{offset},#{pageSize}
+    </select>
+    <select id="getSendWaterCount" parameterType="com.wx.watersupplierservice.req.SendWatersReq" resultType="java.lang.Integer">
+        SELECT
+            count(1)
+        FROM
+            sys_site_user ssu
+        INNER JOIN sys_user su ON ssu.user_id = su.user_id
+        WHERE
+            ssu.site_id = #{siteId}
+        AND user_status = 1
+        AND role_code = 'SITE_SENDER'
     </select>
 </mapper>

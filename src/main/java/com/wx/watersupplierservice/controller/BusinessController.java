@@ -7,7 +7,7 @@ package com.wx.watersupplierservice.controller;/**
  * @version V1.0
  */
 
-import com.wx.watersupplierservice.dto.WatersDto;
+import com.wx.watersupplierservice.dto.WatersPageDto;
 import com.wx.watersupplierservice.req.SendWatersReq;
 import com.wx.watersupplierservice.resp.ObjectResults;
 import com.wx.watersupplierservice.service.BusinessService;
@@ -34,7 +34,7 @@ public class BusinessController {
     private BusinessService businessService;
 
     @PostMapping("/getSendWaterList")
-    public ObjectResults<List<WatersDto>> getSendWaterList(SendWatersReq sendWatersReq){
+    public ObjectResults<WatersPageDto> getSendWaterList(SendWatersReq sendWatersReq){
         return ObjectResults.createSuccessResult(businessService.getSendWaterList(sendWatersReq));
     }
 
