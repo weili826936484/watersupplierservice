@@ -13,24 +13,24 @@ import java.io.Serializable;
 /**
  * @Description: order_business
  * @author 82693
- * @date 2021年01月10日
+ * @date 2021年01月11日
  */
 @ApiModel
-@Table(name = "sys_shop_site")
+@Table(name = "order_business")
 public class OrderBusinessPo implements Serializable {
-
+	private static final long serialVersionUID = 1L;
     @ID
     @Identity
     @ApiModelProperty(value = "主键")
-    private String businessId;
+    private Integer businessId;
     @ApiModelProperty(value = "订单表")
-    private String orderId;
+    private Integer orderId;
     @ApiModelProperty(value = "流程代码")
     private String optCode;
     @ApiModelProperty(value = "水站表")
-    private String siteId;
+    private Integer siteId;
     @ApiModelProperty(value = "送水人员")
-    private String sendBy;
+    private Integer sendBy;
     @ApiModelProperty(value = "创建人")
     private Integer createBy;
     @ApiModelProperty(value = "创建时间")
@@ -40,19 +40,19 @@ public class OrderBusinessPo implements Serializable {
     @ApiModelProperty(value = "更新时间")
     private Date updateTime;
 
-    public String getBusinessId() {
+    public Integer getBusinessId() {
         return businessId;
     }
 
-    public void setBusinessId(String businessId) {
+    public void setBusinessId(Integer businessId) {
         this.businessId = businessId;
     }
 
-    public String getOrderId() {
+    public Integer getOrderId() {
         return orderId;
     }
 
-    public void setOrderId(String orderId) {
+    public void setOrderId(Integer orderId) {
         this.orderId = orderId;
     }
 
@@ -64,19 +64,19 @@ public class OrderBusinessPo implements Serializable {
         this.optCode = optCode;
     }
 
-    public String getSiteId() {
+    public Integer getSiteId() {
         return siteId;
     }
 
-    public void setSiteId(String siteId) {
+    public void setSiteId(Integer siteId) {
         this.siteId = siteId;
     }
 
-    public String getSendBy() {
+    public Integer getSendBy() {
         return sendBy;
     }
 
-    public void setSendBy(String sendBy) {
+    public void setSendBy(Integer sendBy) {
         this.sendBy = sendBy;
     }
 

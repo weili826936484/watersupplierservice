@@ -13,18 +13,19 @@ import java.io.Serializable;
 /**
  * @Description: order_business_process
  * @author 82693
- * @date 2021年01月10日
+ * @date 2021年01月11日
  */
 @ApiModel
 @Table(name = "order_business_process")
 public class OrderBusinessProcessPo implements Serializable {
+	private static final long serialVersionUID = 1L;
 
     @ID
     @Identity
     @ApiModelProperty(value = "主键")
     private Integer processId;
     @ApiModelProperty(value = "业务表")
-    private String businessId;
+    private Integer businessId;
     @ApiModelProperty(value = "")
     private String optCode;
     @ApiModelProperty(value = "反馈结果信息描述")
@@ -46,11 +47,11 @@ public class OrderBusinessProcessPo implements Serializable {
         this.processId = processId;
     }
 
-    public String getBusinessId() {
+    public Integer getBusinessId() {
         return businessId;
     }
 
-    public void setBusinessId(String businessId) {
+    public void setBusinessId(Integer businessId) {
         this.businessId = businessId;
     }
 
