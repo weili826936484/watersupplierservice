@@ -60,15 +60,15 @@ public class LoginController {
             if(userList.size() == 1) {
             	//免登陆，直接进入功能列表页面
             	JSONObject userInfo = userList.get(0);
-            	String userId = userInfo.optString("userId");
-            	String user_code = userInfo.optString("user_code");
+            	String userId = userInfo.optString("user_id");
             	String user_name = userInfo.optString("user_name");
                 String role_code = userInfo.optString("role_code");
+                String role_tel = userInfo.optString("role_tel");
                 attr.addFlashAttribute("openId", openId);
                 attr.addFlashAttribute("userId", userId);
                 attr.addFlashAttribute("role_code", role_code);
                 attr.addFlashAttribute("user_name", user_name);
-                attr.addFlashAttribute("user_code", user_code);
+                attr.addFlashAttribute("role_tel", role_tel);
                 
                 return "redirect:/wx/function.html"; 
             } else {
@@ -80,7 +80,7 @@ public class LoginController {
             
         } catch (Exception e) {
         	e.printStackTrace();
-            return "redirect:" + "/error.html";
+            return "redirect:" + "/wx/error.html";
         }   
         
     }
@@ -97,16 +97,16 @@ public class LoginController {
     @RequestMapping("/wx/user/login")
     public void login(HttpServletResponse response, HttpServletRequest request) throws Exception {
     	JSONObject outdata = new JSONObject();
-        String user_code = request.getParameter("user_tel");
+        String user_tel = request.getParameter("user_tel");
         String password = request.getParameter("password");
         String openId = request.getParameter("openId");
 
         JSONObject params = new JSONObject();
-        params.put("user_code", user_code);
+        params.put("user_tel", user_tel);
         params.put("password", password);
         
         /**
-         **  根据userId和password查找用户
+         **  根据user_tel和password查找用户
          */
         try {
         	List<JSONObject> userList =   null; //sysUserDao.findUsers(params);

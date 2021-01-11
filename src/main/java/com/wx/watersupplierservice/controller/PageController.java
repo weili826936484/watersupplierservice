@@ -20,6 +20,16 @@ public class PageController {
 	}
 	
 	/**
+	 * 错误页面
+	 * @return
+	 */
+	@RequestMapping("/wx/error.html")
+	public String error() {
+		
+        return "error";	
+	}
+	
+	/**
 	 * 登录页
 	 * @param request
 	 * @param map

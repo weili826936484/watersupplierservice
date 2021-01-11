@@ -17,7 +17,7 @@
 	    	<div><input id="openId" type="hidden" th:value="${openId}" /> </div>
 	        <div class="mui-input-row"> 
 	        
-	            <input type="text" id="user_code"  placeholder="请输入您的用户名" value="">
+	            <input type="text" id="user_tel"  placeholder="请输入手机号" value="">
 	        </div>
 	        <div class="mui-input-row">                 
 	            <input id='password' type="password" class="mui-input-password mui-input" placeholder="请输入您的密码" value="">
@@ -47,10 +47,10 @@
 	     */
 	     var loginButton = document.getElementById("login");
 	     loginButton.addEventListener('tap', function(event) {
-	         var user_code = $("#user_code").val();
+	         var user_tel = $("#user_tel").val();
 	         var pwd = $("#password").val();
-	         if(user_code =='' || pwd ==''){
-	             mui.alert("请您填写用户名和密码");
+	         if(user_tel =='' || pwd ==''){
+	             mui.alert("请您填写手机号和密码");
 	             return ;
 	         } 
 	         $.ajax({
@@ -59,14 +59,14 @@
 	             dataType:"json",
 	             data:{
 	                 openId : openId,
-	                 user_code : user_code,                       
+	                 user_tel : user_tel,                       
 	                 password : pwd                      
 	             },
 	             success:function(data){ 
 	                 if(data.code == '0'){
-	                     localStorage.user_code = user_code;
+	                     localStorage.user_tel = data.data.user_id;
 	                     
-	                     window.location='toFunction.html';                         
+	                     window.location='/wx/function.html';                         
 	                 }else{
 	                     mui.alert(data.message);
 	                     return ;
