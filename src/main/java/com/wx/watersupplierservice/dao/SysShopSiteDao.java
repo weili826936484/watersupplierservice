@@ -1,6 +1,8 @@
 package com.wx.watersupplierservice.dao;
 
+import com.wx.watersupplierservice.dto.WatersDto;
 import com.wx.watersupplierservice.po.SysShopSitePo;
+import com.wx.watersupplierservice.req.SendWatersReq;
 import com.xdf.pscommon.dao.base.BaseMapper;
 import org.springframework.stereotype.Repository;
 
@@ -27,4 +29,6 @@ public interface  SysShopSiteDao extends BaseMapper {
 	List<SysShopSitePo> selectList(SysShopSitePo record);
 
 	SysShopSitePo selectForUpdate(SysShopSitePo record);
+
+    List<WatersDto> getSendWaterList(SendWatersReq sendWatersReq);
 }
