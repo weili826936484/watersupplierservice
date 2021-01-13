@@ -1,5 +1,6 @@
 package com.wx.watersupplierservice.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -9,10 +10,13 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.wx.watersupplierservice.po.SysWeixinPo;
+import com.wx.watersupplierservice.service.WeixinService;
 import com.wx.watersupplierservice.util.Cfg;
 import com.wx.watersupplierservice.util.Const;
 import com.wx.watersupplierservice.util.ResponseUtils;
@@ -23,7 +27,8 @@ import com.wx.watersupplierservice.util.wx.WeixinUtil;
 
 @Controller
 public class LoginController {	
-	
+	@Autowired
+	private WeixinService weixinService;
 	
 	/**
      * 
@@ -51,12 +56,17 @@ public class LoginController {
             SNSUserInfo snsUserInfo = WeixinUtil.getSNSUserInfo(accessToken, openId);
             if (snsUserInfo != null) {
                 //根据openId更新 或者保存微信基本信息
+            	SysWeixinPo weixinInfo = new SysWeixinPo();
+            	weixinInfo.setOpenid(openId);
+            	weixinInfo.setNickname(snsUserInfo.getNickname());
+            	weixinInfo.setHeadimgurl(snsUserInfo.getHeadImgUrl());
+            	weixinService.saveOrUpdateWx(weixinInfo);
                 
             }
             //根据openid查询是否绑定了操作员
             JSONObject params = new JSONObject();
             params.put("openId", openId);
-            List<JSONObject> userList =  null; //sysUserDao.findUsers(params);
+            List<JSONObject> userList =  new  ArrayList<JSONObject>(); //sysUserDao.findUsers(params);
             if(userList.size() == 1) {
             	//免登陆，直接进入功能列表页面
             	JSONObject userInfo = userList.get(0);
