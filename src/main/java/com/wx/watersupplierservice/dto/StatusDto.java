@@ -1,9 +1,6 @@
 package com.wx.watersupplierservice.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 /**
  * @program: StatusDao

@@ -3,8 +3,6 @@ package com.wx.watersupplierservice.service;
 import com.wx.watersupplierservice.dto.WatersPageDto;
 import com.wx.watersupplierservice.req.SendWatersReq;
 
-import java.util.List;
-
 /**
  * @author : weili
  * @version V1.0

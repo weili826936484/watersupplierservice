@@ -3,11 +3,10 @@ package com.wx.watersupplierservice.api;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.wx.watersupplierservice.util.ResponseUtils;
 import org.json.JSONObject;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-
-import com.wx.watersupplierservice.util.ResponseUtils;
 
 
 /**
@@ -29,6 +28,6 @@ public class TokenAPI {
 	        outData.put("message",  "success");
 	        outData.put("data",  "");
 	        
-	        ResponseUtils.putJsonResponse(response, outData); 
+	        ResponseUtils.putJsonResponse(response, outData);
 	    }
 }

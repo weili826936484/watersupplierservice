@@ -26,7 +26,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class DataSourceAop {
 
     private static final String MASTER = "master";
-    private static final String[] SLAVE_DBS = {"slave1","slave2"};
+    private static final String[] SLAVE_DBS = {"slave1"};
 
     private static final String DB_MASTER_SLAVE_KEY = "DB_MASTER_SLAVE_KEY";
 

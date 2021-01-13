@@ -1,8 +1,6 @@
 package com.wx.watersupplierservice.po;
 
 
-import com.xdf.pscommon.annotation.alias.ID;
-import com.xdf.pscommon.annotation.alias.Identity;
 import com.xdf.pscommon.annotation.alias.Table;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

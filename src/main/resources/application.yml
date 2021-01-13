@@ -4,7 +4,7 @@ mybatis:
 
 defaultsql:
   datasource:
-    url: jdbc:mysql://101.200.187.135:3306/water_supplier?useSSL=false&allowMultiQueries=true
+    url: jdbc:mysql://101.200.187.135:3306/water_supplier?useSSL=false&allowMultiQueries=true&characterEncoding=utf8&characterSetResults=utf8
     username: root
     password: Marry583@&%!
     driver-class-name: com.mysql.jdbc.Driver
@@ -22,10 +22,10 @@ defaultsql:
     maxPoolPreparedStatementPerConnectionSize: 50
     removeAbandoned: true
     filters: wall,stat,slf4j
-    connectionInitSqls: set names utf8mb4;
+    connectionInitSqls: ["set names utf8mb4;"]
   slave1:
     datasource:
-      url: jdbc:mysql://101.200.187.135:3306/water_supplier?useSSL=false&allowMultiQueries=true
+      url: jdbc:mysql://101.200.187.135:3306/water_supplier?useSSL=false&allowMultiQueries=true&characterEncoding=utf8&characterSetResults=utf8
       username: root
       password: Marry583@&%!
       driver-class-name: com.mysql.jdbc.Driver
@@ -43,4 +43,9 @@ defaultsql:
       maxPoolPreparedStatementPerConnectionSize: 50
       removeAbandoned: true
       filters: wall,stat,slf4j
-      connectionInitSqls: set names utf8mb4;
+      connectionInitSqls: ["set names utf8mb4;"]
+
+spring:
+  devtools:
+    restart:
+      enabled: false

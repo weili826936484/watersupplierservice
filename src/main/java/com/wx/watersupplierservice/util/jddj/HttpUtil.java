@@ -1,4 +1,4 @@
-package com.wx.watersupplierservice.util.jddj;  
+package com.wx.watersupplierservice.util.jddj;
       
 import java.io.IOException;
 import java.net.SocketTimeoutException;

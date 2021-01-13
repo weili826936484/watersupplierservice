@@ -3,7 +3,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.wx.watersupplierservice.dao.OrderBusinessDao">
     <resultMap id="BaseResultMap" type="com.wx.watersupplierservice.po.OrderBusinessPo">
-        <id column="business_id" property="businessId"/>
+        <id column="id" property="id"/>
         <result column="order_id" property="orderId"/>
         <result column="opt_code" property="optCode"/>
         <result column="site_id" property="siteId"/>
@@ -19,7 +19,7 @@
     </sql>
 
     <sql id="Base_Column">
-        business_id,
+        id,
         order_id,
         opt_code,
         site_id,
@@ -32,8 +32,8 @@
 
     <sql id="Base_Where">
         <trim suffixOverrides="AND">
-            <if test="businessId != null">
-                AND business_id=#{businessId}
+            <if test="id != null">
+                AND id=#{id}
             </if>
             <if test="orderId != null">
                 AND order_id=#{orderId}
@@ -74,12 +74,12 @@
 
     <!-- 单条插入 -->
     <insert id="insert" parameterType="com.wx.watersupplierservice.po.OrderBusinessPo" useGeneratedKeys="true"
-            keyProperty="businessId">
+            keyProperty="id">
         insert into
         <include refid="Table_Name"/>
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="businessId != null">
-                business_id,
+            <if test="id != null">
+                id,
             </if>
             <if test="orderId != null">
                 order_id,
@@ -101,8 +101,8 @@
             </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="businessId != null">
-                #{businessId},
+            <if test="id != null">
+                #{id},
             </if>
             <if test="orderId != null">
                 #{orderId},
@@ -176,7 +176,7 @@
                 </if>
             </set>
             where
-                business_id=#{item.businessId}
+                id=#{item.id}
         </foreach>
     </update>
 

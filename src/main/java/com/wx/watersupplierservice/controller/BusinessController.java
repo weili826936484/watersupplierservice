@@ -6,16 +6,12 @@ package com.wx.watersupplierservice.controller;/**
  * @date Date : 2021年01月11日 21:19
  * @version V1.0
  */
-
 import com.wx.watersupplierservice.dto.WatersPageDto;
 import com.wx.watersupplierservice.req.SendWatersReq;
 import com.wx.watersupplierservice.resp.ObjectResults;
 import com.wx.watersupplierservice.service.BusinessService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import java.util.List;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @program: BusinessController
@@ -37,7 +33,5 @@ public class BusinessController {
     public ObjectResults<WatersPageDto> getSendWaterList(SendWatersReq sendWatersReq){
         return ObjectResults.createSuccessResult(businessService.getSendWaterList(sendWatersReq));
     }
-
-
 
 }

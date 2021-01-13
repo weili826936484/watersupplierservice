@@ -4,7 +4,7 @@
 <mapper namespace="com.wx.watersupplierservice.dao.OrderBusinessProcessDao">
     <resultMap id="BaseResultMap" type="com.wx.watersupplierservice.po.OrderBusinessProcessPo">
         <id column="process_id" property="processId"/>
-        <result column="business_id" property="businessId"/>
+        <result column="id" property="id"/>
         <result column="opt_code" property="optCode"/>
         <result column="result_info" property="resultInfo"/>
         <result column="create_by" property="createBy"/>
@@ -19,7 +19,7 @@
 
     <sql id="Base_Column">
         process_id,
-        business_id,
+        id,
         opt_code,
         result_info,
         create_by,
@@ -33,8 +33,8 @@
             <if test="processId != null">
                 AND process_id=#{processId}
             </if>
-            <if test="businessId != null">
-                AND business_id=#{businessId}
+            <if test="id != null">
+                AND id=#{id}
             </if>
             <if test="optCode != null">
                 AND opt_code=#{optCode}
@@ -76,8 +76,8 @@
             <if test="processId != null">
                 process_id,
             </if>
-            <if test="businessId != null">
-                business_id,
+            <if test="id != null">
+                id,
             </if>
             <if test="optCode != null">
                 opt_code,
@@ -96,8 +96,8 @@
             <if test="processId != null">
                 #{processId},
             </if>
-            <if test="businessId != null">
-                #{businessId},
+            <if test="id != null">
+                #{id},
             </if>
             <if test="optCode != null">
                 #{optCode},
@@ -119,7 +119,7 @@
         insert into
         <include refid="Table_Name"/>
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            business_id,
+            id,
             opt_code,
             result_info,
             create_by,
@@ -128,7 +128,7 @@
         values
         <foreach collection="list" item="item" separator=",">
             <trim prefix="(" suffix=")" suffixOverrides=",">
-                #{item.businessId},
+                #{item.id},
                 #{item.optCode},
                 #{item.resultInfo},
                 #{item.createBy},
@@ -143,8 +143,8 @@
             update
             <include refid="Table_Name"/>
             <set>
-                <if test="item.businessId != null">
-                    business_id=#{item.businessId},
+                <if test="item.id != null">
+                    id=#{item.id},
                 </if>
                 <if test="item.optCode != null">
                     opt_code=#{item.optCode},

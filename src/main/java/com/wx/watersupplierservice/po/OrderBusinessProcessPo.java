@@ -25,7 +25,7 @@ public class OrderBusinessProcessPo implements Serializable {
     @ApiModelProperty(value = "主键")
     private Integer processId;
     @ApiModelProperty(value = "业务表")
-    private Integer businessId;
+    private Integer id;
     @ApiModelProperty(value = "")
     private String optCode;
     @ApiModelProperty(value = "反馈结果信息描述")
@@ -47,12 +47,12 @@ public class OrderBusinessProcessPo implements Serializable {
         this.processId = processId;
     }
 
-    public Integer getBusinessId() {
-        return businessId;
+    public Integer getid() {
+        return id;
     }
 
-    public void setBusinessId(Integer businessId) {
-        this.businessId = businessId;
+    public void setid(Integer id) {
+        this.id = id;
     }
 
     public String getOptCode() {

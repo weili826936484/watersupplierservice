@@ -3,12 +3,11 @@ package com.wx.watersupplierservice.api;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.wx.watersupplierservice.util.ResponseUtils;
+import com.wx.watersupplierservice.util.jddj.JddjOrderUtil;
 import org.json.JSONObject;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-
-import com.wx.watersupplierservice.util.ResponseUtils;
-import com.wx.watersupplierservice.util.jddj.JddjOrderUtil;
 
 /**
  *        接收第三方消息推送
@@ -42,15 +41,13 @@ public class JddjOrderAPI {
         JSONObject orgJson = new JSONObject();
         
         // 根据单号获取订单详细信息
-        String orderInfo = JddjOrderUtil.findOrderFromJddj(orgJson,orderJson.optString("billId"));       
+        String orderInfo = JddjOrderUtil.findOrderFromJddj(orgJson,orderJson.optString("billId"));
         // 将订单信息保存到数据库
-   
-
         JSONObject expireData = new JSONObject();
         expireData.put("code", "0");
         expireData.put("message",  "success");
         expireData.put("data",  "");
-        ResponseUtils.putJsonResponse(response, expireData); 
+        ResponseUtils.putJsonResponse(response, expireData);
 	}
 	
 	/**

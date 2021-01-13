@@ -1,9 +1,8 @@
 package com.wx.watersupplierservice.util.wx;
 
 
-import org.json.JSONObject;
-
 import com.wx.watersupplierservice.util.Cfg;
+import org.json.JSONObject;
 
 
 public class WeixinUtil {

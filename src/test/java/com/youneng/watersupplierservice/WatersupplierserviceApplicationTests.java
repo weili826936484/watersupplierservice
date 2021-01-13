@@ -1,4 +1,4 @@
-package com.wx.watersupplierservice;
+package com.youneng.watersupplierservice;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
