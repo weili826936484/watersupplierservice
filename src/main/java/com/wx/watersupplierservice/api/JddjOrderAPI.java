@@ -3,9 +3,12 @@ package com.wx.watersupplierservice.api;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.wx.watersupplierservice.po.SysOrgPo;
+import com.wx.watersupplierservice.service.SysOrgService;
 import com.wx.watersupplierservice.util.ResponseUtils;
 import com.wx.watersupplierservice.util.jddj.JddjOrderUtil;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -16,7 +19,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
  */
 @Controller
 public class JddjOrderAPI {
-    
+	@Autowired
+	private SysOrgService sysOrgService;
 	/**
 	 * 京东新订单
 	 * @param request
@@ -38,10 +42,19 @@ public class JddjOrderAPI {
         JSONObject orderJson = new JSONObject(jd_param_json);
         
         //根据appkey获取商家授权基本信息 appKey,appSecret,token
-        JSONObject orgJson = new JSONObject();
+        SysOrgPo orgInfo = new SysOrgPo();
+        orgInfo.setAppKey(app_key);
+        orgInfo.setToken(token);
+        sysOrgService.findSysOrg(orgInfo);
         
         // 根据单号获取订单详细信息
-        String orderInfo = JddjOrderUtil.findOrderFromJddj(orgJson,orderJson.optString("billId"));
+        String result = JddjOrderUtil.findOrderFromJddj(orgInfo,orderJson.optString("billId"));
+        JSONObject resultJson = new JSONObject(result);
+        String data = resultJson.optString("data");
+        JSONObject dataJson = new JSONObject(data);
+        String orderResult = dataJson.optString("result");
+        JSONObject orderResultJson = new JSONObject(orderResult);
+        String resultList = orderResultJson.optString("resultList");
         // 将订单信息保存到数据库
         JSONObject expireData = new JSONObject();
         expireData.put("code", "0");

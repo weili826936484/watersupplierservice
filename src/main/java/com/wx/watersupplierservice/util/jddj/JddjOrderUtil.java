@@ -7,6 +7,8 @@ import java.util.Map;
 
 import org.json.JSONObject;
 
+import com.wx.watersupplierservice.po.SysOrgPo;
+
 /**
  * 
  * 与京东到家平台信息交互接口
@@ -24,7 +26,7 @@ public class JddjOrderUtil {
      * @param response
      * @throws Exception
      */
-    public static String findOrderFromJddj(JSONObject orgJson, String orderId) throws Exception {
+    public static String findOrderFromJddj(SysOrgPo orgInfo, String orderId) throws Exception {
 	    
     	//请求地址
     	String url = "https://openo2o.jd.com/djapi/order/es/query";
@@ -37,7 +39,7 @@ public class JddjOrderUtil {
         String jd_param_json = reqparams.toString();
         
 	    //根据单号获取订单信息  
-	    String result = HttpUtil.sendJdPostRequest(url, addJddjParam(orgJson, jd_param_json));
+	    String result = HttpUtil.sendJdPostRequest(url, addJddjParam(orgInfo, jd_param_json));
 	    
 		return result;
 	}
@@ -46,7 +48,7 @@ public class JddjOrderUtil {
      **拣货完成且商家自送
      * @throws Exception 
      */
-    public static String sendOrderSerllerDelivery(JSONObject orgJson, String orderId, String operator) throws Exception {
+    public static String sendOrderSerllerDelivery(SysOrgPo orgInfo, String orderId, String operator) throws Exception {
     	
     	//请求地址
     	String url = "https://openapi.jddj.com/djapi/bm/open/api/order/OrderSerllerDelivery";
@@ -58,7 +60,7 @@ public class JddjOrderUtil {
         String jd_param_json = reqparams.toString();
         
 	    //拣货完成且商家自送接口  商家将拣货完成状态推送给京东
-	    String result = HttpUtil.sendJdPostRequest(url, addJddjParam(orgJson, jd_param_json));
+	    String result = HttpUtil.sendJdPostRequest(url, addJddjParam(orgInfo, jd_param_json));
 	    
 		return result;
     }
@@ -67,7 +69,7 @@ public class JddjOrderUtil {
      * *商家配送完成
      * @throws Exception 
      */
-    public static String sendDeliveryEndOrder(JSONObject orgJson, String orderId, String operPin, String operTime) throws Exception {
+    public static String sendDeliveryEndOrder(SysOrgPo orgInfo, String orderId, String operPin, String operTime) throws Exception {
     	
     	//请求地址
     	String url = "https://openapi.jddj.com/djapi/ocs/deliveryEndOrder";
@@ -80,7 +82,7 @@ public class JddjOrderUtil {
         String jd_param_json = reqparams.toString();
         
 	    //拣货完成且商家自送接口  商家将配送完成状态推送给京东
-	    String result = HttpUtil.sendJdPostRequest(url, addJddjParam(orgJson, jd_param_json));
+	    String result = HttpUtil.sendJdPostRequest(url, addJddjParam(orgInfo, jd_param_json));
 	    
 		return result;
     }
@@ -89,7 +91,7 @@ public class JddjOrderUtil {
      * *商家审核用户取消申请
      * @throws Exception 
      */
-    public static String sendOrderCancelOperate(JSONObject orgJson, String orderId, Boolean isAgreed, String operator, String remark) throws Exception {
+    public static String sendOrderCancelOperate(SysOrgPo orgInfo, String orderId, Boolean isAgreed, String operator, String remark) throws Exception {
     	
     	//请求地址
     	String url = "https://openapi.jddj.com/djapi/ocs/orderCancelOperate";
@@ -103,7 +105,7 @@ public class JddjOrderUtil {
         String jd_param_json = reqparams.toString();
         
 	    //拣货完成且商家自送接口  商家将拣货完成状态推送给京东
-	    String result = HttpUtil.sendJdPostRequest(url, addJddjParam(orgJson, jd_param_json));
+	    String result = HttpUtil.sendJdPostRequest(url, addJddjParam(orgInfo, jd_param_json));
 	    
 		return result;
     }
@@ -115,12 +117,12 @@ public class JddjOrderUtil {
      * @return
      * @throws Exception
      */
-    public static Map<String, Object> addJddjParam(JSONObject orgJson, String jd_param_json ) throws Exception{
+    public static Map<String, Object> addJddjParam(SysOrgPo orgInfo, String jd_param_json ) throws Exception{
     	
     	Date now = new Date();
-		String appKey = orgJson.optString("app_key");
-		String appSecret = orgJson.optString("app_secret");
-		String token = orgJson.optString("token");
+		String appKey = orgInfo.getAppKey();
+		String appSecret = orgInfo.getAppSecret();
+		String token = orgInfo.getToken();
 	    String format = "json";
 	    String v = "1.0";	    
 	    String timestamp = sdf.format(now);
