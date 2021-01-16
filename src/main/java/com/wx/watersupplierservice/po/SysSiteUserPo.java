@@ -16,9 +16,7 @@ import java.io.Serializable;
  */
 @ApiModel
 @Table(name = "sys_site_user")
-public class SysSiteUserPo implements Serializable {
-	private static final long serialVersionUID = 1L;
-
+public class SysSiteUserPo {
     @ID
     @Identity
     @ApiModelProperty(value = "主键")

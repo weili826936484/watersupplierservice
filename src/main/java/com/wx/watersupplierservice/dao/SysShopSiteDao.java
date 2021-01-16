@@ -2,6 +2,7 @@ package com.wx.watersupplierservice.dao;
 
 import com.wx.watersupplierservice.po.SysShopSitePo;
 import com.wx.watersupplierservice.dto.WatersPageDto;
+import com.wx.watersupplierservice.pojo.SysSitePojo;
 import com.wx.watersupplierservice.req.SendWatersReq;
 import com.xdf.pscommon.dao.base.BaseMapper;
 import org.springframework.stereotype.Repository;
@@ -33,4 +34,6 @@ public interface  SysShopSiteDao extends BaseMapper {
     List<WatersPageDto.WatersDto> getSendWaterList(SendWatersReq sendWatersReq);
 
     int getSendWaterCount(SendWatersReq sendWatersReq);
+
+    List<SysSitePojo> getSiteList(Integer userId);
 }

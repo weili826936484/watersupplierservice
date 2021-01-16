@@ -132,4 +132,17 @@
         for update
     </select>
 
+    <select id="getUserShopList" resultType="com.wx.watersupplierservice.dto.UserShopDto">
+        SELECT
+            ss.shop_id AS shopId,
+            ss.shop_name AS shopName,
+            ss.platform AS platform,
+            ss.shop_code AS shopCode
+        FROM
+            sys_shop_user ssu
+            INNER JOIN sys_shop ss ON ssu.shop_id = ss.shop_id
+        WHERE
+            ssu.user_id = #{userId}
+            AND ss.shop_status = 1
+    </select>
 </mapper>

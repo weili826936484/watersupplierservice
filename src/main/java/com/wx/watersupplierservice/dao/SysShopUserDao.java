@@ -1,5 +1,6 @@
 package com.wx.watersupplierservice.dao;
 
+import com.wx.watersupplierservice.dto.UserShopDto;
 import com.wx.watersupplierservice.po.SysShopUserPo;
 import com.xdf.pscommon.dao.base.BaseMapper;
 import org.springframework.stereotype.Repository;
@@ -27,4 +28,6 @@ public interface  SysShopUserDao extends BaseMapper {
 	List<SysShopUserPo> selectList(SysShopUserPo record);
 
 	SysShopUserPo selectForUpdate(SysShopUserPo record);
+
+    List<UserShopDto> getUserShopList(Integer userId);
 }

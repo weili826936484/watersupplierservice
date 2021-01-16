@@ -14,7 +14,7 @@ import java.io.Serializable;
  */
 @ApiModel
 @Table(name = "sys_customer_shop")
-public class SysCustomerShopPo implements Serializable {
+public class SysCustomerShopPo {
 
     @ApiModelProperty(value = "消费者")
     private Integer customerId;

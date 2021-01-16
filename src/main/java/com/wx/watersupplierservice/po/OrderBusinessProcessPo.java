@@ -17,8 +17,7 @@ import java.io.Serializable;
  */
 @ApiModel
 @Table(name = "order_business_process")
-public class OrderBusinessProcessPo implements Serializable {
-	private static final long serialVersionUID = 1L;
+public class OrderBusinessProcessPo {
 
     @ID
     @Identity

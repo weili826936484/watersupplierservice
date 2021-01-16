@@ -5,6 +5,7 @@
     <resultMap id="BaseResultMap" type="com.wx.watersupplierservice.po.OrderBusinessPo">
         <id column="id" property="id"/>
         <result column="order_id" property="orderId"/>
+        <result column="platform" property="platform"/>
         <result column="opt_code" property="optCode"/>
         <result column="site_id" property="siteId"/>
         <result column="send_by" property="sendBy"/>
@@ -21,6 +22,7 @@
     <sql id="Base_Column">
         id,
         order_id,
+        platform,
         opt_code,
         site_id,
         send_by,
@@ -37,6 +39,9 @@
             </if>
             <if test="orderId != null">
                 AND order_id=#{orderId}
+            </if>
+            <if test="platform != null">
+                AND platform=#{platform}
             </if>
             <if test="optCode != null">
                 AND opt_code=#{optCode}
@@ -84,6 +89,9 @@
             <if test="orderId != null">
                 order_id,
             </if>
+            <if test="platform != null">
+                platform,
+            </if>
             <if test="optCode != null">
                 opt_code,
             </if>
@@ -106,6 +114,9 @@
             </if>
             <if test="orderId != null">
                 #{orderId},
+            </if>
+            <if test="platform != null">
+                #{platform},
             </if>
             <if test="optCode != null">
                 #{optCode},
@@ -131,6 +142,7 @@
         <include refid="Table_Name"/>
         <trim prefix="(" suffix=")" suffixOverrides=",">
             order_id,
+            platform,
             opt_code,
             site_id,
             send_by,
@@ -141,6 +153,7 @@
         <foreach collection="list" item="item" separator=",">
             <trim prefix="(" suffix=")" suffixOverrides=",">
                 #{item.orderId},
+                #{item.platform},
                 #{item.optCode},
                 #{item.siteId},
                 #{item.sendBy},
@@ -158,6 +171,9 @@
             <set>
                 <if test="item.orderId != null">
                     order_id=#{item.orderId},
+                </if>
+                <if test="item.platform != null">
+                    platform=#{item.platform},
                 </if>
                 <if test="item.optCode != null">
                     opt_code=#{item.optCode},

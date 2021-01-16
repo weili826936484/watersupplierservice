@@ -1,7 +1,10 @@
 package com.wx.watersupplierservice.dao;
 
+import com.wx.watersupplierservice.dto.OrderDto;
 import com.wx.watersupplierservice.po.WaterOrderPo;
+import com.wx.watersupplierservice.req.OrderListReq;
 import com.xdf.pscommon.dao.base.BaseMapper;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -27,4 +30,8 @@ public interface  WaterOrderDao extends BaseMapper {
 	List<WaterOrderPo> selectList(WaterOrderPo record);
 
 	WaterOrderPo selectForUpdate(WaterOrderPo record);
+
+    List<OrderDto> getOrgOrderList(OrderListReq orderListReq);
+
+    List<OrderDto> getOrgOrderListForSite(OrderListReq orderListReq);
 }

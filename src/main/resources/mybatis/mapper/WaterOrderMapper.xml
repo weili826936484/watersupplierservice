@@ -3,7 +3,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.wx.watersupplierservice.dao.WaterOrderDao">
     <resultMap id="BaseResultMap" type="com.wx.watersupplierservice.po.WaterOrderPo">
-        <id column="order_id" property="orderId"/>
+        <id column="id" property="id"/>
         <result column="platform" property="platform"/>
         <result column="orderid" property="orderid"/>
         <result column="srcinnertype" property="srcinnertype"/>
@@ -85,12 +85,82 @@
         <result column="update_time" property="updateTime"/>
     </resultMap>
 
+    <resultMap id="OrgOrderMapForSite" type="com.wx.watersupplierservice.dto.OrderDto">
+        <id column="id" property="id"/>
+        <result column="platform" property="platform"/>
+        <result column="orderId" property="orderid"/>
+        <result column="orderStatus" property="orderstatus"/>
+        <result column="orderStartTime" property="orderstarttime"/>
+        <result column="orderPreStartDeliveryTime" property="orderprestartdeliverytime"/>
+        <result column="orderPreEndDeliveryTime" property="orderpreenddeliverytime"/>
+        <result column="pickDeadline" property="pickdeadline"/>
+        <result column="orderCancelTime" property="ordercanceltime"/>
+        <result column="orderCancelRemark" property="ordercancelremark"/>
+        <result column="buyerPin" property="buyerpin"/>
+        <result column="buyerFullName" property="buyerfullname"/>
+        <result column="buyerFullAddress" property="buyerfulladdress"/>
+        <result column="buyerTelephone" property="buyertelephone"/>
+        <result column="buyerMobile" property="buyermobile"/>
+        <result column="orderPayType" property="orderpaytype"/>
+        <result column="orderTotalMoney" property="ordertotalmoney"/>
+        <result column="orderGoodsMoney" property="ordergoodsmoney"/>
+        <result column="orderBuyerRemark" property="orderid"/>
+        <result column="deliveryStationNo" property="deliverystationno"/>
+        <result column="deliveryStationNoIsv" property="deliverystationnoisv"/>
+        <result column="deliveryStationName" property="deliverystationname"/>
+        <result column="orderbuyerpayablemoney" property="orderbuyerpayablemoney"/>
+        <result column="orderBusinessId" property="orderBusinessId"/>
+        <result column="optCode" property="optCode"/>
+
+        <collection property="list" ofType="com.wx.watersupplierservice.dto.OrderDto$ProductDto">
+            <id column="productId" property="productId"/>
+            <result column="skuName" property="skuName"/>
+            <result column="skuCount" property="skuCount"/>
+        </collection>
+    </resultMap>
+
+    <resultMap id="OrgOrderMap" type="com.wx.watersupplierservice.dto.OrderDto">
+        <id column="id" property="id"/>
+        <result column="platform" property="platform"/>
+        <result column="orderId" property="orderid"/>
+        <result column="orderStatus" property="orderstatus"/>
+        <result column="orderStartTime" property="orderstarttime"/>
+        <result column="orderPreStartDeliveryTime" property="orderprestartdeliverytime"/>
+        <result column="orderPreEndDeliveryTime" property="orderpreenddeliverytime"/>
+        <result column="pickDeadline" property="pickdeadline"/>
+        <result column="orderCancelTime" property="ordercanceltime"/>
+        <result column="orderCancelRemark" property="ordercancelremark"/>
+        <result column="buyerPin" property="buyerpin"/>
+        <result column="buyerFullName" property="buyerfullname"/>
+        <result column="buyerFullAddress" property="buyerfulladdress"/>
+        <result column="buyerTelephone" property="buyertelephone"/>
+        <result column="buyerMobile" property="buyermobile"/>
+        <result column="orderPayType" property="orderpaytype"/>
+        <result column="orderTotalMoney" property="ordertotalmoney"/>
+        <result column="orderGoodsMoney" property="ordergoodsmoney"/>
+        <result column="orderBuyerRemark" property="orderid"/>
+        <result column="deliveryStationNo" property="deliverystationno"/>
+        <result column="deliveryStationNoIsv" property="deliverystationnoisv"/>
+        <result column="deliveryStationName" property="deliverystationname"/>
+        <result column="orderbuyerpayablemoney" property="orderbuyerpayablemoney"/>
+
+        <collection property="list" ofType="com.wx.watersupplierservice.dto.OrderDto$ProductDto">
+            <id column="productId" property="productId"/>
+            <result column="skuName" property="skuName"/>
+            <result column="skuCount" property="skuCount"/>
+        </collection>
+    </resultMap>
+
+
+    wop.product_id as productId,
+    wop.skuName,
+    wop.skuCount
     <sql id="Table_Name">
         water_supplier.water_order
     </sql>
 
     <sql id="Base_Column">
-        order_id,
+        id,
         platform,
         orderid,
         srcinnertype,
@@ -175,7 +245,7 @@
     <sql id="Base_Where">
         <trim suffixOverrides="AND">
             <if test="orderId != null">
-                AND order_id=#{orderId}
+                AND id=#{id}
             </if>
             <if test="platform != null">
                 AND platform=#{platform}
@@ -429,12 +499,12 @@
 
     <!-- 单条插入 -->
     <insert id="insert" parameterType="com.wx.watersupplierservice.po.WaterOrderPo" useGeneratedKeys="true"
-            keyProperty="orderId">
+            keyProperty="id">
         insert into
         <include refid="Table_Name"/>
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="orderId != null">
-                order_id,
+            <if test="id != null">
+                id,
             </if>
             <if test="platform != null">
                 platform,
@@ -669,8 +739,8 @@
             </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="orderId != null">
-                #{orderId},
+            <if test="id != null">
+                #{id},
             </if>
             <if test="platform != null">
                 #{platform},
@@ -1312,7 +1382,7 @@
                 </if>
             </set>
             where
-                order_id=#{item.orderId}
+                id=#{item.id}
         </foreach>
     </update>
 
@@ -1342,4 +1412,106 @@
         for update
     </select>
 
+    <select id="getOrgOrderList" parameterType="com.wx.watersupplierservice.req.OrderListReq" resultMap="OrgOrderMap">
+    SELECT
+        wo.id,
+        wo.orderId,
+        wo.platform,
+        wo.orderStatus,
+        wo.orderStartTime,
+        wo.pickDeadline,
+        wo.orderPreStartDeliveryTime,
+        wo.orderPreEndDeliveryTime,
+        wo.orderCancelTime,
+        wo.orderCancelRemark,
+        wo.buyerPin,
+        wo.buyerFullName,
+        wo.buyerFullAddress,
+        wo.buyerTelephone,
+        wo.buyerMobile,
+        wo.orderPayType,
+        wo.orderTotalMoney,
+        wo.orderGoodsMoney,
+        wo.orderBuyerRemark,
+        wo.deliveryStationNo,
+        wo.deliveryStationNoIsv,
+        wo.deliveryStationName,
+        wo.orderbuyerpayablemoney,
+        wop.product_id as productId,
+        wop.skuName,
+        wop.skuCount
+    FROM
+        water_order wo
+        INNER JOIN water_order_product wop ON wo.id = wop.orderId
+    WHERE
+        <if test="orderId != null">
+            wo.id = #{orderId}
+        </if>
+        <if test="orderId == null">
+            wo.org_id in
+            <foreach collection="idlist" item="id" open="(" close=")" separator=",">
+                #{id}
+            </foreach>
+        </if>
+        AND wo.orderStatus = #{status}
+        <if test="platform != null">
+            wo.platform = #{platform}
+        </if>
+        <if test="offset != null and pageSize != null">
+            LIMIT #{offset},#{pageSize}
+        </if>
+    </select>
+
+    <select id="getOrgOrderListForSite" parameterType="com.wx.watersupplierservice.req.OrderListReq" resultMap="OrgOrderMapForSite">
+        SELECT
+        wo.id,
+        wo.orderId,
+        wo.platform,
+        wo.orderStatus,
+        wo.orderStartTime,
+        wo.pickDeadline,
+        wo.orderPreStartDeliveryTime,
+        wo.orderPreEndDeliveryTime,
+        wo.orderCancelTime,
+        wo.orderCancelRemark,
+        wo.buyerPin,
+        wo.buyerFullName,
+        wo.buyerFullAddress,
+        wo.buyerTelephone,
+        wo.buyerMobile,
+        wo.orderPayType,
+        wo.orderTotalMoney,
+        wo.orderGoodsMoney,
+        wo.orderBuyerRemark,
+        wo.deliveryStationNo,
+        wo.deliveryStationNoIsv,
+        wo.deliveryStationName,
+        wo.orderbuyerpayablemoney,
+        wop.product_id as productId,
+        wop.skuName,
+        wop.skuCount,
+        ob.id AS orderBusinessId,
+        ob.opt_code as aptCode
+        FROM
+        water_order wo
+        INNER JOIN order_business ob ON ob.order_id = wo.id
+        INNER JOIN water_order_product wop ON wo.id = wop.orderId
+        WHERE
+        <if test="orderBusinessId != null">
+            ob.id = #{orderBusinessId}
+        </if>
+        <if test="orderId == null">
+            ob.site_id in
+            <foreach collection="idlist" item="id" open="(" close=")" separator=",">
+                #{id}
+            </foreach>
+        </if>
+        AND ob.opt_code = #{status}
+        <if test="platform != null">
+            wo.platform = #{platform}
+        </if>
+        <if test="offset != null and pageSize != null">
+            LIMIT #{offset},#{pageSize}
+        </if>
+    </select>
 </mapper>

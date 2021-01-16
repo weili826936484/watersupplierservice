@@ -19,6 +19,7 @@ public class OrderBusinessPo {
     @Identity
     private Integer id;
     private Integer orderId;
+    private String platform;
     private String optCode;
     private Integer siteId;
     private Integer sendBy;

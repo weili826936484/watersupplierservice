@@ -132,4 +132,19 @@
         for update
     </select>
 
+    <select id="getOrgBaseInfo" resultType="com.wx.watersupplierservice.pojo.SysOrgPojo">
+        SELECT
+            sou.org_user_id AS orgUserId,
+            sou.org_id AS orgId,
+            so.platform,
+            so.app_key AS appKey,
+            so.app_secret AS appSecret,
+            so.token,
+            so.orgCode AS orgcode
+        FROM
+            sys_org_user sou
+            INNER JOIN sys_org so ON sou.org_id = so.org_id
+        WHERE
+            sou.user_id = #{userId}
+    </select>
 </mapper>

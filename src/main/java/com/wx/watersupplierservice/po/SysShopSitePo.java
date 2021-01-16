@@ -16,7 +16,7 @@ import java.io.Serializable;
  */
 @ApiModel
 @Table(name = "sys_shop_site")
-public class SysShopSitePo implements Serializable {
+public class SysShopSitePo {
     @ID
     @Identity
     @ApiModelProperty(value = "主键")

@@ -17,7 +17,7 @@ import java.io.Serializable;
  */
 @ApiModel
 @Table(name = "sys_site")
-public class SysSitePo implements Serializable {
+public class SysSitePo {
 
     @ID
     @Identity

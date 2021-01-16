@@ -17,7 +17,7 @@ import java.io.Serializable;
  */
 @ApiModel
 @Table(name = "water_order_product")
-public class WaterOrderProductPo implements Serializable {
+public class WaterOrderProductPo {
 
     @ID
     @Identity

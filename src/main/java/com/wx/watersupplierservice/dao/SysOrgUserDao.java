@@ -1,6 +1,7 @@
 package com.wx.watersupplierservice.dao;
 
 import com.wx.watersupplierservice.po.SysOrgUserPo;
+import com.wx.watersupplierservice.pojo.SysOrgPojo;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -26,4 +27,6 @@ public interface  SysOrgUserDao {
 	List<SysOrgUserPo> selectList(SysOrgUserPo record);
 
 	SysOrgUserPo selectForUpdate(SysOrgUserPo record);
+
+    List<SysOrgPojo> getOrgBaseInfo(Integer userId);
 }

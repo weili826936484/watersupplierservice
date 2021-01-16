@@ -20,18 +20,18 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public enum PlatformStatusEnum {
-    PLANTFORM_JD("JDDJ","京东到家"),
-    PLANTFORM_MT("MEITUAN","美团"),
-    PLANTFORM_ELM("ELEME","饿了么"),
-    PLANTFORM_SJZJ("SJZJ","商家自建");
+public enum UserRoleEnum {
+    ORG_MANAGER("ORG_MANAGER","商户"),
+    SHOP_MANAGER("SHOP_MANAGER","门店"),
+    SITE_MANAGER("SITE_MANAGER","水站"),
+    SITE_SENDER("SITE_SENDER","配送员");
 
     private String code;
     private String name;
 
-    public static List<StatusDto> getPlatformStatus() {
+    public static List<StatusDto> getUserRoleStatus() {
         List<StatusDto> sorts = new ArrayList<>();
-        for (PlatformStatusEnum siteStatusEnum : PlatformStatusEnum.values()) {
+        for (UserRoleEnum siteStatusEnum : UserRoleEnum.values()) {
             StatusDto statusDto = new StatusDto();
             statusDto.setCode(siteStatusEnum.getCode());
             statusDto.setName(siteStatusEnum.getName());
@@ -41,7 +41,7 @@ public enum PlatformStatusEnum {
     }
 
     public static String getName(String code){
-        for (PlatformStatusEnum value : values()) {
+        for (UserRoleEnum value : values()) {
             if(value.code.equals(code)){
                 return value.getName();
             }
@@ -49,16 +49,21 @@ public enum PlatformStatusEnum {
         return null;
     }
 
-    public static boolean isPLANTFORM_JD(String code){
-        return PLANTFORM_JD.code.equals(code);
+    /**
+     * 判断角色
+     * @param code
+     * @return
+     */
+    public static boolean isORG_MANAGER(String code){
+        return ORG_MANAGER.code.equals(code);
     }
-    public static boolean isPLANTFORM_MT(String code){
-        return PLANTFORM_MT.code.equals(code);
+    public static boolean isSHOP_MANAGER(String code){
+        return SHOP_MANAGER.code.equals(code);
     }
-    public static boolean isPLANTFORM_ELM(String code){
-        return PLANTFORM_ELM.code.equals(code);
+    public static boolean isSITE_MANAGER(String code){
+        return SITE_MANAGER.code.equals(code);
     }
-    public static boolean isPLANTFORM_SJZJ(String code){
-        return PLANTFORM_SJZJ.code.equals(code);
+    public static boolean isSITE_SENDER(String code){
+        return SITE_SENDER.code.equals(code);
     }
 }

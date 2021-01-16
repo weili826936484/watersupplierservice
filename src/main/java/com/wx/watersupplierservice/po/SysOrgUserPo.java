@@ -16,8 +16,7 @@ import java.io.Serializable;
  */
 @ApiModel
 @Table(name = "sys_org_user")
-public class SysOrgUserPo implements Serializable {
-	private static final long serialVersionUID = 1L;
+public class SysOrgUserPo {
 
     @ID
     @Identity
