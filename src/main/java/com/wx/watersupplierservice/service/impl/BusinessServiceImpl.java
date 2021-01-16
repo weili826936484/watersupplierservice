@@ -5,12 +5,15 @@ import com.wx.watersupplierservice.dto.OrderDto;
 import com.wx.watersupplierservice.dto.UserShopDto;
 import com.wx.watersupplierservice.dto.UseroOrderPageDto;
 import com.wx.watersupplierservice.dto.WatersPageDto;
+import com.wx.watersupplierservice.enums.OPTStatusEnum;
+import com.wx.watersupplierservice.enums.OrderStatusEnum;
 import com.wx.watersupplierservice.enums.PlatformStatusEnum;
 import com.wx.watersupplierservice.enums.UserRoleEnum;
 import com.wx.watersupplierservice.exception.PublicException;
 import com.wx.watersupplierservice.po.*;
 import com.wx.watersupplierservice.pojo.SysOrgPojo;
 import com.wx.watersupplierservice.pojo.SysSitePojo;
+import com.wx.watersupplierservice.req.ChangeOrderReq;
 import com.wx.watersupplierservice.req.OrderListReq;
 import com.wx.watersupplierservice.req.SendWatersReq;
 import com.wx.watersupplierservice.service.BusinessService;
@@ -18,6 +21,8 @@ import com.xdf.pscommon.mybatis.rt.PMLO;
 import com.xdf.pscommon.mybatis.rt.QueryFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
@@ -102,6 +107,53 @@ public class BusinessServiceImpl implements BusinessService {
             throw new PublicException("用户角色异常");
         }
         return useroOrderPageDto;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
+    public void changeOrder(ChangeOrderReq changeOrder) {
+        if (Objects.isNull(changeOrder) || CollectionUtils.isEmpty(changeOrder.getOrderIds())
+                ||Objects.isNull(changeOrder.getOptCode())){
+            throw new PublicException("参数不全！");
+        }
+        if (OPTStatusEnum.isSITE_CANCEL(changeOrder.getOptCode())){
+            cancelOrder(changeOrder);
+        } else if (OPTStatusEnum.isSITE_FENDAN(changeOrder.getOptCode())){
+            splitOrder(changeOrder);
+        } else if (OPTStatusEnum.isSITE_JIEDAN(changeOrder.getOptCode())){
+            suitReceiveOrder(changeOrder);
+        } else if (OPTStatusEnum.isSITE_OK(changeOrder.getOptCode())){
+            finishOrder(changeOrder);
+        } else if (OPTStatusEnum.isSITE_REFUSE(changeOrder.getOptCode())){
+            refuseOrder(changeOrder);
+        } else {
+
+        }
+    }
+
+    private void refuseOrder(ChangeOrderReq changeOrder) {
+
+    }
+
+    private void finishOrder(ChangeOrderReq changeOrder) {
+    }
+
+    private void suitReceiveOrder(ChangeOrderReq changeOrder) {
+    }
+
+    private void splitOrder(ChangeOrderReq changeOrder) {
+        List<QueryFilter> qfs = new ArrayList<>();
+        qfs.add(new QueryFilter("id", PMLO.IN, changeOrder.getOrderIds()));
+        List<WaterOrderPo> waterOrderPos = waterOrderDao.find(WaterOrderPo.class, qfs.toArray(new QueryFilter[]{}));
+        long count = waterOrderPos.stream().filter(e -> !OrderStatusEnum.isORDER_OUT(e.getOrderstatus())).count();
+        if (count > 0l){
+            throw new PublicException("订单状态有变化，请重新选择！");
+        }
+
+    }
+
+    private void cancelOrder(ChangeOrderReq changeOrder) {
+
     }
 
     private UseroOrderPageDto getSenderOrderList(OrderListReq orderListReq, UseroOrderPageDto useroOrderPageDto) {

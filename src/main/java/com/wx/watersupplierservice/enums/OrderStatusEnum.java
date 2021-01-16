@@ -55,4 +55,8 @@ public enum OrderStatusEnum {
         }
         return null;
     }
+    public static boolean isORDER_OUT(String code){
+        return ORDER_OUT.code.equals(code);
+    }
+
 }

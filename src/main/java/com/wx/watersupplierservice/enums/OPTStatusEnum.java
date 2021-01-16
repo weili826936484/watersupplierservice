@@ -20,10 +20,11 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public enum SiteStatusEnum {
+public enum OPTStatusEnum {
     SITE_REFUSE("L21","水站拒单"),
     SITE_JIEDAN("L20","水站接单配送"),
     SITE_FENDAN("L10","分单"),
+    SITE_CANCEL("B90","订单取消"),
     SITE_OK("L90","配送完成");
 
     private String code;
@@ -31,7 +32,7 @@ public enum SiteStatusEnum {
 
     public static List<StatusDto> getSiteStatus() {
         List<StatusDto> sorts = new ArrayList<>();
-        for (SiteStatusEnum siteStatusEnum : SiteStatusEnum.values()) {
+        for (OPTStatusEnum siteStatusEnum : OPTStatusEnum.values()) {
             StatusDto statusDto = new StatusDto();
             statusDto.setCode(siteStatusEnum.getCode());
             statusDto.setName(siteStatusEnum.getName());
@@ -41,11 +42,19 @@ public enum SiteStatusEnum {
     }
 
     public static String getName(String code){
-        for (SiteStatusEnum value : values()) {
+        for (OPTStatusEnum value : values()) {
             if(value.code.equals(code)){
                 return value.getName();
             }
         }
         return null;
     }
+
+    public static boolean isSITE_REFUSE(String code){
+        return SITE_REFUSE.code.equals(code);
+    }
+    public static boolean isSITE_JIEDAN(String code){ return SITE_JIEDAN.code.equals(code); }
+    public static boolean isSITE_FENDAN(String code) { return SITE_FENDAN.code.equals(code); }
+    public static boolean isSITE_CANCEL(String code){ return SITE_CANCEL.code.equals(code); }
+    public static boolean isSITE_OK(String code){ return SITE_OK.code.equals(code); }
 }

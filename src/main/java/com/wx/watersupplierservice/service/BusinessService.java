@@ -3,8 +3,10 @@ package com.wx.watersupplierservice.service;
 import com.wx.watersupplierservice.dto.UserShopDto;
 import com.wx.watersupplierservice.dto.UseroOrderPageDto;
 import com.wx.watersupplierservice.dto.WatersPageDto;
+import com.wx.watersupplierservice.req.ChangeOrderReq;
 import com.wx.watersupplierservice.req.OrderListReq;
 import com.wx.watersupplierservice.req.SendWatersReq;
+import sun.reflect.generics.tree.VoidDescriptor;
 
 import java.util.List;
 
@@ -23,4 +25,6 @@ public interface BusinessService {
     List<UserShopDto> getUserShopList(Integer userId);
 
     UseroOrderPageDto getOrderList(OrderListReq getOrderListReq);
+
+    void changeOrder(ChangeOrderReq changeOrder);
 }

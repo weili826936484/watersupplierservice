@@ -1,7 +1,7 @@
 package com.wx.watersupplierservice.service.impl;
 
 import com.wx.watersupplierservice.dto.StatusDto;
-import com.wx.watersupplierservice.enums.SiteStatusEnum;
+import com.wx.watersupplierservice.enums.OPTStatusEnum;
 import com.wx.watersupplierservice.enums.OrderStatusEnum;
 import com.wx.watersupplierservice.enums.PlatformStatusEnum;
 import com.wx.watersupplierservice.service.StatisticsService;
@@ -28,7 +28,7 @@ public class StatisticsServiceImpl implements StatisticsService {
         } else if("order_status".equals(type)){
             return OrderStatusEnum.getOrderStatus();
         } else {
-            return SiteStatusEnum.getSiteStatus();
+            return OPTStatusEnum.getSiteStatus();
         }
     }
 }

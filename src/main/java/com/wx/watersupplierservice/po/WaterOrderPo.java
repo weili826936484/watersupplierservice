@@ -183,6 +183,7 @@ public class WaterOrderPo {
     @ApiModelProperty(value = "更新时间")
     private Date updateTime;
     private Integer orgId;
+    private Integer version;
 
 
 }

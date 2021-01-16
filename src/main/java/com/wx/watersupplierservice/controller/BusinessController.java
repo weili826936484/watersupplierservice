@@ -3,6 +3,7 @@ package com.wx.watersupplierservice.controller;
 import com.wx.watersupplierservice.dto.UserShopDto;
 import com.wx.watersupplierservice.dto.UseroOrderPageDto;
 import com.wx.watersupplierservice.dto.WatersPageDto;
+import com.wx.watersupplierservice.req.ChangeOrderReq;
 import com.wx.watersupplierservice.req.OrderListReq;
 import com.wx.watersupplierservice.req.SendWatersReq;
 import com.wx.watersupplierservice.resp.ObjectResults;
@@ -61,4 +62,9 @@ public class BusinessController {
         return ObjectResults.createSuccessResult(businessService.getOrderList(orderListReq));
     }
 
+    @PostMapping("/changeOrder")
+    public ObjectResults changeOrder(@RequestBody ChangeOrderReq changeOrder){
+        businessService.changeOrder(changeOrder);
+        return ObjectResults.createSuccessResult();
+    }
 }
