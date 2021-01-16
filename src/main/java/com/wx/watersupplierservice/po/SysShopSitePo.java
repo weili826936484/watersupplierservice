@@ -1,6 +1,7 @@
 package com.wx.watersupplierservice.po;
 
 
+import com.xdf.pscommon.annotation.alias.Column;
 import com.xdf.pscommon.annotation.alias.ID;
 import com.xdf.pscommon.annotation.alias.Identity;
 import com.xdf.pscommon.annotation.alias.Table;
@@ -18,8 +19,8 @@ import java.io.Serializable;
 @Table(name = "sys_shop_site")
 public class SysShopSitePo {
     @ID
-    @Identity
     @ApiModelProperty(value = "主键")
+    @Column(name = "shop_site_id")
     private Integer shopSiteId;
     @ApiModelProperty(value = "门店id")
     private Integer shopId;

@@ -2,6 +2,7 @@ package com.wx.watersupplierservice.po;
 
 import java.util.Date;
 
+import com.xdf.pscommon.annotation.alias.Column;
 import com.xdf.pscommon.annotation.alias.ID;
 import com.xdf.pscommon.annotation.alias.Identity;
 import com.xdf.pscommon.annotation.alias.Table;
@@ -20,8 +21,8 @@ import java.io.Serializable;
 public class WaterOrderDiscountPo {
 
     @ID
-    @Identity
     @ApiModelProperty(value = "主键")
+    @Column(name = "discount_id")
     private Integer discountId;
     @ApiModelProperty(value = "订单号")
     private String orderid;

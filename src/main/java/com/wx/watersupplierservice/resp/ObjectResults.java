@@ -18,7 +18,7 @@ public class ObjectResults<T> extends Results {
     }
 
     public ObjectResults(int status, String message, T data) {
-        this.status = status;
+        this.code = status;
         this.message = message;
         this.data = data;
     }

@@ -19,7 +19,7 @@ public abstract class Results {
     public static final String ERROR_PERMISSION_DENIED="无权限执行此操作";
 
 
-    protected Integer status;
+    protected Integer code;
     protected String message;
     //feign调用返回反序列化需要无参的构造器
     public Results() {
@@ -27,18 +27,18 @@ public abstract class Results {
 
     public boolean success(){
 
-        return OK.equals(getStatus());
+        return OK.equals(getCode());
     }
     /**
      * 业务正常
      * **/
     public static <T extends Results> boolean resultServiceOK(T results) {
-        return results != null && Objects.equals(results.getStatus(), OK) ;
+        return results != null && Objects.equals(results.getCode(), OK) ;
     }
     /**
      * 业务异常
      * **/
     public static <T extends Results> boolean resultErrorException(T results) {
-        return results != null && Objects.equals(results.getStatus(), ERROR);
+        return results != null && Objects.equals(results.getCode(), ERROR);
     }
 }

@@ -17,7 +17,6 @@ import lombok.Data;
 public class SysWeixinPo {
 
     @ID
-    @Identity
     private String openid;
     private String nickname;
     private String headimgurl;

@@ -10,7 +10,6 @@ import lombok.Data;
 public class SubjectPo {
 
     @ID
-    @Identity
     private Long id;
 
     private String subjectCode;

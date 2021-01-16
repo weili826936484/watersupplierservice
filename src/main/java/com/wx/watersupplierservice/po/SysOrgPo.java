@@ -2,6 +2,7 @@ package com.wx.watersupplierservice.po;
 
 import java.util.Date;
 
+import com.xdf.pscommon.annotation.alias.Column;
 import com.xdf.pscommon.annotation.alias.ID;
 import com.xdf.pscommon.annotation.alias.Identity;
 import com.xdf.pscommon.annotation.alias.Table;
@@ -20,8 +21,8 @@ import java.io.Serializable;
 public class SysOrgPo {
 
     @ID
-    @Identity
     @ApiModelProperty(value = "主键")
+    @Column(name = "org_Id")
     private Integer orgId;
     @ApiModelProperty(value = "商家平台")
     private String platform;

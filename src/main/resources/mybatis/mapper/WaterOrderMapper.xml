@@ -112,7 +112,7 @@
         <result column="orderBusinessId" property="orderBusinessId"/>
         <result column="optCode" property="optCode"/>
 
-        <collection property="list" ofType="com.wx.watersupplierservice.dto.OrderDto$ProductDto">
+        <collection property="productList" ofType="com.wx.watersupplierservice.dto.OrderDto$ProductDto">
             <id column="productId" property="productId"/>
             <result column="skuName" property="skuName"/>
             <result column="skuCount" property="skuCount"/>
@@ -144,17 +144,13 @@
         <result column="deliveryStationName" property="deliverystationname"/>
         <result column="orderbuyerpayablemoney" property="orderbuyerpayablemoney"/>
 
-        <collection property="list" ofType="com.wx.watersupplierservice.dto.OrderDto$ProductDto">
+        <collection property="productList" ofType="com.wx.watersupplierservice.dto.OrderDto$ProductDto">
             <id column="productId" property="productId"/>
             <result column="skuName" property="skuName"/>
             <result column="skuCount" property="skuCount"/>
         </collection>
     </resultMap>
 
-
-    wop.product_id as productId,
-    wop.skuName,
-    wop.skuCount
     <sql id="Table_Name">
         water_supplier.water_order
     </sql>
@@ -1444,18 +1440,27 @@
         water_order wo
         INNER JOIN water_order_product wop ON wo.id = wop.orderId
     WHERE
+        1=1
         <if test="orderId != null">
-            wo.id = #{orderId}
+        AND wo.id = #{orderId}
         </if>
         <if test="orderId == null">
-            wo.org_id in
-            <foreach collection="idlist" item="id" open="(" close=")" separator=",">
-                #{id}
-            </foreach>
+            <if test="shoplist != null and shoplist.size() != 0">
+                AND wo.deliveryStationNoIsv in
+                <foreach collection="shoplist" item="id" open="(" close=")" separator=",">
+                    #{id}
+                </foreach>
+            </if>
+            <if test="idlist != null and idlist.size() != 0">
+                AND wo.org_id in
+                <foreach collection="idlist" item="id" open="(" close=")" separator=",">
+                    #{id}
+                </foreach>
+            </if>
         </if>
         AND wo.orderStatus = #{status}
         <if test="platform != null">
-            wo.platform = #{platform}
+        AND wo.platform = #{platform}
         </if>
         <if test="offset != null and pageSize != null">
             LIMIT #{offset},#{pageSize}
@@ -1497,11 +1502,12 @@
         INNER JOIN order_business ob ON ob.order_id = wo.id
         INNER JOIN water_order_product wop ON wo.id = wop.orderId
         WHERE
+        1=1
         <if test="orderBusinessId != null">
-            ob.id = #{orderBusinessId}
+        AND ob.id = #{orderBusinessId}
         </if>
         <if test="orderId == null">
-            ob.site_id in
+        AND ob.site_id in
             <foreach collection="idlist" item="id" open="(" close=")" separator=",">
                 #{id}
             </foreach>

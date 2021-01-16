@@ -3,6 +3,7 @@ package com.wx.watersupplierservice.dao;
 import com.wx.watersupplierservice.dto.OrderDto;
 import com.wx.watersupplierservice.po.WaterOrderPo;
 import com.wx.watersupplierservice.req.OrderListReq;
+import com.xdf.pscommon.annotation.alias.Table;
 import com.xdf.pscommon.dao.base.BaseMapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;

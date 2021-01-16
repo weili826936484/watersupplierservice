@@ -9,7 +9,7 @@ defaultsql:
     password: Marry583@&%!
     driver-class-name: com.mysql.jdbc.Driver
     minIdle: 5
-    maxActive: 100
+    maxActive: 50
     initialSize: 10
     maxWait: 60000
     timeBetweenEvictionRunsMillis: 60000
@@ -30,7 +30,7 @@ defaultsql:
       password: Marry583@&%!
       driver-class-name: com.mysql.jdbc.Driver
       minIdle: 5
-      maxActive: 100
+      maxActive: 50
       initialSize: 10
       maxWait: 60000
       timeBetweenEvictionRunsMillis: 60000

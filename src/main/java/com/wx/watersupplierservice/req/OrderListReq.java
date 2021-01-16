@@ -34,5 +34,7 @@ public class OrderListReq {
 
     private List<Integer> idlist;
 
+    private List<String> shoplist;
+
     private Integer orderBusinessId;
 }

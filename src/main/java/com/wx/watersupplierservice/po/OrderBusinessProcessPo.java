@@ -2,11 +2,13 @@ package com.wx.watersupplierservice.po;
 
 import java.util.Date;
 
+import com.xdf.pscommon.annotation.alias.Column;
 import com.xdf.pscommon.annotation.alias.ID;
 import com.xdf.pscommon.annotation.alias.Identity;
 import com.xdf.pscommon.annotation.alias.Table;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 
 import java.io.Serializable;
 
@@ -17,14 +19,16 @@ import java.io.Serializable;
  */
 @ApiModel
 @Table(name = "order_business_process")
+@Data
 public class OrderBusinessProcessPo {
 
     @ID
-    @Identity
+    @Column(name = "process_id")
     @ApiModelProperty(value = "主键")
     private Integer processId;
     @ApiModelProperty(value = "业务表")
-    private Integer id;
+    @Column(name = "business_id")
+    private Integer businessId;
     @ApiModelProperty(value = "")
     private String optCode;
     @ApiModelProperty(value = "反馈结果信息描述")
@@ -37,70 +41,4 @@ public class OrderBusinessProcessPo {
     private Integer updateBy;
     @ApiModelProperty(value = "更新时间")
     private Date updateTime;
-
-    public Integer getProcessId() {
-        return processId;
-    }
-
-    public void setProcessId(Integer processId) {
-        this.processId = processId;
-    }
-
-    public Integer getid() {
-        return id;
-    }
-
-    public void setid(Integer id) {
-        this.id = id;
-    }
-
-    public String getOptCode() {
-        return optCode;
-    }
-
-    public void setOptCode(String optCode) {
-        this.optCode = optCode;
-    }
-
-    public String getResultInfo() {
-        return resultInfo;
-    }
-
-    public void setResultInfo(String resultInfo) {
-        this.resultInfo = resultInfo;
-    }
-
-    public Integer getCreateBy() {
-        return createBy;
-    }
-
-    public void setCreateBy(Integer createBy) {
-        this.createBy = createBy;
-    }
-
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-    public Integer getUpdateBy() {
-        return updateBy;
-    }
-
-    public void setUpdateBy(Integer updateBy) {
-        this.updateBy = updateBy;
-    }
-
-    public Date getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
-    }
-
-
 }

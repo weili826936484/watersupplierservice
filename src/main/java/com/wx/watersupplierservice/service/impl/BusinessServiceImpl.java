@@ -125,9 +125,13 @@ public class BusinessServiceImpl implements BusinessService {
         //根据商户code和平台类型查询订单
         if (PlatformStatusEnum.isPLANTFORM_JD(orderListReq.getPlatform())){
             List<QueryFilter> qfs = new ArrayList<>();
-            qfs.add(new QueryFilter("site_id", PMLO.IN, siteids));
-            if (Objects.nonNull(orderListReq.getStatus())){
-                qfs.add(new QueryFilter("opt_code", orderListReq.getStatus()));
+            if (Objects.nonNull(orderListReq.getOrderBusinessId())){
+                qfs.add(new QueryFilter("id", orderListReq.getOrderBusinessId()));
+            } else {
+                qfs.add(new QueryFilter("site_id", PMLO.IN, siteids));
+                if (Objects.nonNull(orderListReq.getStatus())){
+                    qfs.add(new QueryFilter("opt_code", orderListReq.getStatus()));
+                }
             }
             Integer count = orderBusinessDao.findCount(OrderBusinessPo.class, qfs.toArray(new QueryFilter[]{}));
             if (Objects.isNull(count) || count == 0){
@@ -165,15 +169,19 @@ public class BusinessServiceImpl implements BusinessService {
         if (CollectionUtils.isEmpty(userShopList)){
             throw new PublicException("该用户权限不足");
         }
-        List<Integer> shopids = userShopList.stream().map(UserShopDto::getShopId).collect(Collectors.toList());
+        List<String> shopids = userShopList.stream().map(UserShopDto::getShopCode).collect(Collectors.toList());
         //根据商户code和平台类型查询订单
         if (PlatformStatusEnum.isPLANTFORM_JD(orderListReq.getPlatform())){
             List<QueryFilter> qfs = new ArrayList<>();
-            qfs.add(new QueryFilter("deliveryStationNoIsv", PMLO.IN, shopids));
-            if (Objects.nonNull(orderListReq.getStatus())){
-                qfs.add(new QueryFilter("orderStatus", orderListReq.getStatus()));
+            if (Objects.nonNull(orderListReq.getOrderId())){
+                qfs.add(new QueryFilter("id", orderListReq.getOrderId()));
+            }else {
+                qfs.add(new QueryFilter("deliveryStationNoIsv", PMLO.IN, shopids));
+                if (Objects.nonNull(orderListReq.getStatus())){
+                    qfs.add(new QueryFilter("orderStatus", orderListReq.getStatus()));
+                }
             }
-            Integer count = waterOrderDao.findCount(OrderDto.class, qfs.toArray(new QueryFilter[]{}));
+            Integer count = waterOrderDao.findCount(WaterOrderPo.class, qfs.toArray(new QueryFilter[]{}));
             if (Objects.isNull(count) || count == 0){
                 useroOrderPageDto.setCount(0);
                 return useroOrderPageDto;
@@ -182,7 +190,7 @@ public class BusinessServiceImpl implements BusinessService {
             //获取订单信息
             int offset = (orderListReq.getPageIndex() - 1) * orderListReq.getPageSize();
             orderListReq.setOffset(offset);
-            orderListReq.setIdlist(shopids);
+            orderListReq.setShoplist(shopids);
             List<OrderDto> orders = waterOrderDao.getOrgOrderList(orderListReq);
             useroOrderPageDto.setList(orders);
         }else if(PlatformStatusEnum.isPLANTFORM_ELM(orderListReq.getPlatform())){
@@ -219,11 +227,15 @@ public class BusinessServiceImpl implements BusinessService {
         //根据商户code和平台类型查询订单
         if (PlatformStatusEnum.isPLANTFORM_JD(orderListReq.getPlatform())){
             List<QueryFilter> qfs = new ArrayList<>();
-            qfs.add(new QueryFilter("org_id", PMLO.IN, orgids));
-            if (Objects.nonNull(orderListReq.getStatus())){
-                qfs.add(new QueryFilter("orderStatus", orderListReq.getStatus()));
+            if (Objects.nonNull(orderListReq.getOrderId())){
+                qfs.add(new QueryFilter("id", orderListReq.getOrderId()));
+            }else {
+                qfs.add(new QueryFilter("org_id", PMLO.IN, orgids));
+                if (Objects.nonNull(orderListReq.getStatus())){
+                    qfs.add(new QueryFilter("orderStatus", orderListReq.getStatus()));
+                }
             }
-            Integer count = waterOrderDao.findCount(OrderDto.class, qfs.toArray(new QueryFilter[]{}));
+            Integer count = waterOrderDao.findCount(WaterOrderPo.class, qfs.toArray(new QueryFilter[]{}));
             if (Objects.isNull(count) || count == 0){
                 useroOrderPageDto.setCount(0);
                 return useroOrderPageDto;

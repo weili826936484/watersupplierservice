@@ -2,11 +2,13 @@ package com.wx.watersupplierservice.po;
 
 import java.util.Date;
 
+import com.xdf.pscommon.annotation.alias.Column;
 import com.xdf.pscommon.annotation.alias.ID;
 import com.xdf.pscommon.annotation.alias.Identity;
 import com.xdf.pscommon.annotation.alias.Table;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 
 import java.io.Serializable;
 
@@ -17,11 +19,12 @@ import java.io.Serializable;
  */
 @ApiModel
 @Table(name = "water_order_product")
+@Data
 public class WaterOrderProductPo {
 
     @ID
-    @Identity
     @ApiModelProperty(value = "主键")
+    @Column(name = "product_id")
     private Integer productId;
     @ApiModelProperty(value = "订单号")
     private String orderid;
@@ -69,198 +72,4 @@ public class WaterOrderProductPo {
     private String updateBy;
     @ApiModelProperty(value = "更新时间")
     private Date updateTime;
-
-    public Integer getProductId() {
-        return productId;
-    }
-
-    public void setProductId(Integer productId) {
-        this.productId = productId;
-    }
-
-    public String getOrderid() {
-        return orderid;
-    }
-
-    public void setOrderid(String orderid) {
-        this.orderid = orderid;
-    }
-
-    public String getSkuid() {
-        return skuid;
-    }
-
-    public void setSkuid(String skuid) {
-        this.skuid = skuid;
-    }
-
-    public String getSkucostumeproperty() {
-        return skucostumeproperty;
-    }
-
-    public void setSkucostumeproperty(String skucostumeproperty) {
-        this.skucostumeproperty = skucostumeproperty;
-    }
-
-    public String getAdjustid() {
-        return adjustid;
-    }
-
-    public void setAdjustid(String adjustid) {
-        this.adjustid = adjustid;
-    }
-
-    public String getSkuname() {
-        return skuname;
-    }
-
-    public void setSkuname(String skuname) {
-        this.skuname = skuname;
-    }
-
-    public String getSkuidisv() {
-        return skuidisv;
-    }
-
-    public void setSkuidisv(String skuidisv) {
-        this.skuidisv = skuidisv;
-    }
-
-    public String getSkujdprice() {
-        return skujdprice;
-    }
-
-    public void setSkujdprice(String skujdprice) {
-        this.skujdprice = skujdprice;
-    }
-
-    public String getSkucount() {
-        return skucount;
-    }
-
-    public void setSkucount(String skucount) {
-        this.skucount = skucount;
-    }
-
-    public String getAdjustmode() {
-        return adjustmode;
-    }
-
-    public void setAdjustmode(String adjustmode) {
-        this.adjustmode = adjustmode;
-    }
-
-    public String getUpccode() {
-        return upccode;
-    }
-
-    public void setUpccode(String upccode) {
-        this.upccode = upccode;
-    }
-
-    public String getSkustoreprice() {
-        return skustoreprice;
-    }
-
-    public void setSkustoreprice(String skustoreprice) {
-        this.skustoreprice = skustoreprice;
-    }
-
-    public String getSkucostprice() {
-        return skucostprice;
-    }
-
-    public void setSkucostprice(String skucostprice) {
-        this.skucostprice = skucostprice;
-    }
-
-    public String getPromotiontype() {
-        return promotiontype;
-    }
-
-    public void setPromotiontype(String promotiontype) {
-        this.promotiontype = promotiontype;
-    }
-
-    public String getSkutaxrate() {
-        return skutaxrate;
-    }
-
-    public void setSkutaxrate(String skutaxrate) {
-        this.skutaxrate = skutaxrate;
-    }
-
-    public String getPromotionid() {
-        return promotionid;
-    }
-
-    public void setPromotionid(String promotionid) {
-        this.promotionid = promotionid;
-    }
-
-    public String getRelatedskus() {
-        return relatedskus;
-    }
-
-    public void setRelatedskus(String relatedskus) {
-        this.relatedskus = relatedskus;
-    }
-
-    public String getSkuweight() {
-        return skuweight;
-    }
-
-    public void setSkuweight(String skuweight) {
-        this.skuweight = skuweight;
-    }
-
-    public String getCanteenmoney() {
-        return canteenmoney;
-    }
-
-    public void setCanteenmoney(String canteenmoney) {
-        this.canteenmoney = canteenmoney;
-    }
-
-    public String getProductextendinfomap() {
-        return productextendinfomap;
-    }
-
-    public void setProductextendinfomap(String productextendinfomap) {
-        this.productextendinfomap = productextendinfomap;
-    }
-
-    public String getCreateBy() {
-        return createBy;
-    }
-
-    public void setCreateBy(String createBy) {
-        this.createBy = createBy;
-    }
-
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-    public String getUpdateBy() {
-        return updateBy;
-    }
-
-    public void setUpdateBy(String updateBy) {
-        this.updateBy = updateBy;
-    }
-
-    public Date getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
-    }
-
-
 }

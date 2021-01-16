@@ -37,7 +37,7 @@ public class BusinessController {
             Runtime.getRuntime().availableProcessors() * 2, 60, TimeUnit.SECONDS,
             new LinkedBlockingQueue<>(1000), (r, executor) -> System.out.println("订单推送失败！"));
     @PostMapping("/getSendWaterList")
-    public ObjectResults<WatersPageDto> getSendWaterList(SendWatersReq sendWatersReq){
+    public ObjectResults<WatersPageDto> getSendWaterList(@RequestBody SendWatersReq sendWatersReq){
         return ObjectResults.createSuccessResult(businessService.getSendWaterList(sendWatersReq));
     }
 
@@ -57,8 +57,8 @@ public class BusinessController {
      * @return
      */
     @PostMapping("/getOrderList")
-    public ObjectResults<UseroOrderPageDto> getOrderList(OrderListReq getOrderListReq){
-        return ObjectResults.createSuccessResult(businessService.getOrderList(getOrderListReq));
+    public ObjectResults<UseroOrderPageDto> getOrderList(@RequestBody OrderListReq orderListReq){
+        return ObjectResults.createSuccessResult(businessService.getOrderList(orderListReq));
     }
 
 }

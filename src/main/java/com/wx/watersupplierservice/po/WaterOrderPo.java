@@ -22,7 +22,6 @@ import java.io.Serializable;
 public class WaterOrderPo {
 
     @ID
-    @Identity
     @ApiModelProperty(value = "主键")
     private Integer id;
     @ApiModelProperty(value = "订单来源平台")

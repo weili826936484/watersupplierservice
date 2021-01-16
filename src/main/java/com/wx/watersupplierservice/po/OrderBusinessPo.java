@@ -16,7 +16,6 @@ import lombok.Data;
 @Data
 public class OrderBusinessPo {
     @ID
-    @Identity
     private Integer id;
     private Integer orderId;
     private String platform;

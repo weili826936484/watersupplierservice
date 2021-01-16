@@ -36,7 +36,7 @@ public class OrderDto {
     private String optCodeName;
 
 
-    private List<ProductDto> list;
+    private List<ProductDto> productList;
     @Data
     public static class ProductDto{
         private Integer productId;

@@ -2,12 +2,14 @@ package com.wx.watersupplierservice.po;
 
 import java.util.Date;
 
+import com.xdf.pscommon.annotation.alias.Column;
 import com.xdf.pscommon.annotation.alias.ID;
 import com.xdf.pscommon.annotation.alias.Identity;
 import com.xdf.pscommon.annotation.alias.Table;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import lombok.Value;
 
 import java.io.Serializable;
 
@@ -21,9 +23,9 @@ import java.io.Serializable;
 @Data
 public class SysUserPo {
 
-    @ID
-    @Identity
     @ApiModelProperty(value = "主键")
+    @ID
+    @Column(name = "user_Id")
     private Integer userId;
     @ApiModelProperty(value = "用户名")
     private String userCode;
