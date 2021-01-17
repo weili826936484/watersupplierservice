@@ -57,6 +57,7 @@ public class BusinessServiceImpl implements BusinessService {
     @Autowired
     private SysOrgUserDao sysOrgUserDao;
 
+    @Autowired
     private OrderBusinessDao orderBusinessDao;
 
     @Override
@@ -149,7 +150,29 @@ public class BusinessServiceImpl implements BusinessService {
         if (count > 0l){
             throw new PublicException("订单状态有变化，请重新选择！");
         }
+        List<OrderBusinessPo> orderBusinessPos = new ArrayList<>();
+        //批量入business
+        waterOrderPos.forEach(po->{
+            OrderBusinessPo orderBusinessPo = new OrderBusinessPo();
+            orderBusinessPo.setOptCode(OPTStatusEnum.SITE_FENDAN.getCode());
+            orderBusinessPo.setOrderId(po.getId());
+            orderBusinessPo.setPlatform(po.getPlatform());
+            orderBusinessPo.setCreateBy(changeOrder.getUserId());
+            orderBusinessPo.setSiteId(changeOrder.getSiteId());
+            orderBusinessPos.add(orderBusinessPo);
+        });
+        int num = orderBusinessDao.insertList(orderBusinessPos);
+        if (num == 0){
+            throw new PublicException("操作失败！");
+        }
+        //如操作明细表
+        List<OrderBusinessProcessPo> orderBusinessProcessPos = new ArrayList<>();
+        orderBusinessPos.forEach(e->{
+            OrderBusinessProcessPo orderBusinessProcessPo = new OrderBusinessProcessPo();
+            orderBusinessProcessPo.setBusinessId(e.getId());
+            orderBusinessProcessPo.setCreateBy(changeOrder.getUserId());
 
+        });
     }
 
     private void cancelOrder(ChangeOrderReq changeOrder) {
@@ -167,12 +190,12 @@ public class BusinessServiceImpl implements BusinessService {
         if (CollectionUtils.isEmpty(userShopSiteList)){
             throw new PublicException("用户角色异常,该用户非水站");
         }
-        if (Objects.nonNull(orderListReq.getPlatform())){
-            userShopSiteList = userShopSiteList.stream().filter(v -> Objects.equals(v.getPlatform(), orderListReq.getPlatform())).collect(Collectors.toList());
-        }
-        if (CollectionUtils.isEmpty(userShopSiteList)){
-            throw new PublicException("该用户权限不足");
-        }
+//        if (Objects.nonNull(orderListReq.getPlatform())){
+//            userShopSiteList = userShopSiteList.stream().filter(v -> Objects.equals(v.getPlatform(), orderListReq.getPlatform())).collect(Collectors.toList());
+//        }
+//        if (CollectionUtils.isEmpty(userShopSiteList)){
+//            throw new PublicException("该用户权限不足");
+//        }
         List<Integer> siteids = userShopSiteList.stream().map(SysSitePojo::getSiteId).collect(Collectors.toList());
         //根据商户code和平台类型查询订单
         if (PlatformStatusEnum.isPLANTFORM_JD(orderListReq.getPlatform())){
@@ -185,7 +208,8 @@ public class BusinessServiceImpl implements BusinessService {
                     qfs.add(new QueryFilter("opt_code", orderListReq.getStatus()));
                 }
             }
-            Integer count = orderBusinessDao.findCount(OrderBusinessPo.class, qfs.toArray(new QueryFilter[]{}));
+            QueryFilter[] queryFilters = qfs.toArray(new QueryFilter[]{});
+            Integer count = orderBusinessDao.findCount(OrderBusinessPo.class, queryFilters);
             if (Objects.isNull(count) || count == 0){
                 useroOrderPageDto.setCount(0);
                 return useroOrderPageDto;
@@ -196,6 +220,7 @@ public class BusinessServiceImpl implements BusinessService {
             orderListReq.setOffset(offset);
             orderListReq.setIdlist(siteids);
             List<OrderDto> orders = waterOrderDao.getOrgOrderListForSite(orderListReq);
+            orders.forEach(e->e.setPlatformName(PlatformStatusEnum.getName(e.getPlatform())));
             useroOrderPageDto.setList(orders);
         }else if(PlatformStatusEnum.isPLANTFORM_ELM(orderListReq.getPlatform())){
 
@@ -244,6 +269,7 @@ public class BusinessServiceImpl implements BusinessService {
             orderListReq.setOffset(offset);
             orderListReq.setShoplist(shopids);
             List<OrderDto> orders = waterOrderDao.getOrgOrderList(orderListReq);
+            orders.forEach(e->e.setPlatformName(PlatformStatusEnum.getName(e.getPlatform())));
             useroOrderPageDto.setList(orders);
         }else if(PlatformStatusEnum.isPLANTFORM_ELM(orderListReq.getPlatform())){
 
@@ -298,6 +324,7 @@ public class BusinessServiceImpl implements BusinessService {
             orderListReq.setOffset(offset);
             orderListReq.setIdlist(orgids);
             List<OrderDto> orders = waterOrderDao.getOrgOrderList(orderListReq);
+            orders.forEach(e->e.setPlatformName(PlatformStatusEnum.getName(e.getPlatform())));
             useroOrderPageDto.setList(orders);
         }else if(PlatformStatusEnum.isPLANTFORM_ELM(orderListReq.getPlatform())){
 

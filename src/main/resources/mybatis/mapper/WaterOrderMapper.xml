@@ -104,7 +104,7 @@
         <result column="orderPayType" property="orderpaytype"/>
         <result column="orderTotalMoney" property="ordertotalmoney"/>
         <result column="orderGoodsMoney" property="ordergoodsmoney"/>
-        <result column="orderBuyerRemark" property="orderid"/>
+        <result column="orderBuyerRemark" property="orderbuyerremark"/>
         <result column="deliveryStationNo" property="deliverystationno"/>
         <result column="deliveryStationNoIsv" property="deliverystationnoisv"/>
         <result column="deliveryStationName" property="deliverystationname"/>
@@ -112,7 +112,8 @@
         <result column="orderBusinessId" property="orderBusinessId"/>
         <result column="optCode" property="optCode"/>
 
-        <collection property="productList" ofType="com.wx.watersupplierservice.dto.OrderDto$ProductDto">
+        <collection property="productList" ofType="com.wx.watersupplierservice.dto.OrderDto$ProductDto"
+                    select="getProducts" column="id" fetchType="eager">
             <id column="productId" property="productId"/>
             <result column="skuName" property="skuName"/>
             <result column="skuCount" property="skuCount"/>
@@ -138,13 +139,13 @@
         <result column="orderPayType" property="orderpaytype"/>
         <result column="orderTotalMoney" property="ordertotalmoney"/>
         <result column="orderGoodsMoney" property="ordergoodsmoney"/>
-        <result column="orderBuyerRemark" property="orderid"/>
+        <result column="orderBuyerRemark" property="orderbuyerremark"/>
         <result column="deliveryStationNo" property="deliverystationno"/>
         <result column="deliveryStationNoIsv" property="deliverystationnoisv"/>
         <result column="deliveryStationName" property="deliverystationname"/>
         <result column="orderbuyerpayablemoney" property="orderbuyerpayablemoney"/>
-
-        <collection property="productList" ofType="com.wx.watersupplierservice.dto.OrderDto$ProductDto">
+        <collection property="productList" ofType="com.wx.watersupplierservice.dto.OrderDto$ProductDto"
+                    select="getProducts" column="id" fetchType="eager" >
             <id column="productId" property="productId"/>
             <result column="skuName" property="skuName"/>
             <result column="skuCount" property="skuCount"/>
@@ -1407,6 +1408,16 @@
         <include refid="Base_Select"/>
         for update
     </select>
+    <select id="getProducts" parameterType="java.lang.Integer" resultType="com.wx.watersupplierservice.dto.OrderDto$ProductDto">
+        select
+            wop.product_id as productId,
+            wop.skuName,
+            wop.skuCount
+        from
+            water_order_product wop
+        where
+            wop.orderId = #{id}
+    </select>
 
     <select id="getOrgOrderList" parameterType="com.wx.watersupplierservice.req.OrderListReq" resultMap="OrgOrderMap">
     SELECT
@@ -1432,13 +1443,9 @@
         wo.deliveryStationNo,
         wo.deliveryStationNoIsv,
         wo.deliveryStationName,
-        wo.orderbuyerpayablemoney,
-        wop.product_id as productId,
-        wop.skuName,
-        wop.skuCount
+        wo.orderbuyerpayablemoney
     FROM
         water_order wo
-        INNER JOIN water_order_product wop ON wo.id = wop.orderId
     WHERE
         1=1
         <if test="orderId != null">
@@ -1492,15 +1499,11 @@
         wo.deliveryStationNoIsv,
         wo.deliveryStationName,
         wo.orderbuyerpayablemoney,
-        wop.product_id as productId,
-        wop.skuName,
-        wop.skuCount,
         ob.id AS orderBusinessId,
         ob.opt_code as aptCode
         FROM
         water_order wo
         INNER JOIN order_business ob ON ob.order_id = wo.id
-        INNER JOIN water_order_product wop ON wo.id = wop.orderId
         WHERE
         1=1
         <if test="orderBusinessId != null">
@@ -1514,7 +1517,7 @@
         </if>
         AND ob.opt_code = #{status}
         <if test="platform != null">
-            wo.platform = #{platform}
+        AND wo.platform = #{platform}
         </if>
         <if test="offset != null and pageSize != null">
             LIMIT #{offset},#{pageSize}

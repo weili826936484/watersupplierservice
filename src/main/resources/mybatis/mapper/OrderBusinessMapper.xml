@@ -137,28 +137,62 @@
     </insert>
 
     <!-- 批量插入 -->
-    <insert id="insertList" parameterType="java.util.List">
+    <insert id="insertList" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
         insert into
         <include refid="Table_Name"/>
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            order_id,
-            platform,
-            opt_code,
-            site_id,
-            send_by,
-            create_by,
-            update_by,
+            <if test="id != null">
+                id,
+            </if>
+            <if test="orderId != null">
+                order_id,
+            </if>
+            <if test="platform != null">
+                platform,
+            </if>
+            <if test="optCode != null">
+                opt_code,
+            </if>
+            <if test="siteId != null">
+                site_id,
+            </if>
+            <if test="sendBy != null">
+                send_by,
+            </if>
+            <if test="createBy != null">
+                create_by,
+            </if>
+            <if test="updateBy != null">
+                update_by,
+            </if>
         </trim>
         values
         <foreach collection="list" item="item" separator=",">
             <trim prefix="(" suffix=")" suffixOverrides=",">
-                #{item.orderId},
-                #{item.platform},
-                #{item.optCode},
-                #{item.siteId},
-                #{item.sendBy},
-                #{item.createBy},
-                #{item.updateBy},
+                <if test="id != null">
+                    #{id},
+                </if>
+                <if test="orderId != null">
+                    #{orderId},
+                </if>
+                <if test="platform != null">
+                    #{platform},
+                </if>
+                <if test="optCode != null">
+                    #{optCode},
+                </if>
+                <if test="siteId != null">
+                    #{siteId},
+                </if>
+                <if test="sendBy != null">
+                    #{sendBy},
+                </if>
+                <if test="createBy != null">
+                    #{createBy},
+                </if>
+                <if test="updateBy != null">
+                    #{updateBy},
+                </if>
             </trim>
         </foreach>
     </insert>

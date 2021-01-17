@@ -162,6 +162,13 @@
     </select>
 
     <select id="getSiteList" resultType="com.wx.watersupplierservice.pojo.SysSitePojo">
-
+        SELECT
+            ssu.site_user_id AS siteUserId,
+            ssu.site_id AS siteId
+        FROM
+            sys_site_user ssu
+            INNER JOIN sys_site ss ON ssu.site_id = ss.site_id
+        WHERE
+            user_id = #{userId}
     </select>
 </mapper>

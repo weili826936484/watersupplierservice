@@ -1,3 +1,5 @@
+
+
 mybatis:
   mapperLocations: classpath*:/mybatis/mapper/*.xml
   configLocation: classpath:/mybatis/mybatis-config.xml
@@ -49,3 +51,9 @@ spring:
   devtools:
     restart:
       enabled: false
+  application:
+    name: bservice
+server:
+  port: 8080
+  servlet:
+    context-path: /bservice
