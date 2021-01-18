@@ -1,0 +1,8 @@
+{
+  "properties": [
+    {
+      "name": "defaultsql.datasource.connectionInitSqls",
+      "type": "java.lang.String",
+      "description": "Description for defaultsql.datasource.connectionInitSqls."
+  }
+] }

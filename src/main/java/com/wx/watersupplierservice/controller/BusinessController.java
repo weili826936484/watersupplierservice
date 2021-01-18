@@ -37,6 +37,7 @@ public class BusinessController {
     private static final Executor executor = new ThreadPoolExecutor(Runtime.getRuntime().availableProcessors(),
             Runtime.getRuntime().availableProcessors() * 2, 60, TimeUnit.SECONDS,
             new LinkedBlockingQueue<>(1000), (r, executor) -> System.out.println("订单推送失败！"));
+
     @PostMapping("/getSendWaterList")
     public ObjectResults<WatersPageDto> getSendWaterList(@RequestBody SendWatersReq sendWatersReq){
         return ObjectResults.createSuccessResult(businessService.getSendWaterList(sendWatersReq));
@@ -62,6 +63,11 @@ public class BusinessController {
         return ObjectResults.createSuccessResult(businessService.getOrderList(orderListReq));
     }
 
+    /**
+     * 改变订单状态
+     * @param changeOrder
+     * @return
+     */
     @PostMapping("/changeOrder")
     public ObjectResults changeOrder(@RequestBody ChangeOrderReq changeOrder){
         businessService.changeOrder(changeOrder);

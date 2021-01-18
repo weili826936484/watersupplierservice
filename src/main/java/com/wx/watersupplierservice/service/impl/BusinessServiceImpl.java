@@ -19,15 +19,15 @@ import com.wx.watersupplierservice.req.SendWatersReq;
 import com.wx.watersupplierservice.service.BusinessService;
 import com.xdf.pscommon.mybatis.rt.PMLO;
 import com.xdf.pscommon.mybatis.rt.QueryFilter;
+import org.apache.commons.compress.utils.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.lang.reflect.Array;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -113,7 +113,7 @@ public class BusinessServiceImpl implements BusinessService {
     @Override
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
     public void changeOrder(ChangeOrderReq changeOrder) {
-        if (Objects.isNull(changeOrder) || CollectionUtils.isEmpty(changeOrder.getOrderIds())
+        if (Objects.isNull(changeOrder) || CollectionUtils.isEmpty(changeOrder.getOrderSiteIds())
                 ||Objects.isNull(changeOrder.getOptCode())){
             throw new PublicException("参数不全！");
         }
@@ -143,11 +143,15 @@ public class BusinessServiceImpl implements BusinessService {
     }
 
     private void splitOrder(ChangeOrderReq changeOrder) {
+        List<Map<Integer, Integer>> orderSiteIds = changeOrder.getOrderSiteIds();
+        HashSet<Integer> sets = new HashSet<>();
+        orderSiteIds.forEach(e-> sets.addAll(e.keySet()));
+        List<Integer> orders = new ArrayList(sets);
         List<QueryFilter> qfs = new ArrayList<>();
-        qfs.add(new QueryFilter("id", PMLO.IN, changeOrder.getOrderIds()));
+        qfs.add(new QueryFilter("id", PMLO.IN, orders));
         List<WaterOrderPo> waterOrderPos = waterOrderDao.find(WaterOrderPo.class, qfs.toArray(new QueryFilter[]{}));
         long count = waterOrderPos.stream().filter(e -> !OrderStatusEnum.isORDER_OUT(e.getOrderstatus())).count();
-        if (count > 0l){
+        if (count > 0L){
             throw new PublicException("订单状态有变化，请重新选择！");
         }
         List<OrderBusinessPo> orderBusinessPos = new ArrayList<>();
