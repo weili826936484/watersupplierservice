@@ -126,7 +126,7 @@ public class BusinessServiceImpl implements BusinessService {
         String preOrderStatus;
         if (OPTStatusEnum.isSITE_CANCEL(changeOrder.getOptCode())){
             orderStatus = OrderStatusEnum.ORDER_OUT.getCode();
-            preOrderStatus = OrderStatusEnum.ORDER_CANCEL_REQ.getCode();
+            preOrderStatus = OrderStatusEnum.ORDER_CANCEL_AGREE.getCode();
             cancelOrder(changeOrder,orderStatus,preOrderStatus);
         } else if (OPTStatusEnum.isSITE_FENDAN(changeOrder.getOptCode())){
             orderStatus = OrderStatusEnum.ORDER_OUT.getCode();
@@ -144,9 +144,53 @@ public class BusinessServiceImpl implements BusinessService {
             orderStatus = OrderStatusEnum.ORDER_SEND.getCode();
             preOrderStatus = OrderStatusEnum.ORDER_OUT.getCode();
             refuseOrder(changeOrder,orderStatus,preOrderStatus);
+        } else if (OPTStatusEnum.isSITE_CANCEL_RETUIRN(changeOrder.getOptCode())){
+            orderStatus = OrderStatusEnum.ORDER_OUT.getCode();
+            preOrderStatus = OrderStatusEnum.ORDER_OUT.getCode();
+            cancelReturnOrder(changeOrder,orderStatus,preOrderStatus);
+        } else if (OPTStatusEnum.isSITE_CANCEL_RETUIRN(changeOrder.getOptCode())){
+            orderStatus = OrderStatusEnum.ORDER_OUT.getCode();
+            preOrderStatus = OrderStatusEnum.ORDER_OUT.getCode();
+            cancelReturnOrder(changeOrder,orderStatus,preOrderStatus);
         } else {
             throw new PublicException("不支持当前操作！");
         }
+    }
+
+    private void cancelReturnOrder(ChangeOrderReq changeOrder, String orderStatus, String preOrderStatus) {
+        if (Objects.isNull(changeOrder.getOrderId())){
+            throw new PublicException("参数不全");
+        }
+        WaterOrderPo waterOrderPo = waterOrderDao.findById(WaterOrderPo.class, changeOrder.getOrderId());
+        if (Objects.isNull(waterOrderPo) || !orderStatus.equals(waterOrderPo.getOrderstatus())){
+            throw new PublicException("订单状态有变化，请重新选择！");
+        }
+        OrderBusinessPo orderBusinessPo = orderBusinessDao.findByOrderId(changeOrder.getOrderId());
+        if (Objects.isNull(orderBusinessPo)){
+            throw new PublicException("参数错误");
+        }
+        //如操作明细表
+        OrderBusinessProcessPo orderBusinessProcessPo = new OrderBusinessProcessPo();
+        orderBusinessProcessPo.setBusinessId(orderBusinessPo.getId());
+        orderBusinessProcessPo.setCreateBy(changeOrder.getUserId());
+        orderBusinessProcessPo.setOptCode(changeOrder.getOptCode());
+        orderBusinessProcessPo.setUpdateTime(new Date());
+        orderBusinessProcessPo.setResultInfo(changeOrder.getRemark());
+        int num = orderBusinessProcessDao.insert(orderBusinessProcessPo);
+        if (num == 0){
+            throw new PublicException("操作失败！");
+        }
+        orderBusinessPo.setUpdateBy(changeOrder.getUserId());
+        orderBusinessPo.setUpdateTime(new Date());
+        orderBusinessPo.setOptCode(changeOrder.getOptCode());
+        orderBusinessDao.update(orderBusinessPo);
+        int index = waterOrderDao.updateStatusById(waterOrderPo.getId(),preOrderStatus,waterOrderPo.getVersion(),changeOrder.getUserId());
+        if (index == 0 ){
+            throw new PublicException("选中订单状态有变化，请重新选择");
+        }
+
+        //todo 向京东推送驳回
+
     }
 
     private void refuseOrder(ChangeOrderReq changeOrder, String orderStatus, String preOrderStatus) {
@@ -370,7 +414,7 @@ public class BusinessServiceImpl implements BusinessService {
         if (index == 0 ){
             throw new PublicException("选中订单状态有变化，请重新选择");
         }
-        //todo 向京东推送
+        //todo 向京东推送同意取消
 
     }
 

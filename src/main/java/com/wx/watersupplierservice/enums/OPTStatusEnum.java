@@ -59,4 +59,5 @@ public enum OPTStatusEnum {
     public static boolean isSITE_FENDAN(String code) { return SITE_FENDAN.code.equals(code); }
     public static boolean isSITE_CANCEL(String code){ return SITE_CANCEL.code.equals(code); }
     public static boolean isSITE_OK(String code){ return SITE_OK.code.equals(code); }
+    public static boolean isSITE_CANCEL_RETUIRN(String code){ return SITE_CANCEL_RETUIRN.code.equals(code); }
 }
