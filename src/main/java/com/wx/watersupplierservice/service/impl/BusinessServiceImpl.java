@@ -148,10 +148,6 @@ public class BusinessServiceImpl implements BusinessService {
             orderStatus = OrderStatusEnum.ORDER_OUT.getCode();
             preOrderStatus = OrderStatusEnum.ORDER_OUT.getCode();
             cancelReturnOrder(changeOrder,orderStatus,preOrderStatus);
-        } else if (OPTStatusEnum.isSITE_CANCEL_RETUIRN(changeOrder.getOptCode())){
-            orderStatus = OrderStatusEnum.ORDER_OUT.getCode();
-            preOrderStatus = OrderStatusEnum.ORDER_OUT.getCode();
-            cancelReturnOrder(changeOrder,orderStatus,preOrderStatus);
         } else {
             throw new PublicException("不支持当前操作！");
         }
