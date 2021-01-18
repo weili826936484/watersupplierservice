@@ -26,7 +26,7 @@ public enum OPTStatusEnum {
     SITE_FENDAN("L10","分单"),
     SITE_CANCEL_REQ("B91","订单取消申请"),
     SITE_CANCEL_RETUIRN("B92","驳回取消申请"),
-    SITE_CANCEL("B90","订单取消/商家同意取消申请"),
+    SITE_CANCEL("B93","订单取消/商家同意取消申请"),
     SITE_OK("L90","配送完成");
 
     private String code;
