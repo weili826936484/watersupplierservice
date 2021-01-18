@@ -1523,4 +1523,15 @@
             LIMIT #{offset},#{pageSize}
         </if>
     </select>
+
+    <update id="updateStatusById">
+        UPDATE orderstatus
+        SET orderstatus = #{code},
+         version = #{version}+ 1,
+         update_by = #{userId},
+         update_time = now()
+        WHERE
+            id = #{id}
+        AND version = #{version}
+    </update>
 </mapper>

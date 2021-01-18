@@ -8,10 +8,20 @@ import java.util.Map;
 @Data
 public class ChangeOrderReq {
     /**
-     * key为orderid value为水站id
+     * key为orderid value为水站id 分单才传
      */
-    private List<Map<Integer,Integer>> orderSiteIds;
+    private List<OrderSite> orderSiteList;
     private String optCode;
     private String remark;
     private Integer userId;
+    /**
+     * 对单个订单的操作
+     */
+    private Integer orderId;
+
+    @Data
+    public static class OrderSite{
+        private Integer orderId;
+        private Integer siteId;
+    }
 }

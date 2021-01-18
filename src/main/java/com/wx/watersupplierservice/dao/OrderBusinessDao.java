@@ -27,4 +27,6 @@ public interface  OrderBusinessDao extends BaseMapper {
 	List<OrderBusinessPo> selectList(OrderBusinessPo record);
 
 	OrderBusinessPo selectForUpdate(OrderBusinessPo record);
+
+    OrderBusinessPo findByOrderId(Integer orderId);
 }

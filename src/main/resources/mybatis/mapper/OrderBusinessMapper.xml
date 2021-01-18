@@ -170,28 +170,28 @@
         <foreach collection="list" item="item" separator=",">
             <trim prefix="(" suffix=")" suffixOverrides=",">
                 <if test="id != null">
-                    #{id},
+                    #{item.id},
                 </if>
                 <if test="orderId != null">
-                    #{orderId},
+                    #{item.orderId},
                 </if>
                 <if test="platform != null">
-                    #{platform},
+                    #{item.platform},
                 </if>
                 <if test="optCode != null">
-                    #{optCode},
+                    #{item.optCode},
                 </if>
                 <if test="siteId != null">
-                    #{siteId},
+                    #{item.siteId},
                 </if>
                 <if test="sendBy != null">
-                    #{sendBy},
+                    #{item.sendBy},
                 </if>
                 <if test="createBy != null">
-                    #{createBy},
+                    #{item.createBy},
                 </if>
                 <if test="updateBy != null">
-                    #{updateBy},
+                    #{item.updateBy},
                 </if>
             </trim>
         </foreach>
@@ -256,4 +256,22 @@
         for update
     </select>
 
+    <select id="findByOrderId" resultType="com.wx.watersupplierservice.po.OrderBusinessPo">
+        SELECT
+            id,
+            order_id as orderId,
+            platform,
+            opt_code as optCode,
+            site_id as siteId,
+            send_by as sendBy,
+            create_by as createBy,
+            create_time as createTime,
+            update_by as updateBy,
+            update_time as updateTime
+        FROM
+            order_business
+        WHERE
+            order_id = #{orderId}
+        LIMIT 1
+    </select>
 </mapper>

@@ -254,4 +254,23 @@
         for update
     </select>
 
+    <select id="checkExists" resultType="com.wx.watersupplierservice.po.SysCustomerPo">
+        SELECT
+            customer_id AS customerId,
+            customer_name AS customerName,
+            customer_tel AS customerTel,
+            customer_address AS customerAddress,
+            consume_count AS consumeCount,
+            consume_money AS consumeMoney,
+            platform_source AS platformSource,
+            platform_userid AS platformUserid,
+            create_by AS createBy,
+            update_by AS updateBy
+        FROM
+            sys_customer
+        WHERE
+            platform_userId = #{buyerpin}
+        AND platform_source = #{platform}
+        LIMIT 1
+    </select>
 </mapper>

@@ -29,7 +29,6 @@ public class OrderBusinessProcessPo {
     @ApiModelProperty(value = "业务表")
     @Column(name = "business_id")
     private Integer businessId;
-    @ApiModelProperty(value = "")
     private String optCode;
     @ApiModelProperty(value = "反馈结果信息描述")
     private String resultInfo;
