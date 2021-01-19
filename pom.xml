@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.wx</groupId>
-    <artifactId>watersupplierservice</artifactId>
+    <artifactId>bservice</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>bservice</name>
     <description>bservice</description>
