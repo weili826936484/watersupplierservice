@@ -23,9 +23,7 @@ import java.util.List;
 public enum OrderStatusEnum {
     ORDER_LOCK("20010","订单锁定"),
     ORDER_CANCEL_REQ("20030","订单取消申请"),
-    ORDER_CANCEL_AGREE("20031","商家同意取消申请"),
-    ORDER_CANCEL_RETURN("20032","商家驳回取消申请"),
-    ORDER_CANCELED("20030","订单取消"),
+    ORDER_CANCELED("20020","订单取消"),
     ORDER_NOT_PAY("20040","超时未支付系统取消"),
     ORDER_WAIT_PAY("31000","等待付款"),
     ORDER_PAY("31020","已付款"),

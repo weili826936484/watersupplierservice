@@ -126,7 +126,7 @@ public class BusinessServiceImpl implements BusinessService {
         String preOrderStatus;
         if (OPTStatusEnum.isSITE_CANCEL(changeOrder.getOptCode())){
             orderStatus = OrderStatusEnum.ORDER_OUT.getCode();
-            preOrderStatus = OrderStatusEnum.ORDER_CANCEL_AGREE.getCode();
+            preOrderStatus = OrderStatusEnum.ORDER_CANCELED.getCode();
             cancelOrder(changeOrder,orderStatus,preOrderStatus);
         } else if (OPTStatusEnum.isSITE_FENDAN(changeOrder.getOptCode())){
             orderStatus = OrderStatusEnum.ORDER_OUT.getCode();
