@@ -1525,8 +1525,8 @@
     </select>
 
     <update id="updateStatusById">
-        UPDATE orderstatus
-        SET orderstatus = #{code},
+        UPDATE water_order
+        SET orderStatus = #{code},
          version = #{version}+ 1,
          update_by = #{userId},
          update_time = now()

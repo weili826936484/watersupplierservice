@@ -166,20 +166,20 @@ public class BusinessServiceImpl implements BusinessService {
             throw new PublicException("参数错误");
         }
         //如操作明细表
-        OrderBusinessProcessPo orderBusinessProcessPo = new OrderBusinessProcessPo();
-        orderBusinessProcessPo.setBusinessId(orderBusinessPo.getId());
-        orderBusinessProcessPo.setCreateBy(changeOrder.getUserId());
-        orderBusinessProcessPo.setOptCode(changeOrder.getOptCode());
-        orderBusinessProcessPo.setUpdateTime(new Date());
-        orderBusinessProcessPo.setResultInfo(changeOrder.getRemark());
-        int num = orderBusinessProcessDao.insert(orderBusinessProcessPo);
-        if (num == 0){
-            throw new PublicException("操作失败！");
-        }
-        orderBusinessPo.setUpdateBy(changeOrder.getUserId());
-        orderBusinessPo.setUpdateTime(new Date());
-        orderBusinessPo.setOptCode(changeOrder.getOptCode());
-        orderBusinessDao.update(orderBusinessPo);
+//        OrderBusinessProcessPo orderBusinessProcessPo = new OrderBusinessProcessPo();
+//        orderBusinessProcessPo.setBusinessId(orderBusinessPo.getId());
+//        orderBusinessProcessPo.setCreateBy(changeOrder.getUserId());
+//        orderBusinessProcessPo.setOptCode(changeOrder.getOptCode());
+//        orderBusinessProcessPo.setUpdateTime(new Date());
+//        orderBusinessProcessPo.setResultInfo(changeOrder.getRemark());
+//        int num = orderBusinessProcessDao.insert(orderBusinessProcessPo);
+//        if (num == 0){
+//            throw new PublicException("操作失败！");
+//        }
+//        orderBusinessPo.setUpdateBy(changeOrder.getUserId());
+//        orderBusinessPo.setUpdateTime(new Date());
+//        orderBusinessPo.setOptCode(changeOrder.getOptCode());
+//        orderBusinessDao.update(orderBusinessPo);
         int index = waterOrderDao.updateStatusById(waterOrderPo.getId(),preOrderStatus,waterOrderPo.getVersion(),changeOrder.getUserId());
         if (index == 0 ){
             throw new PublicException("选中订单状态有变化，请重新选择");
@@ -509,14 +509,13 @@ public class BusinessServiceImpl implements BusinessService {
 
             List<String> customs = orders.stream().map(OrderDto::getBuyerpin).collect(Collectors.toList());
             List<QueryFilter> qfs2 = new ArrayList<>();
-            qfs2.add(new QueryFilter("platformUserid",PMLO.IN, customs));
+            qfs2.add(new QueryFilter("platform_userId",PMLO.IN, customs));
             List<SysCustomerPo> sysCustomerPos = sysCustomerDao.find(SysCustomerPo.class, qfs2.toArray(new QueryFilter[]{}));
             if (sysCustomerPos == null || sysCustomerPos.isEmpty()){
                 orders.forEach(e->e.setBatchSplitStatus(-1));
             }else {
                 Map<String, List<SysCustomerPo>> collect = sysCustomerPos.stream().collect(Collectors.groupingBy(SysCustomerPo::getPlatformUserid));
                 orders.forEach(e->{
-                    e.setPlatformName(PlatformStatusEnum.getName(e.getPlatform()));
                     //根据id和地址获取
                     if (collect.containsKey(e.getBuyerpin())){
                         List<SysCustomerPo> sysCustomerPos1 = collect.get(e.getBuyerpin());
@@ -538,7 +537,7 @@ public class BusinessServiceImpl implements BusinessService {
                     }
                 });
             }
-
+            orders.forEach(e->e.setPlatformName(PlatformStatusEnum.getName(e.getPlatform())));
             useroOrderPageDto.setList(orders);
         }else if(PlatformStatusEnum.isPLANTFORM_ELM(orderListReq.getPlatform())){
 
@@ -595,14 +594,13 @@ public class BusinessServiceImpl implements BusinessService {
             List<OrderDto> orders = waterOrderDao.getOrgOrderList(orderListReq);
             List<String> customs = orders.stream().map(OrderDto::getBuyerpin).collect(Collectors.toList());
             List<QueryFilter> qfs2 = new ArrayList<>();
-            qfs2.add(new QueryFilter("platformUserid",PMLO.IN, customs));
+            qfs2.add(new QueryFilter("platform_userId",PMLO.IN, customs));
             List<SysCustomerPo> sysCustomerPos = sysCustomerDao.find(SysCustomerPo.class, qfs2.toArray(new QueryFilter[]{}));
             if (sysCustomerPos == null || sysCustomerPos.isEmpty()){
                 orders.forEach(e->e.setBatchSplitStatus(-1));
             }else {
                 Map<String, List<SysCustomerPo>> collect = sysCustomerPos.stream().collect(Collectors.groupingBy(SysCustomerPo::getPlatformUserid));
                 orders.forEach(e->{
-                    e.setPlatformName(PlatformStatusEnum.getName(e.getPlatform()));
                     //根据id和地址获取
                     if (collect.containsKey(e.getBuyerpin())){
                         List<SysCustomerPo> sysCustomerPos1 = collect.get(e.getBuyerpin());
@@ -624,6 +622,7 @@ public class BusinessServiceImpl implements BusinessService {
                     }
                 });
             }
+            orders.forEach(e->e.setPlatformName(PlatformStatusEnum.getName(e.getPlatform())));
             useroOrderPageDto.setList(orders);
         }else if(PlatformStatusEnum.isPLANTFORM_ELM(orderListReq.getPlatform())){
 

@@ -2,6 +2,7 @@ package com.wx.watersupplierservice.dao;
 
 import com.wx.watersupplierservice.po.OrderBusinessPo;
 import com.xdf.pscommon.dao.base.BaseMapper;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

@@ -141,58 +141,24 @@
         insert into
         <include refid="Table_Name"/>
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="id != null">
-                id,
-            </if>
-            <if test="orderId != null">
                 order_id,
-            </if>
-            <if test="platform != null">
                 platform,
-            </if>
-            <if test="optCode != null">
                 opt_code,
-            </if>
-            <if test="siteId != null">
                 site_id,
-            </if>
-            <if test="sendBy != null">
                 send_by,
-            </if>
-            <if test="createBy != null">
                 create_by,
-            </if>
-            <if test="updateBy != null">
                 update_by,
-            </if>
         </trim>
         values
         <foreach collection="list" item="item" separator=",">
             <trim prefix="(" suffix=")" suffixOverrides=",">
-                <if test="id != null">
-                    #{item.id},
-                </if>
-                <if test="orderId != null">
-                    #{item.orderId},
-                </if>
-                <if test="platform != null">
-                    #{item.platform},
-                </if>
-                <if test="optCode != null">
-                    #{item.optCode},
-                </if>
-                <if test="siteId != null">
-                    #{item.siteId},
-                </if>
-                <if test="sendBy != null">
-                    #{item.sendBy},
-                </if>
-                <if test="createBy != null">
-                    #{item.createBy},
-                </if>
-                <if test="updateBy != null">
-                    #{item.updateBy},
-                </if>
+                #{item.orderId},
+                #{item.platform},
+                #{item.optCode},
+                #{item.siteId},
+                #{item.sendBy},
+                #{item.createBy},
+                #{item.updateBy},
             </trim>
         </foreach>
     </insert>

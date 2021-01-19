@@ -31,6 +31,7 @@ public class SysCustomerPo {
     private Integer consumeCount;
     private Long consumeMoney;
     private String platformSource;
+    @Column(name = "platform_userId")
     private String platformUserid;
     private String createBy;
     private Date createTime;

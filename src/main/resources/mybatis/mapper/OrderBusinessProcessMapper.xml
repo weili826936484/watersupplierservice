@@ -119,46 +119,20 @@
         insert into
         <include refid="Table_Name"/>
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="processId != null">
-                process_id,
-            </if>
-            <if test="businessId != null">
                 business_id,
-            </if>
-            <if test="optCode != null">
                 opt_code,
-            </if>
-            <if test="resultInfo != null">
                 result_info,
-            </if>
-            <if test="createBy != null">
                 create_by,
-            </if>
-            <if test="updateBy != null">
                 update_by,
-            </if>
         </trim>
         values
         <foreach collection="list" item="item" separator=",">
             <trim prefix="(" suffix=")" suffixOverrides=",">
-                <if test="processId != null">
-                    #{item.processId},
-                </if>
-                <if test="businessId != null">
-                    #{item.businessId},
-                </if>
-                <if test="optCode != null">
-                    #{item.optCode},
-                </if>
-                <if test="resultInfo != null">
-                    #{item.resultInfo},
-                </if>
-                <if test="createBy != null">
-                    #{item.createBy},
-                </if>
-                <if test="updateBy != null">
-                    #{item.updateBy},
-                </if>
+                #{item.businessId},
+                #{item.optCode},
+                #{item.resultInfo},
+                #{item.createBy},
+                #{item.updateBy},
             </trim>
         </foreach>
     </insert>
