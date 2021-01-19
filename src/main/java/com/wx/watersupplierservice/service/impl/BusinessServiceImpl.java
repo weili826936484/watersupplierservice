@@ -560,6 +560,9 @@ public class BusinessServiceImpl implements BusinessService {
             orderListReq.setIdlist(orgids);
             List<OrderDto> orders = waterOrderDao.getOrgOrderList(orderListReq);
             orders.forEach(e->e.setPlatformName(PlatformStatusEnum.getName(e.getPlatform())));
+            //获取改用户前两次订单信息
+            List<String> customs = orders.stream().map(OrderDto::getBuyerpin).collect(Collectors.toList());
+            //waterOrderDao.getOrgOrderList()
             useroOrderPageDto.setList(orders);
         }else if(PlatformStatusEnum.isPLANTFORM_ELM(orderListReq.getPlatform())){
 

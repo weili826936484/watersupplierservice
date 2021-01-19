@@ -1,6 +1,7 @@
 package com.wx.watersupplierservice.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.wx.watersupplierservice.req.ChangeOrderReq;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -50,10 +51,21 @@ public class OrderDto {
 
 
     private List<ProductDto> productList;
+
+    private List<OrderSiteBefor> orderSiteBeforList;
+
     @Data
     public static class ProductDto{
         private Integer productId;
         private String skuName;
         private String skuCount;
+    }
+
+    @Data
+    public static class OrderSiteBefor{
+        private Integer orderId;
+        private Integer siteId;
+        private String siteName;
+        private String address;
     }
 }
