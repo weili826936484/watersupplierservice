@@ -1534,4 +1534,23 @@
             id = #{id}
         AND version = #{version}
     </update>
+
+    <select id="getOrderSiteBeforsList" resultType="com.wx.watersupplierservice.dto.OrderDto$OrderSiteBefor">
+        SELECT
+            wo.id AS orderId,
+            ob.site_id AS siteId,
+            ss.site_name AS siteName,
+            wo.buyerFullAddress AS address
+        FROM
+            water_order wo
+        INNER JOIN order_business ob ON wo.id = ob.order_id
+        INNER JOIN sys_site ss ON ob.site_id = ss.site_id
+        WHERE
+            buyerPin = #{custom}
+        AND orderStatus = '33060'
+        AND ss.site_status = '1'
+        ORDER BY
+            wo.create_time DESC
+        LIMIT 1
+    </select>
 </mapper>

@@ -262,10 +262,12 @@ public class BusinessServiceImpl implements BusinessService {
             sysCustomerPo.setConsumeCount(1);
             sysCustomerPo.setConsumeMoney(Long.parseLong(waterOrderPo.getOrderbuyerpayablemoney()));
             sysCustomerPo.setCustomerName(waterOrderPo.getBuyerfullname());
+            sysCustomerPo.setCustomerAddress(waterOrderPo.getBuyerfulladdress());
             sysCustomerDao.insert(sysCustomerPo);
         } else {
             sysCustomerPo.setConsumeCount(sysCustomerPo.getConsumeCount()+1);
             sysCustomerPo.setConsumeMoney(sysCustomerPo.getConsumeMoney()+Long.parseLong(waterOrderPo.getOrderbuyerpayablemoney()));
+            sysCustomerPo.setCustomerName(waterOrderPo.getBuyerfullname());
             sysCustomerDao.update(sysCustomerPo);
         }
         //for循环更新order表
@@ -504,7 +506,39 @@ public class BusinessServiceImpl implements BusinessService {
             orderListReq.setOffset(offset);
             orderListReq.setShoplist(shopids);
             List<OrderDto> orders = waterOrderDao.getOrgOrderList(orderListReq);
-            orders.forEach(e->e.setPlatformName(PlatformStatusEnum.getName(e.getPlatform())));
+
+            List<String> customs = orders.stream().map(OrderDto::getBuyerpin).collect(Collectors.toList());
+            List<QueryFilter> qfs2 = new ArrayList<>();
+            qfs2.add(new QueryFilter("platformUserid",PMLO.IN, customs));
+            List<SysCustomerPo> sysCustomerPos = sysCustomerDao.find(SysCustomerPo.class, qfs2.toArray(new QueryFilter[]{}));
+            if (sysCustomerPos == null || sysCustomerPos.isEmpty()){
+                orders.forEach(e->e.setBatchSplitStatus(-1));
+            }else {
+                Map<String, List<SysCustomerPo>> collect = sysCustomerPos.stream().collect(Collectors.groupingBy(SysCustomerPo::getPlatformUserid));
+                orders.forEach(e->{
+                    e.setPlatformName(PlatformStatusEnum.getName(e.getPlatform()));
+                    //根据id和地址获取
+                    if (collect.containsKey(e.getBuyerpin())){
+                        List<SysCustomerPo> sysCustomerPos1 = collect.get(e.getBuyerpin());
+                        SysCustomerPo sysCustomerPo = sysCustomerPos1.get(0);
+                        if (e.getBuyerfulladdress().equals(sysCustomerPo.getCustomerAddress())){
+                            e.setBatchSplitStatus(1);
+                        } else {
+                            e.setBatchSplitStatus(-1);
+                        }
+                    } else {
+                        e.setBatchSplitStatus(-1);
+                    }
+                    //获取改用户前两次订单信息
+                    List<OrderDto.OrderSiteBefor> orderSiteBefors = waterOrderDao.getOrderSiteBeforsList(e.getBuyerpin());
+                    if (orderSiteBefors == null || orderSiteBefors.isEmpty()){
+                        e.setBatchSplitStatus(-1);
+                    }else {
+                        e.setOrderSiteBeforList(orderSiteBefors);
+                    }
+                });
+            }
+
             useroOrderPageDto.setList(orders);
         }else if(PlatformStatusEnum.isPLANTFORM_ELM(orderListReq.getPlatform())){
 
@@ -559,10 +593,37 @@ public class BusinessServiceImpl implements BusinessService {
             orderListReq.setOffset(offset);
             orderListReq.setIdlist(orgids);
             List<OrderDto> orders = waterOrderDao.getOrgOrderList(orderListReq);
-            orders.forEach(e->e.setPlatformName(PlatformStatusEnum.getName(e.getPlatform())));
-            //获取改用户前两次订单信息
             List<String> customs = orders.stream().map(OrderDto::getBuyerpin).collect(Collectors.toList());
-            //waterOrderDao.getOrgOrderList()
+            List<QueryFilter> qfs2 = new ArrayList<>();
+            qfs2.add(new QueryFilter("platformUserid",PMLO.IN, customs));
+            List<SysCustomerPo> sysCustomerPos = sysCustomerDao.find(SysCustomerPo.class, qfs2.toArray(new QueryFilter[]{}));
+            if (sysCustomerPos == null || sysCustomerPos.isEmpty()){
+                orders.forEach(e->e.setBatchSplitStatus(-1));
+            }else {
+                Map<String, List<SysCustomerPo>> collect = sysCustomerPos.stream().collect(Collectors.groupingBy(SysCustomerPo::getPlatformUserid));
+                orders.forEach(e->{
+                    e.setPlatformName(PlatformStatusEnum.getName(e.getPlatform()));
+                    //根据id和地址获取
+                    if (collect.containsKey(e.getBuyerpin())){
+                        List<SysCustomerPo> sysCustomerPos1 = collect.get(e.getBuyerpin());
+                        SysCustomerPo sysCustomerPo = sysCustomerPos1.get(0);
+                        if (e.getBuyerfulladdress().equals(sysCustomerPo.getCustomerAddress())){
+                            e.setBatchSplitStatus(1);
+                        } else {
+                            e.setBatchSplitStatus(-1);
+                        }
+                    } else {
+                        e.setBatchSplitStatus(-1);
+                    }
+                    //获取改用户前两次订单信息
+                    List<OrderDto.OrderSiteBefor> orderSiteBefors = waterOrderDao.getOrderSiteBeforsList(e.getBuyerpin());
+                    if (orderSiteBefors == null || orderSiteBefors.isEmpty()){
+                        e.setBatchSplitStatus(-1);
+                    }else {
+                        e.setOrderSiteBeforList(orderSiteBefors);
+                    }
+                });
+            }
             useroOrderPageDto.setList(orders);
         }else if(PlatformStatusEnum.isPLANTFORM_ELM(orderListReq.getPlatform())){
 
