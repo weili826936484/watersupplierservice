@@ -1465,13 +1465,34 @@
                 </foreach>
             </if>
         </if>
-        AND wo.orderStatus = #{status}
-        <if test="platform != null">
-        AND wo.platform = #{platform}
+        <if test="status != null">
+            AND wo.orderStatus = #{status}
+        </if>
+        <if test="searchAddress != null and searchAddress != ''">
+            AND wo.buyerFullAddress = #{searchAddress}
+        </if>
+        <if test="searchName != null and searchName != ''">
+            AND wo.buyerFullName = #{searchName}
+        </if>
+        <if test="platforms != null and platforms.size() != 0">
+            AND wo.platform in
+            <foreach collection="platforms" item="platform" open="(" close=")" separator=",">
+                #{platform}
+            </foreach>
+        </if>
+        <if test="startTime != null and endTime != null">
+            AND wo.create_time BETWEEN #{startTime} AND #{endTime}
+        </if>
+        <if test="startTime != null and endTime == null">
+            AND #{endTime} >= wo.create_time
+        </if>
+        <if test="startTime == null and endTime != null">
+            AND wo.create_time >= #{startTime}
         </if>
         <if test="offset != null and pageSize != null">
             LIMIT #{offset},#{pageSize}
         </if>
+
     </select>
 
     <select id="getOrgOrderListForSite" parameterType="com.wx.watersupplierservice.req.OrderListReq" resultMap="OrgOrderMapForSite">
@@ -1515,9 +1536,29 @@
                 #{id}
             </foreach>
         </if>
-        AND ob.opt_code = #{status}
-        <if test="platform != null">
-        AND wo.platform = #{platform}
+        <if test="searchAddress != null and searchAddress != ''">
+            AND wo.buyerFullAddress = #{searchAddress}
+        </if>
+        <if test="searchName != null and searchName != ''">
+            AND wo.buyerFullName = #{searchName}
+        </if>
+        <if test="status != null">
+            AND ob.opt_code = #{status}
+        </if>
+        <if test="platforms != null and platforms.size() != 0">
+            AND wo.platform in
+            <foreach collection="platforms" item="platform" open="(" close=")" separator=",">
+                #{platform}
+            </foreach>
+        </if>
+        <if test="startTime != null and endTime != null">
+            AND wo.create_time BETWEEN #{startTime} AND #{endTime}
+        </if>
+        <if test="startTime != null and endTime == null">
+            AND #{endTime} >= wo.create_time
+        </if>
+        <if test="startTime == null and endTime != null">
+            AND wo.create_time >= #{startTime}
         </if>
         <if test="offset != null and pageSize != null">
             LIMIT #{offset},#{pageSize}

@@ -48,6 +48,8 @@ public class OrderDto {
     private Integer orderBusinessId;
     private String optCode;
     private String optCodeName;
+
+    private int times;
     /**
      * 1表示可以批量分单
      * -1表示不可以

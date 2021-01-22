@@ -1,7 +1,10 @@
 package com.wx.watersupplierservice.req;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
+import java.util.Date;
 import java.util.List;
 
 @Data
@@ -27,6 +30,10 @@ public class OrderListReq {
 
     private String search;
 
+    private String searchAddress;
+
+    private String searchName;
+
     private Integer pageSize;
 
     private Integer pageIndex;
@@ -40,4 +47,11 @@ public class OrderListReq {
     private List<String> shoplist;
 
     private Integer orderBusinessId;
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
+    private Date startTime;
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
+    private Date endTime;
 }

@@ -19,6 +19,7 @@ import com.wx.watersupplierservice.req.SendWatersReq;
 import com.wx.watersupplierservice.service.BusinessService;
 import com.xdf.pscommon.mybatis.rt.PMLO;
 import com.xdf.pscommon.mybatis.rt.QueryFilter;
+import com.xdf.pscommon.util.StringUtil;
 import lombok.Data;
 import org.apache.commons.compress.utils.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -90,8 +91,7 @@ public class BusinessServiceImpl implements BusinessService {
     @Override
     public UseroOrderPageDto getOrderList(OrderListReq orderListReq) {
         if (Objects.isNull(orderListReq) || Objects.isNull(orderListReq.getUserId())
-                || Objects.isNull(orderListReq.getPageIndex()) || Objects.isNull(orderListReq.getPageSize())
-                || Objects.isNull(orderListReq.getPlatform())){
+                || Objects.isNull(orderListReq.getPageIndex()) || Objects.isNull(orderListReq.getPageSize())){
             throw new PublicException("参数不全...");
         }
         //根据用户角色返回不同数据
@@ -427,47 +427,31 @@ public class BusinessServiceImpl implements BusinessService {
         if (CollectionUtils.isEmpty(userShopSiteList)){
             throw new PublicException("用户角色异常,该用户非水站");
         }
-//        if (Objects.nonNull(orderListReq.getPlatform())){
-//            userShopSiteList = userShopSiteList.stream().filter(v -> Objects.equals(v.getPlatform(), orderListReq.getPlatform())).collect(Collectors.toList());
-//        }
-//        if (CollectionUtils.isEmpty(userShopSiteList)){
-//            throw new PublicException("该用户权限不足");
-//        }
         List<Integer> siteids = userShopSiteList.stream().map(SysSitePojo::getSiteId).collect(Collectors.toList());
         //根据商户code和平台类型查询订单
-        if (PlatformStatusEnum.isPLANTFORM_JD(orderListReq.getPlatform())){
-            List<QueryFilter> qfs = new ArrayList<>();
-            if (Objects.nonNull(orderListReq.getOrderBusinessId())){
-                qfs.add(new QueryFilter("id", orderListReq.getOrderBusinessId()));
-            } else {
-                qfs.add(new QueryFilter("site_id", PMLO.IN, siteids));
-                if (Objects.nonNull(orderListReq.getStatus())){
-                    qfs.add(new QueryFilter("opt_code", orderListReq.getStatus()));
-                }
+        List<QueryFilter> qfs = new ArrayList<>();
+        if (Objects.nonNull(orderListReq.getOrderBusinessId())){
+            qfs.add(new QueryFilter("id", orderListReq.getOrderBusinessId()));
+        } else {
+            qfs.add(new QueryFilter("site_id", PMLO.IN, siteids));
+            if (Objects.nonNull(orderListReq.getStatus())){
+                qfs.add(new QueryFilter("opt_code", orderListReq.getStatus()));
             }
-            QueryFilter[] queryFilters = qfs.toArray(new QueryFilter[]{});
-            Integer count = orderBusinessDao.findCount(OrderBusinessPo.class, queryFilters);
-            if (Objects.isNull(count) || count == 0){
-                useroOrderPageDto.setCount(0);
-                return useroOrderPageDto;
-            }
-            useroOrderPageDto.setCount(count);
-            //获取订单信息
-            int offset = (orderListReq.getPageIndex() - 1) * orderListReq.getPageSize();
-            orderListReq.setOffset(offset);
-            orderListReq.setIdlist(siteids);
-            List<OrderDto> orders = waterOrderDao.getOrgOrderListForSite(orderListReq);
-            orders.forEach(e->e.setPlatformName(PlatformStatusEnum.getName(e.getPlatform())));
-            useroOrderPageDto.setList(orders);
-        }else if(PlatformStatusEnum.isPLANTFORM_ELM(orderListReq.getPlatform())){
-
-        }else if(PlatformStatusEnum.isPLANTFORM_MT(orderListReq.getPlatform())){
-
-        }else if(PlatformStatusEnum.isPLANTFORM_SJZJ(orderListReq.getPlatform())){
-
-        }else {
-            throw new PublicException("暂不支持该平台");
         }
+        QueryFilter[] queryFilters = qfs.toArray(new QueryFilter[]{});
+        Integer count = orderBusinessDao.findCount(OrderBusinessPo.class, queryFilters);
+        if (Objects.isNull(count) || count == 0){
+            useroOrderPageDto.setCount(0);
+            return useroOrderPageDto;
+        }
+        useroOrderPageDto.setCount(count);
+        //获取订单信息
+        int offset = (orderListReq.getPageIndex() - 1) * orderListReq.getPageSize();
+        orderListReq.setOffset(offset);
+        orderListReq.setIdlist(siteids);
+        List<OrderDto> orders = waterOrderDao.getOrgOrderListForSite(orderListReq);
+        orders.forEach(e->e.setPlatformName(PlatformStatusEnum.getName(e.getPlatform())));
+        useroOrderPageDto.setList(orders);
         return useroOrderPageDto;
     }
 
@@ -477,54 +461,53 @@ public class BusinessServiceImpl implements BusinessService {
         if (CollectionUtils.isEmpty(userShopList)){
             throw new PublicException("用户角色异常,该用户非门店");
         }
-        if (Objects.nonNull(orderListReq.getPlatform())){
-            userShopList = userShopList.stream().filter(v -> Objects.equals(v.getPlatform(), orderListReq.getPlatform())).collect(Collectors.toList());
-        }
         if (CollectionUtils.isEmpty(userShopList)){
             throw new PublicException("该用户权限不足");
         }
         List<String> shopids = userShopList.stream().map(UserShopDto::getShopCode).collect(Collectors.toList());
-        //根据商户code和平台类型查询订单
-        if (PlatformStatusEnum.isPLANTFORM_JD(orderListReq.getPlatform())){
-            List<QueryFilter> qfs = new ArrayList<>();
-            if (Objects.nonNull(orderListReq.getOrderId())){
-                qfs.add(new QueryFilter("id", orderListReq.getOrderId()));
-            }else {
-                qfs.add(new QueryFilter("deliveryStationNoIsv", PMLO.IN, shopids));
-                if (Objects.nonNull(orderListReq.getStatus())){
-                    qfs.add(new QueryFilter("orderStatus", orderListReq.getStatus()));
-                }
+        List<QueryFilter> qfs = new ArrayList<>();
+        if (Objects.nonNull(orderListReq.getOrderId())){
+            qfs.add(new QueryFilter("id", orderListReq.getOrderId()));
+        }else {
+            qfs.add(new QueryFilter("deliveryStationNoIsv", PMLO.IN, shopids));
+            if (Objects.nonNull(orderListReq.getStatus())){
+                qfs.add(new QueryFilter("orderStatus", orderListReq.getStatus()));
             }
-            Integer count = waterOrderDao.findCount(WaterOrderPo.class, qfs.toArray(new QueryFilter[]{}));
-            if (Objects.isNull(count) || count == 0){
-                useroOrderPageDto.setCount(0);
-                return useroOrderPageDto;
+            if (!StringUtil.isEmpty(orderListReq.getSearchAddress())){
+                qfs.add(new QueryFilter("buyerFullAddress",PMLO.CONTAIN, orderListReq.getSearchAddress()));
             }
-            useroOrderPageDto.setCount(count);
-            //获取订单信息
-            int offset = (orderListReq.getPageIndex() - 1) * orderListReq.getPageSize();
-            orderListReq.setOffset(offset);
-            orderListReq.setShoplist(shopids);
-            List<OrderDto> orders = waterOrderDao.getOrgOrderList(orderListReq);
+            if (!StringUtil.isEmpty(orderListReq.getSearchName())){
+                qfs.add(new QueryFilter("buyerFullName",PMLO.CONTAIN, orderListReq.getSearchName()));
+            }
+        }
+        Integer count = waterOrderDao.findCount(WaterOrderPo.class, qfs.toArray(new QueryFilter[]{}));
+        if (Objects.isNull(count) || count == 0){
+            useroOrderPageDto.setCount(0);
+            return useroOrderPageDto;
+        }
+        useroOrderPageDto.setCount(count);
+        //获取订单信息
+        int offset = (orderListReq.getPageIndex() - 1) * orderListReq.getPageSize();
+        orderListReq.setOffset(offset);
+        orderListReq.setShoplist(shopids);
+        List<OrderDto> orders = waterOrderDao.getOrgOrderList(orderListReq);
 
-            List<String> customs = orders.stream().map(OrderDto::getBuyerpin).collect(Collectors.toList());
-            List<QueryFilter> qfs2 = new ArrayList<>();
-            qfs2.add(new QueryFilter("platform_userId",PMLO.IN, customs));
-            List<SysCustomerPo> sysCustomerPos = sysCustomerDao.find(SysCustomerPo.class, qfs2.toArray(new QueryFilter[]{}));
-            if (sysCustomerPos == null || sysCustomerPos.isEmpty()){
-                orders.forEach(e->e.setBatchSplitStatus(-1));
-            }else {
-                Map<String, List<SysCustomerPo>> collect = sysCustomerPos.stream().collect(Collectors.groupingBy(SysCustomerPo::getPlatformUserid));
-                orders.forEach(e->{
-                    //根据id和地址获取
-                    if (collect.containsKey(e.getBuyerpin())){
-                        List<SysCustomerPo> sysCustomerPos1 = collect.get(e.getBuyerpin());
-                        SysCustomerPo sysCustomerPo = sysCustomerPos1.get(0);
-                        if (e.getBuyerfulladdress().equals(sysCustomerPo.getCustomerAddress())){
-                            e.setBatchSplitStatus(1);
-                        } else {
-                            e.setBatchSplitStatus(-1);
-                        }
+        List<String> customs = orders.stream().map(OrderDto::getBuyerpin).collect(Collectors.toList());
+        List<QueryFilter> qfs2 = new ArrayList<>();
+        qfs2.add(new QueryFilter("platform_userId",PMLO.IN, customs));
+        List<SysCustomerPo> sysCustomerPos = sysCustomerDao.find(SysCustomerPo.class, qfs2.toArray(new QueryFilter[]{}));
+        if (sysCustomerPos == null || sysCustomerPos.isEmpty()){
+            orders.forEach(e->e.setBatchSplitStatus(-1));
+        }else {
+            Map<String, List<SysCustomerPo>> collect = sysCustomerPos.stream().collect(Collectors.groupingBy(SysCustomerPo::getPlatformUserid));
+            orders.forEach(e->{
+                //根据id和地址获取
+                if (collect.containsKey(e.getBuyerpin())){
+                    List<SysCustomerPo> sysCustomerPos1 = collect.get(e.getBuyerpin());
+                    SysCustomerPo sysCustomerPo = sysCustomerPos1.get(0);
+                    e.setTimes(sysCustomerPo.getConsumeCount());
+                    if (e.getBuyerfulladdress().equals(sysCustomerPo.getCustomerAddress())){
+                        e.setBatchSplitStatus(1);
                     } else {
                         e.setBatchSplitStatus(-1);
                     }
@@ -535,19 +518,14 @@ public class BusinessServiceImpl implements BusinessService {
                     }else {
                         e.setOrderSiteBeforList(orderSiteBefors);
                     }
-                });
-            }
-            orders.forEach(e->e.setPlatformName(PlatformStatusEnum.getName(e.getPlatform())));
-            useroOrderPageDto.setList(orders);
-        }else if(PlatformStatusEnum.isPLANTFORM_ELM(orderListReq.getPlatform())){
+                } else {
+                    e.setBatchSplitStatus(-1);
+                }
 
-        }else if(PlatformStatusEnum.isPLANTFORM_MT(orderListReq.getPlatform())){
-
-        }else if(PlatformStatusEnum.isPLANTFORM_SJZJ(orderListReq.getPlatform())){
-
-        }else {
-            throw new PublicException("暂不支持该平台");
+            });
         }
+        orders.forEach(e->e.setPlatformName(PlatformStatusEnum.getName(e.getPlatform())));
+        useroOrderPageDto.setList(orders);
         return useroOrderPageDto;
     }
 
@@ -563,53 +541,62 @@ public class BusinessServiceImpl implements BusinessService {
         if (CollectionUtils.isEmpty(sysOrgPoList)){
             throw new PublicException("用户角色异常,该用户非商户");
         }
-        if (Objects.nonNull(orderListReq.getPlatform())){
-            sysOrgPoList = sysOrgPoList.stream().filter(v -> Objects.equals(v.getPlatform(), orderListReq.getPlatform())).collect(Collectors.toList());
-        }
         if (CollectionUtils.isEmpty(sysOrgPoList)){
             throw new PublicException("该用户权限不足");
         }
         List<Integer> orgids = sysOrgPoList.stream().map(SysOrgPojo::getOrgId).collect(Collectors.toList());
         //根据商户code和平台类型查询订单
-        if (PlatformStatusEnum.isPLANTFORM_JD(orderListReq.getPlatform())){
-            List<QueryFilter> qfs = new ArrayList<>();
-            if (Objects.nonNull(orderListReq.getOrderId())){
-                qfs.add(new QueryFilter("id", orderListReq.getOrderId()));
-            }else {
-                qfs.add(new QueryFilter("org_id", PMLO.IN, orgids));
-                if (Objects.nonNull(orderListReq.getStatus())){
-                    qfs.add(new QueryFilter("orderStatus", orderListReq.getStatus()));
-                }
+        List<QueryFilter> qfs = new ArrayList<>();
+        if (Objects.nonNull(orderListReq.getOrderId())){
+            qfs.add(new QueryFilter("id", orderListReq.getOrderId()));
+        }else {
+            qfs.add(new QueryFilter("org_id", PMLO.IN, orgids));
+            if (Objects.nonNull(orderListReq.getStatus())){
+                qfs.add(new QueryFilter("orderStatus", orderListReq.getStatus()));
             }
-            Integer count = waterOrderDao.findCount(WaterOrderPo.class, qfs.toArray(new QueryFilter[]{}));
-            if (Objects.isNull(count) || count == 0){
-                useroOrderPageDto.setCount(0);
-                return useroOrderPageDto;
+            if(orderListReq.getPlatforms() != null && !orderListReq.getPlatforms().isEmpty()){
+                qfs.add(new QueryFilter("platform" ,PMLO.IN, orderListReq.getPlatforms()));
             }
-            useroOrderPageDto.setCount(count);
-            //获取订单信息
-            int offset = (orderListReq.getPageIndex() - 1) * orderListReq.getPageSize();
-            orderListReq.setOffset(offset);
-            orderListReq.setIdlist(orgids);
-            List<OrderDto> orders = waterOrderDao.getOrgOrderList(orderListReq);
-            List<String> customs = orders.stream().map(OrderDto::getBuyerpin).collect(Collectors.toList());
-            List<QueryFilter> qfs2 = new ArrayList<>();
-            qfs2.add(new QueryFilter("platform_userId",PMLO.IN, customs));
-            List<SysCustomerPo> sysCustomerPos = sysCustomerDao.find(SysCustomerPo.class, qfs2.toArray(new QueryFilter[]{}));
-            if (sysCustomerPos == null || sysCustomerPos.isEmpty()){
-                orders.forEach(e->e.setBatchSplitStatus(-1));
-            }else {
-                Map<String, List<SysCustomerPo>> collect = sysCustomerPos.stream().collect(Collectors.groupingBy(SysCustomerPo::getPlatformUserid));
-                orders.forEach(e->{
-                    //根据id和地址获取
-                    if (collect.containsKey(e.getBuyerpin())){
-                        List<SysCustomerPo> sysCustomerPos1 = collect.get(e.getBuyerpin());
-                        SysCustomerPo sysCustomerPo = sysCustomerPos1.get(0);
-                        if (e.getBuyerfulladdress().equals(sysCustomerPo.getCustomerAddress())){
-                            e.setBatchSplitStatus(1);
-                        } else {
-                            e.setBatchSplitStatus(-1);
-                        }
+            if (!StringUtil.isEmpty(orderListReq.getSearchAddress())){
+                qfs.add(new QueryFilter("buyerFullAddress",PMLO.CONTAIN, orderListReq.getSearchAddress()));
+            }
+            if (!StringUtil.isEmpty(orderListReq.getSearchName())){
+                qfs.add(new QueryFilter("buyerFullName",PMLO.CONTAIN, orderListReq.getSearchName()));
+            }
+            if (Objects.nonNull(orderListReq.getStartTime())){
+                qfs.add(new QueryFilter("create_time",PMLO.GREAT_EQUAL, orderListReq.getStartTime()));
+            }
+            if (Objects.nonNull(orderListReq.getEndTime())){
+                qfs.add(new QueryFilter("create_time",PMLO.LESS_EQUAL, orderListReq.getEndTime()));
+            }
+        }
+        Integer count = waterOrderDao.findCount(WaterOrderPo.class, qfs.toArray(new QueryFilter[]{}));
+        if (Objects.isNull(count) || count == 0){
+            useroOrderPageDto.setCount(0);
+            return useroOrderPageDto;
+        }
+        useroOrderPageDto.setCount(count);
+        //获取订单信息
+        int offset = (orderListReq.getPageIndex() - 1) * orderListReq.getPageSize();
+        orderListReq.setOffset(offset);
+        orderListReq.setIdlist(orgids);
+        List<OrderDto> orders = waterOrderDao.getOrgOrderList(orderListReq);
+        List<String> customs = orders.stream().map(OrderDto::getBuyerpin).collect(Collectors.toList());
+        List<QueryFilter> qfs2 = new ArrayList<>();
+        qfs2.add(new QueryFilter("platform_userId",PMLO.IN, customs));
+        List<SysCustomerPo> sysCustomerPos = sysCustomerDao.find(SysCustomerPo.class, qfs2.toArray(new QueryFilter[]{}));
+        if (sysCustomerPos == null || sysCustomerPos.isEmpty()){
+            orders.forEach(e->e.setBatchSplitStatus(-1));
+        }else {
+            Map<String, List<SysCustomerPo>> collect = sysCustomerPos.stream().collect(Collectors.groupingBy(SysCustomerPo::getPlatformUserid));
+            orders.forEach(e->{
+                //根据id和地址获取
+                if (collect.containsKey(e.getBuyerpin())){
+                    List<SysCustomerPo> sysCustomerPos1 = collect.get(e.getBuyerpin());
+                    SysCustomerPo sysCustomerPo = sysCustomerPos1.get(0);
+                    e.setTimes(sysCustomerPo.getConsumeCount());
+                    if (e.getBuyerfulladdress().equals(sysCustomerPo.getCustomerAddress())){
+                        e.setBatchSplitStatus(1);
                     } else {
                         e.setBatchSplitStatus(-1);
                     }
@@ -620,19 +607,14 @@ public class BusinessServiceImpl implements BusinessService {
                     }else {
                         e.setOrderSiteBeforList(orderSiteBefors);
                     }
-                });
-            }
-            orders.forEach(e->e.setPlatformName(PlatformStatusEnum.getName(e.getPlatform())));
-            useroOrderPageDto.setList(orders);
-        }else if(PlatformStatusEnum.isPLANTFORM_ELM(orderListReq.getPlatform())){
-
-        }else if(PlatformStatusEnum.isPLANTFORM_MT(orderListReq.getPlatform())){
-
-        }else if(PlatformStatusEnum.isPLANTFORM_SJZJ(orderListReq.getPlatform())){
-
-        }else {
-            throw new PublicException("暂不支持该平台");
+                } else {
+                    e.setBatchSplitStatus(-1);
+                }
+            });
         }
+        orders.forEach(e->e.setPlatformName(PlatformStatusEnum.getName(e.getPlatform())));
+        useroOrderPageDto.setList(orders);
+
         return useroOrderPageDto;
     }
 
