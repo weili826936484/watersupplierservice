@@ -1472,10 +1472,10 @@
             AND wo.orderStatus = #{status}
         </if>
         <if test="searchAddress != null and searchAddress != ''">
-            AND wo.buyerFullAddress = #{searchAddress}
+            AND wo.buyerFullAddress like CONCAT('%',#{searchAddress},'%')
         </if>
         <if test="searchName != null and searchName != ''">
-            AND wo.buyerFullName = #{searchName}
+            AND wo.buyerFullName = like CONCAT('%',#{searchName},'%')
         </if>
         <if test="platforms != null and platforms.size() != 0">
             AND wo.platform in
@@ -1541,10 +1541,10 @@
             </foreach>
         </if>
         <if test="searchAddress != null and searchAddress != ''">
-            AND wo.buyerFullAddress = #{searchAddress}
+            AND wo.buyerFullAddress like CONCAT('%',#{searchAddress},'%')
         </if>
         <if test="searchName != null and searchName != ''">
-            AND wo.buyerFullName = #{searchName}
+            AND wo.buyerFullName like CONCAT('%',#{searchName},'%')
         </if>
         <if test="status != null and status != ''">
             AND ob.opt_code = #{status}

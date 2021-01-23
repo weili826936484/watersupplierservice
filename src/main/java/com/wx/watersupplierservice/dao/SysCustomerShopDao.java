@@ -1,6 +1,8 @@
 package com.wx.watersupplierservice.dao;
 
 import com.wx.watersupplierservice.po.SysCustomerShopPo;
+import com.xdf.pscommon.aop.DataSourceType;
+import com.xdf.pscommon.aop.VPSDataSource;
 import com.xdf.pscommon.dao.base.BaseMapper;
 import org.springframework.stereotype.Repository;
 
@@ -14,10 +16,13 @@ import java.util.List;
 @Repository
 public interface  SysCustomerShopDao extends BaseMapper {
 
+	@VPSDataSource(DataSourceType.MASTER)
 	int insert(SysCustomerShopPo record);
 
+	@VPSDataSource(DataSourceType.MASTER)
     int insertList(List<SysCustomerShopPo> list);
 
+	@VPSDataSource(DataSourceType.MASTER)
     int updateList(List<SysCustomerShopPo> list);
 
     int count(SysCustomerShopPo record);

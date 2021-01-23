@@ -101,8 +101,8 @@ public class DataSourceConfig {
                 ((DruidDataSource)masterDataSource).getRawJdbcUrl(),((DruidDataSource)slave1DataSource).getRawJdbcUrl());
         try {
             SqlSessionFactoryBean sessionFactoryBean = new SqlSessionFactoryBean();
-            sessionFactoryBean.setDataSource(roundRobinDataSouceProxy(masterDataSource,slave1DataSource));
-
+            //sessionFactoryBean.setDataSource(roundRobinDataSouceProxy(masterDataSource,slave1DataSource));
+            sessionFactoryBean.setDataSource(masterDataSource);
             //设置mapper.xml文件所在位置
             Resource[] resources = new PathMatchingResourcePatternResolver().getResources(mapperLocations);
             sessionFactoryBean.setMapperLocations(resources);

@@ -149,7 +149,7 @@ public class BusinessServiceImpl implements BusinessService {
             preOrderStatus = OrderStatusEnum.ORDER_OUT.getCode();
             refuseOrder(changeOrder,orderStatus,preOrderStatus);
         } else if (OPTStatusEnum.isSITE_CANCEL_RETUIRN(changeOrder.getOptCode())){
-            orderStatus = OrderStatusEnum.ORDER_OUT.getCode();
+            orderStatus = OrderStatusEnum.ORDER_CANCEL_REQ.getCode();
             preOrderStatus = OrderStatusEnum.ORDER_OUT.getCode();
             cancelReturnOrder(changeOrder,orderStatus,preOrderStatus);
         } else if (OPTStatusEnum.isSITE_ORDER_OK(changeOrder.getOptCode())){
@@ -176,16 +176,18 @@ public class BusinessServiceImpl implements BusinessService {
         OrderBusinessProcessPo orderBusinessProcessPo = new OrderBusinessProcessPo();
         orderBusinessProcessPo.setBusinessId(orderBusinessPo.getId());
         orderBusinessProcessPo.setCreateBy(changeOrder.getUserId());
-        orderBusinessProcessPo.setOptCode(changeOrder.getOptCode());
+        orderBusinessProcessPo.setOptCode(OPTStatusEnum.SITE_OK.getCode());
         orderBusinessProcessPo.setUpdateTime(new Date());
-        orderBusinessProcessPo.setResultInfo(changeOrder.getRemark());
+        if (StringUtils.isNotBlank(changeOrder.getRemark())){
+            orderBusinessProcessPo.setResultInfo(changeOrder.getRemark());
+        }
         int num = orderBusinessProcessDao.insert(orderBusinessProcessPo);
         if (num == 0){
             throw new PublicException("操作失败！");
         }
         orderBusinessPo.setUpdateBy(changeOrder.getUserId());
         orderBusinessPo.setUpdateTime(new Date());
-        orderBusinessPo.setOptCode(changeOrder.getOptCode());
+        orderBusinessPo.setOptCode(OPTStatusEnum.SITE_OK.getCode());
         orderBusinessDao.update(orderBusinessPo);
         //对人员进行检测，并将次数+1操作
         String platform = waterOrderPo.getPlatform();
@@ -229,7 +231,9 @@ public class BusinessServiceImpl implements BusinessService {
         orderBusinessProcessPo.setCreateBy(changeOrder.getUserId());
         orderBusinessProcessPo.setOptCode(code);
         orderBusinessProcessPo.setUpdateTime(new Date());
-        orderBusinessProcessPo.setResultInfo(changeOrder.getRemark());
+        if (StringUtils.isNotBlank(changeOrder.getRemark())){
+            orderBusinessProcessPo.setResultInfo(changeOrder.getRemark());
+        }
         int num = orderBusinessProcessDao.insert(orderBusinessProcessPo);
         if (num == 0){
             throw new PublicException("操作失败！");
@@ -249,21 +253,37 @@ public class BusinessServiceImpl implements BusinessService {
         if (Objects.isNull(waterOrderPo) || !orderStatus.equals(waterOrderPo.getOrderstatus())){
             throw new PublicException("订单状态有变化，请重新选择！");
         }
-//        OrderBusinessPo orderBusinessPo = orderBusinessDao.findByOrderId(changeOrder.getOrderId());
-//        if (Objects.isNull(orderBusinessPo)){
-//            throw new PublicException("参数错误");
-//        }
+        OrderBusinessPo orderBusinessPo = orderBusinessDao.findByOrderId(waterOrderPo.getId());
+        List<OrderBusinessPo> orderBusinessPos = new ArrayList<>();
+        int num;
+        if (orderBusinessPo == null){
+            OrderBusinessPo po = new OrderBusinessPo();
+            po.setOrderId(waterOrderPo.getId());
+            po.setPlatform(waterOrderPo.getPlatform());
+            po.setCreateBy(changeOrder.getUserId());
+            orderBusinessPos.add(po);
+            num = orderBusinessDao.insertList(orderBusinessPos);
+            if (num == 0){
+                throw new PublicException("操作失败");
+            }
+            orderBusinessPo = orderBusinessPos.get(0);
+        }else {
+            orderBusinessPo.setOptCode(OPTStatusEnum.SITE_default.getCode());
+            orderBusinessDao.update(orderBusinessPo);
+        }
         //如操作明细表
-//        OrderBusinessProcessPo orderBusinessProcessPo = new OrderBusinessProcessPo();
-//        orderBusinessProcessPo.setBusinessId(orderBusinessPo.getId());
-//        orderBusinessProcessPo.setCreateBy(changeOrder.getUserId());
-//        orderBusinessProcessPo.setOptCode(changeOrder.getOptCode());
-//        orderBusinessProcessPo.setUpdateTime(new Date());
-//        orderBusinessProcessPo.setResultInfo(changeOrder.getRemark());
-//        int num = orderBusinessProcessDao.insert(orderBusinessProcessPo);
-//        if (num == 0){
-//            throw new PublicException("操作失败！");
-//        }
+        OrderBusinessProcessPo orderBusinessProcessPo = new OrderBusinessProcessPo();
+        orderBusinessProcessPo.setBusinessId(orderBusinessPo.getId());
+        orderBusinessProcessPo.setCreateBy(changeOrder.getUserId());
+        orderBusinessProcessPo.setOptCode(changeOrder.getOptCode());
+        orderBusinessProcessPo.setUpdateTime(new Date());
+        if (StringUtils.isNotBlank(changeOrder.getRemark())){
+            orderBusinessProcessPo.setResultInfo(changeOrder.getRemark());
+        }
+        num = orderBusinessProcessDao.insert(orderBusinessProcessPo);
+        if (num == 0){
+            throw new PublicException("操作失败！");
+        }
 //        orderBusinessPo.setUpdateBy(changeOrder.getUserId());
 //        orderBusinessPo.setUpdateTime(new Date());
 //        orderBusinessPo.setOptCode(changeOrder.getOptCode());
@@ -295,7 +315,9 @@ public class BusinessServiceImpl implements BusinessService {
         orderBusinessProcessPo.setCreateBy(changeOrder.getUserId());
         orderBusinessProcessPo.setOptCode(changeOrder.getOptCode());
         orderBusinessProcessPo.setUpdateTime(new Date());
-        orderBusinessProcessPo.setResultInfo(changeOrder.getRemark());
+        if (StringUtils.isNotBlank(changeOrder.getRemark())){
+            orderBusinessProcessPo.setResultInfo(changeOrder.getRemark());
+        }
         int num = orderBusinessProcessDao.insert(orderBusinessProcessPo);
         if (num == 0){
             throw new PublicException("操作失败！");
@@ -317,7 +339,7 @@ public class BusinessServiceImpl implements BusinessService {
             throw new PublicException("参数不全");
         }
         WaterOrderPo waterOrderPo = waterOrderDao.findById(WaterOrderPo.class, changeOrder.getOrderId());
-        if (Objects.isNull(waterOrderPo) || !orderStatus.equals(waterOrderPo.getOrderstatus())){
+        if (Objects.isNull(waterOrderPo)){
             throw new PublicException("订单状态有变化，请重新选择！");
         }
         OrderBusinessPo orderBusinessPo = orderBusinessDao.findByOrderId(changeOrder.getOrderId());
@@ -330,7 +352,9 @@ public class BusinessServiceImpl implements BusinessService {
         orderBusinessProcessPo.setCreateBy(changeOrder.getUserId());
         orderBusinessProcessPo.setOptCode(changeOrder.getOptCode());
         orderBusinessProcessPo.setUpdateTime(new Date());
-        orderBusinessProcessPo.setResultInfo(changeOrder.getRemark());
+        if (StringUtils.isNotBlank(changeOrder.getRemark())){
+            orderBusinessProcessPo.setResultInfo(changeOrder.getRemark());
+        }
         int num = orderBusinessProcessDao.insert(orderBusinessProcessPo);
         if (num == 0){
             throw new PublicException("操作失败！");
@@ -359,10 +383,10 @@ public class BusinessServiceImpl implements BusinessService {
 //            sysCustomerDao.update(sysCustomerPo);
 //        }
         //for循环更新order表
-        int index = waterOrderDao.updateStatusById(waterOrderPo.getId(),preOrderStatus,waterOrderPo.getVersion(),changeOrder.getUserId());
-        if (index == 0 ){
-            throw new PublicException("选中订单状态有变化，请重新选择");
-        }
+        //int index = waterOrderDao.updateStatusById(waterOrderPo.getId(),preOrderStatus,waterOrderPo.getVersion(),changeOrder.getUserId());
+//        if (index == 0 ){
+//            throw new PublicException("选中订单状态有变化，请重新选择");
+//        }
         //todo 向商户推送
 
     }
@@ -372,7 +396,7 @@ public class BusinessServiceImpl implements BusinessService {
             throw new PublicException("参数不全");
         }
         WaterOrderPo waterOrderPo = waterOrderDao.findById(WaterOrderPo.class, changeOrder.getOrderId());
-        if (Objects.isNull(waterOrderPo) || !orderStatus.equals(waterOrderPo.getOrderstatus())){
+        if (Objects.isNull(waterOrderPo)){
             throw new PublicException("订单状态有变化，请重新选择！");
         }
         OrderBusinessPo orderBusinessPo = orderBusinessDao.findByOrderId(changeOrder.getOrderId());
@@ -385,7 +409,9 @@ public class BusinessServiceImpl implements BusinessService {
         orderBusinessProcessPo.setCreateBy(changeOrder.getUserId());
         orderBusinessProcessPo.setOptCode(changeOrder.getOptCode());
         orderBusinessProcessPo.setUpdateTime(new Date());
-        orderBusinessProcessPo.setResultInfo(changeOrder.getRemark());
+        if (StringUtils.isNotBlank(changeOrder.getRemark())){
+            orderBusinessProcessPo.setResultInfo(changeOrder.getRemark());
+        }
         int num = orderBusinessProcessDao.insert(orderBusinessProcessPo);
         if (num == 0){
             throw new PublicException("操作失败！");
@@ -395,10 +421,10 @@ public class BusinessServiceImpl implements BusinessService {
         orderBusinessPo.setOptCode(changeOrder.getOptCode());
         orderBusinessDao.update(orderBusinessPo);
         //for循环更新order表
-        int index = waterOrderDao.updateStatusById(waterOrderPo.getId(),preOrderStatus,waterOrderPo.getVersion(),changeOrder.getUserId());
-        if (index == 0 ){
-            throw new PublicException("选中订单状态有变化，请重新选择");
-        }
+//        int index = waterOrderDao.updateStatusById(waterOrderPo.getId(),preOrderStatus,waterOrderPo.getVersion(),changeOrder.getUserId());
+//        if (index == 0 ){
+//            throw new PublicException("选中订单状态有变化，请重新选择");
+//        }
         //todo 向商户推送？？？？
     }
 
@@ -457,7 +483,9 @@ public class BusinessServiceImpl implements BusinessService {
             orderBusinessProcessPo.setCreateBy(changeOrder.getUserId());
             orderBusinessProcessPo.setOptCode(changeOrder.getOptCode());
             orderBusinessProcessPo.setUpdateTime(new Date());
-            orderBusinessProcessPo.setResultInfo(changeOrder.getRemark());
+            if (StringUtils.isNotBlank(changeOrder.getRemark())){
+                orderBusinessProcessPo.setResultInfo(changeOrder.getRemark());
+            }
             orderBusinessProcessPos.add(orderBusinessProcessPo);
         });
         num = orderBusinessProcessDao.insertList(orderBusinessProcessPos);
@@ -488,25 +516,39 @@ public class BusinessServiceImpl implements BusinessService {
         if (Objects.isNull(waterOrderPo) || !orderStatus.equals(waterOrderPo.getOrderstatus())){
             throw new PublicException("订单状态有变化，请重新选择！");
         }
-        OrderBusinessPo orderBusinessPo = orderBusinessDao.findByOrderId(changeOrder.getOrderId());
-        if (Objects.isNull(orderBusinessPo)){
-            throw new PublicException("参数错误");
+        OrderBusinessPo orderBusinessPo = orderBusinessDao.findByOrderId(waterOrderPo.getId());
+        List<OrderBusinessPo> orderBusinessPos = new ArrayList<>();
+        int num;
+        if (orderBusinessPo == null){
+            OrderBusinessPo po = new OrderBusinessPo();
+            po.setOrderId(waterOrderPo.getId());
+            po.setOptCode(OPTStatusEnum.SITE_CANCEL.getCode());
+            po.setPlatform(waterOrderPo.getPlatform());
+            po.setCreateBy(changeOrder.getUserId());
+            orderBusinessPos.add(po);
+            num = orderBusinessDao.insertList(orderBusinessPos);
+            if (num == 0){
+                throw new PublicException("操作失败");
+            }
+            orderBusinessPo = orderBusinessPos.get(0);
+        } else {
+            orderBusinessPo.setOptCode(OPTStatusEnum.SITE_CANCEL.getCode());
+            orderBusinessDao.update(orderBusinessPo);
         }
+
         //如操作明细表
         OrderBusinessProcessPo orderBusinessProcessPo = new OrderBusinessProcessPo();
         orderBusinessProcessPo.setBusinessId(orderBusinessPo.getId());
         orderBusinessProcessPo.setCreateBy(changeOrder.getUserId());
         orderBusinessProcessPo.setOptCode(changeOrder.getOptCode());
         orderBusinessProcessPo.setUpdateTime(new Date());
-        orderBusinessProcessPo.setResultInfo(changeOrder.getRemark());
-        int num = orderBusinessProcessDao.insert(orderBusinessProcessPo);
+        if (StringUtils.isNotBlank(changeOrder.getRemark())){
+            orderBusinessProcessPo.setResultInfo(changeOrder.getRemark());
+        }
+        num = orderBusinessProcessDao.insert(orderBusinessProcessPo);
         if (num == 0){
             throw new PublicException("操作失败！");
         }
-        orderBusinessPo.setUpdateBy(changeOrder.getUserId());
-        orderBusinessPo.setUpdateTime(new Date());
-        orderBusinessPo.setOptCode(changeOrder.getOptCode());
-        orderBusinessDao.update(orderBusinessPo);
         //for循环更新order表
         int index = waterOrderDao.updateStatusById(waterOrderPo.getId(),preOrderStatus,waterOrderPo.getVersion(),changeOrder.getUserId());
         if (index == 0 ){
@@ -658,8 +700,12 @@ public class BusinessServiceImpl implements BusinessService {
             e.setOrderStatusName(OrderStatusEnum.getName(e.getOrderstatus()));
             if(finalOrderBusinessPoMap != null && finalOrderBusinessPoMap.containsKey(e.getId())){
                 e.setOptCodeName(OPTStatusEnum.getName(finalOrderBusinessPoMap.get(e.getId()).getOptCode()));
-                e.setSiteName(finalSysSitePoMap.get(finalOrderBusinessPoMap.get(e.getId()).getSiteId()).getSiteName());
-                e.setSiteTel(finalSysSitePoMap.get(finalOrderBusinessPoMap.get(e.getId()).getSiteId()).getSiteTel());
+                if (finalOrderBusinessPoMap.get(e.getId()).getSiteId() != null){
+                    e.setSiteName(finalSysSitePoMap.get(finalOrderBusinessPoMap.get(e.getId()).getSiteId()).getSiteName());
+                    e.setSiteTel(finalSysSitePoMap.get(finalOrderBusinessPoMap.get(e.getId()).getSiteId()).getSiteTel());
+                } else {
+                    e.setSiteName("无");
+                }
                 e.setRemand(finalOrderBusinessPoMap.get(e.getId()).getRemand());
             } else {
                 e.setOptCodeName("待分单");
@@ -785,8 +831,12 @@ public class BusinessServiceImpl implements BusinessService {
             e.setOrderStatusName(OrderStatusEnum.getName(e.getOrderstatus()));
             if(finalOrderBusinessPoMap != null && finalOrderBusinessPoMap.containsKey(e.getId())){
                 e.setOptCodeName(OPTStatusEnum.getName(finalOrderBusinessPoMap.get(e.getId()).getOptCode()));
-                e.setSiteName(finalSysSitePoMap.get(finalOrderBusinessPoMap.get(e.getId()).getSiteId()).getSiteName());
-                e.setSiteTel(finalSysSitePoMap.get(finalOrderBusinessPoMap.get(e.getId()).getSiteId()).getSiteTel());
+                if (finalOrderBusinessPoMap.get(e.getId()).getSiteId() != null){
+                    e.setSiteName(finalSysSitePoMap.get(finalOrderBusinessPoMap.get(e.getId()).getSiteId()).getSiteName());
+                    e.setSiteTel(finalSysSitePoMap.get(finalOrderBusinessPoMap.get(e.getId()).getSiteId()).getSiteTel());
+                } else {
+                    e.setSiteName("无");
+                }
                 e.setRemand(finalOrderBusinessPoMap.get(e.getId()).getRemand());
             } else {
                 e.setOptCodeName("待分单");

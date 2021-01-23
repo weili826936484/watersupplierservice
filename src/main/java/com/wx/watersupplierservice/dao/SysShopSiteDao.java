@@ -4,6 +4,8 @@ import com.wx.watersupplierservice.po.SysShopSitePo;
 import com.wx.watersupplierservice.dto.WatersPageDto;
 import com.wx.watersupplierservice.pojo.SysSitePojo;
 import com.wx.watersupplierservice.req.SendWatersReq;
+import com.xdf.pscommon.aop.DataSourceType;
+import com.xdf.pscommon.aop.VPSDataSource;
 import com.xdf.pscommon.dao.base.BaseMapper;
 import org.springframework.stereotype.Repository;
 
@@ -17,10 +19,13 @@ import java.util.List;
 @Repository
 public interface  SysShopSiteDao extends BaseMapper {
 
+    @VPSDataSource(DataSourceType.MASTER)
 	int insert(SysShopSitePo record);
 
+    @VPSDataSource(DataSourceType.MASTER)
     int insertList(List<SysShopSitePo> list);
 
+    @VPSDataSource(DataSourceType.MASTER)
     int updateList(List<SysShopSitePo> list);
 
     int count(SysShopSitePo record);

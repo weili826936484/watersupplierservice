@@ -22,12 +22,13 @@ import java.util.List;
 @AllArgsConstructor
 public enum OPTStatusEnum {
     SITE_REFUSE("L21","水站拒单"),
+    SITE_default("L23","待分单"),
     SITE_REMAND("L22","催单"),
     SITE_JIEDAN("L20","水站接单配送"),
     SITE_FENDAN("L10","已分单"),
     SITE_CANCEL_REQ("B91","订单取消申请"),
     SITE_CANCEL_RETUIRN("B92","驳回取消申请"),
-    SITE_CANCEL("B90","订单取消/商家同意取消申请"),
+    SITE_CANCEL("B90","商家同意取消申请"),
     SITE_OK("L90","配送完成"),
     ORDER_OK("L100","订单完成");
 
