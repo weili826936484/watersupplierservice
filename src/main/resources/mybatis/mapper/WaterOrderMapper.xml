@@ -111,6 +111,7 @@
         <result column="orderbuyerpayablemoney" property="orderbuyerpayablemoney"/>
         <result column="orderBusinessId" property="orderBusinessId"/>
         <result column="optCode" property="optCode"/>
+        <result column="remand" property="remand"/>
 
         <collection property="productList" ofType="com.wx.watersupplierservice.dto.OrderDto$ProductDto"
                     select="getProducts" column="id" fetchType="eager">
@@ -149,6 +150,7 @@
             <id column="productId" property="productId"/>
             <result column="skuName" property="skuName"/>
             <result column="skuCount" property="skuCount"/>
+            <result column="skuJdPrice" property="skuJdPrice"/>
         </collection>
     </resultMap>
 
@@ -1412,7 +1414,8 @@
         select
             wop.product_id as productId,
             wop.skuName,
-            wop.skuCount
+            wop.skuCount,
+            wop.skuJdPrice
         from
             water_order_product wop
         where
@@ -1465,7 +1468,7 @@
                 </foreach>
             </if>
         </if>
-        <if test="status != null">
+        <if test="status != null and status != ''">
             AND wo.orderStatus = #{status}
         </if>
         <if test="searchAddress != null and searchAddress != ''">
@@ -1521,7 +1524,8 @@
         wo.deliveryStationName,
         wo.orderbuyerpayablemoney,
         ob.id AS orderBusinessId,
-        ob.opt_code as aptCode
+        ob.opt_code as optCode,
+        ob.remand
         FROM
         water_order wo
         INNER JOIN order_business ob ON ob.order_id = wo.id
@@ -1542,7 +1546,7 @@
         <if test="searchName != null and searchName != ''">
             AND wo.buyerFullName = #{searchName}
         </if>
-        <if test="status != null">
+        <if test="status != null and status != ''">
             AND ob.opt_code = #{status}
         </if>
         <if test="platforms != null and platforms.size() != 0">

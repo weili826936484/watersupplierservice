@@ -30,5 +30,6 @@ public class OrderBusinessPo {
     private Date createTime;
     private Integer updateBy;
     private Date updateTime;
+    private Integer remand;
 
 }

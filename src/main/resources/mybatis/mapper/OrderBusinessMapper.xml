@@ -13,6 +13,7 @@
         <result column="create_time" property="createTime"/>
         <result column="update_by" property="updateBy"/>
         <result column="update_time" property="updateTime"/>
+        <result column="remand" property="remand"/>
     </resultMap>
 
     <sql id="Table_Name">
@@ -29,7 +30,8 @@
         create_by,
         create_time,
         update_by,
-        update_time
+        update_time,
+        remand
     </sql>
 
     <sql id="Base_Where">
@@ -63,6 +65,9 @@
             </if>
             <if test="updateTime != null">
                 AND update_time=#{updateTime}
+            </if>
+            <if test="remand != null">
+                AND remand=#{remand}
             </if>
         </trim>
     </sql>
@@ -107,6 +112,9 @@
             <if test="updateBy != null">
                 update_by,
             </if>
+            <if test="remand != null">
+                remand,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -132,6 +140,9 @@
             </if>
             <if test="updateBy != null">
                 #{updateBy},
+            </if>
+            <if test="remand != null">
+                #{remand},
             </if>
         </trim>
     </insert>
@@ -190,6 +201,9 @@
                 <if test="item.updateBy != null">
                     update_by=#{item.updateBy},
                 </if>
+                <if test="item.remand != null">
+                    remand=#{item.remand},
+                </if>
             </set>
             where
                 id=#{item.id}
@@ -233,7 +247,8 @@
             create_by as createBy,
             create_time as createTime,
             update_by as updateBy,
-            update_time as updateTime
+            update_time as updateTime,
+            remand
         FROM
             order_business
         WHERE

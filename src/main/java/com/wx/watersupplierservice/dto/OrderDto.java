@@ -15,6 +15,7 @@ public class OrderDto {
     private String platformName;
     private String orderid;
     private String orderstatus;
+    private String orderStatusName;
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date orderstarttime;
@@ -49,7 +50,10 @@ public class OrderDto {
     private String optCode;
     private String optCodeName;
 
+    private String siteName;
+    private String siteTel;
     private int times;
+    private Integer remand;
     /**
      * 1表示可以批量分单
      * -1表示不可以
@@ -65,6 +69,7 @@ public class OrderDto {
         private Integer productId;
         private String skuName;
         private String skuCount;
+        private String skuJdPrice;
     }
 
     @Data

@@ -22,12 +22,14 @@ import java.util.List;
 @AllArgsConstructor
 public enum OPTStatusEnum {
     SITE_REFUSE("L21","水站拒单"),
+    SITE_REMAND("L22","催单"),
     SITE_JIEDAN("L20","水站接单配送"),
-    SITE_FENDAN("L10","分单"),
+    SITE_FENDAN("L10","已分单"),
     SITE_CANCEL_REQ("B91","订单取消申请"),
     SITE_CANCEL_RETUIRN("B92","驳回取消申请"),
     SITE_CANCEL("B90","订单取消/商家同意取消申请"),
-    SITE_OK("L90","配送完成");
+    SITE_OK("L90","配送完成"),
+    ORDER_OK("L100","订单完成");
 
     private String code;
     private String name;
@@ -60,4 +62,6 @@ public enum OPTStatusEnum {
     public static boolean isSITE_CANCEL(String code){ return SITE_CANCEL.code.equals(code); }
     public static boolean isSITE_OK(String code){ return SITE_OK.code.equals(code); }
     public static boolean isSITE_CANCEL_RETUIRN(String code){ return SITE_CANCEL_RETUIRN.code.equals(code); }
+    public static boolean isSITE_ORDER_OK(String code){ return ORDER_OK.code.equals(code); }
+    public static boolean isSITE_SITE_REMAND(String code){ return SITE_REMAND.code.equals(code); }
 }
