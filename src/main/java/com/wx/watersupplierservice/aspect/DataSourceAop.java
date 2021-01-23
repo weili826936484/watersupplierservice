@@ -21,8 +21,8 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * 主从切换 weili
  */
-@Aspect
-@Configuration
+//@Aspect
+//@Configuration
 public class DataSourceAop {
 
     private static final String MASTER = "master";
@@ -34,10 +34,10 @@ public class DataSourceAop {
 
     private static Map<String,String> masterSlave = new ConcurrentHashMap<>();
 
-    @Pointcut("@annotation(com.xdf.pscommon.aop.VPSDataSource)")
+//    @Pointcut("@annotation(com.xdf.pscommon.aop.VPSDataSource)")
     public void changeVPSDataSource(){}
 
-    @Pointcut("@annotation(com.xdf.pscommon.aop.HitDataSource)")
+//    @Pointcut("@annotation(com.xdf.pscommon.aop.HitDataSource)")
     public void changeHitDataSource(){}
 
 

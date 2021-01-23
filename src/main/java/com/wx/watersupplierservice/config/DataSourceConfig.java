@@ -85,20 +85,19 @@ public class DataSourceConfig {
      * 从库配置
      * @return
      */
-    @Bean(name = "slave1DataSource")
-    @ConfigurationProperties(prefix = "defaultsql.slave1.datasource")
-    public DataSource readDataSourceOne() {
-        log.info("-------------------- slave1 DataSourceOne init ---------------------");
-        DruidDataSource dataSource = new DruidDataSource();
-
-        return dataSource;
-    }
+//    @Bean(name = "slave1DataSource")
+//    @ConfigurationProperties(prefix = "defaultsql.slave1.datasource")
+//    public DataSource readDataSourceOne() {
+//        log.info("-------------------- slave1 DataSourceOne init ---------------------");
+//        DruidDataSource dataSource = new DruidDataSource();
+//
+//        return dataSource;
+//    }
 
     @Bean(name="sqlSessionFactory")
-    public SqlSessionFactory sqlSessionFactorys(@Qualifier("dataSource") DataSource masterDataSource,
-                                                @Qualifier("slave1DataSource") DataSource slave1DataSource) throws Exception {
-        log.info("--------------------  sqlSessionFactory init --------------------- {} {} {}",
-                ((DruidDataSource)masterDataSource).getRawJdbcUrl(),((DruidDataSource)slave1DataSource).getRawJdbcUrl());
+    public SqlSessionFactory sqlSessionFactorys(@Qualifier("dataSource") DataSource masterDataSource) throws Exception {
+        log.info("--------------------  sqlSessionFactory init --------------------- {}",
+                ((DruidDataSource)masterDataSource).getRawJdbcUrl());
         try {
             SqlSessionFactoryBean sessionFactoryBean = new SqlSessionFactoryBean();
             //sessionFactoryBean.setDataSource(roundRobinDataSouceProxy(masterDataSource,slave1DataSource));
@@ -123,33 +122,33 @@ public class DataSourceConfig {
      * 把所有数据库都放在路由中
      * @return
      */
-    @Bean(name="roundRobinDataSouceProxy")
-    public DynamicDataSource roundRobinDataSouceProxy(@Qualifier("dataSource") DataSource masterDataSource,
-                                                      @Qualifier("slave1DataSource") DataSource slave1DataSource) {
-
-        Map<Object, Object> targetDataSources = new HashMap<Object, Object>();
-        //把所有数据库都放在targetDataSources中,注意key值要和determineCurrentLookupKey()中代码写的一至，
-        //否则切换数据源时找不到正确的数据源
-        targetDataSources.put(DataSourceType.MASTER.getCode(), masterDataSource);
-        targetDataSources.put(DataSourceType.SLAVE.getCode()+"1", slave1DataSource);
-        //路由类，寻找对应的数据源
-        DynamicDataSource proxy = new DynamicDataSource();
-        proxy.setDefaultTargetDataSource(masterDataSource);//默认库
-        proxy.setTargetDataSources(targetDataSources);
-        proxy.afterPropertiesSet();
-        return proxy;
-    }
+//    @Bean(name="roundRobinDataSouceProxy")
+//    public DynamicDataSource roundRobinDataSouceProxy(@Qualifier("dataSource") DataSource masterDataSource,
+//                                                      @Qualifier("slave1DataSource") DataSource slave1DataSource) {
+//
+//        Map<Object, Object> targetDataSources = new HashMap<Object, Object>();
+//        //把所有数据库都放在targetDataSources中,注意key值要和determineCurrentLookupKey()中代码写的一至，
+//        //否则切换数据源时找不到正确的数据源
+//        targetDataSources.put(DataSourceType.MASTER.getCode(), masterDataSource);
+//        targetDataSources.put(DataSourceType.SLAVE.getCode()+"1", slave1DataSource);
+//        //路由类，寻找对应的数据源
+//        DynamicDataSource proxy = new DynamicDataSource();
+//        proxy.setDefaultTargetDataSource(masterDataSource);//默认库
+//        proxy.setTargetDataSources(targetDataSources);
+//        proxy.afterPropertiesSet();
+//        return proxy;
+//    }
 
     @Bean(name = "sqlSessionTemplate")
     @Primary
     public SqlSessionTemplate sqlSessionTemplate(@Qualifier("sqlSessionFactory") SqlSessionFactory sqlSessionFactory) {
         return new SqlSessionTemplate(sqlSessionFactory);
     }
-    @Bean("platformTransactionManager")
-    @Primary
-    public PlatformTransactionManager annotationDrivenTransactionManager(@Qualifier("roundRobinDataSouceProxy") DynamicDataSource dataSource) {
-        return new DataSourceTransactionManager(dataSource);
-    }
+//    @Bean("platformTransactionManager")
+//    @Primary
+//    public PlatformTransactionManager annotationDrivenTransactionManager(@Qualifier("roundRobinDataSouceProxy") DynamicDataSource dataSource) {
+//        return new DataSourceTransactionManager(dataSource);
+//    }
 
 
     @Bean
