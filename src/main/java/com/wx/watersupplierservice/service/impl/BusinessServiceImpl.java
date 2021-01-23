@@ -622,10 +622,10 @@ public class BusinessServiceImpl implements BusinessService {
                 qfs.add(new QueryFilter("orderStatus", orderListReq.getStatus()));
             }
             if (!StringUtil.isEmpty(orderListReq.getSearchAddress())){
-                qfs.add(new QueryFilter("buyerFullAddress",PMLO.CONTAIN, orderListReq.getSearchAddress()));
+                qfs.add(new QueryFilter("buyerFullAddress",PMLO.CONTAIN, "%"+orderListReq.getSearchAddress()+"%"));
             }
             if (!StringUtil.isEmpty(orderListReq.getSearchName())){
-                qfs.add(new QueryFilter("buyerFullName",PMLO.CONTAIN, orderListReq.getSearchName()));
+                qfs.add(new QueryFilter("buyerFullName",PMLO.CONTAIN, "%"+orderListReq.getSearchName()+"%"));
             }
         }
         Integer count = waterOrderDao.findCount(WaterOrderPo.class, qfs.toArray(new QueryFilter[]{}));
@@ -746,10 +746,10 @@ public class BusinessServiceImpl implements BusinessService {
                 qfs.add(new QueryFilter("platform" ,PMLO.IN, orderListReq.getPlatforms()));
             }
             if (!StringUtil.isEmpty(orderListReq.getSearchAddress())){
-                qfs.add(new QueryFilter("buyerFullAddress",PMLO.CONTAIN, orderListReq.getSearchAddress()));
+                qfs.add(new QueryFilter("buyerFullAddress",PMLO.CONTAIN, "%"+orderListReq.getSearchAddress()+"%"));
             }
             if (!StringUtil.isEmpty(orderListReq.getSearchName())){
-                qfs.add(new QueryFilter("buyerFullName",PMLO.CONTAIN, orderListReq.getSearchName()));
+                qfs.add(new QueryFilter("buyerFullName",PMLO.CONTAIN, "%"+orderListReq.getSearchName()+"%"));
             }
             if (Objects.nonNull(orderListReq.getStartTime())){
                 qfs.add(new QueryFilter("create_time",PMLO.GREAT_EQUAL, orderListReq.getStartTime()));
