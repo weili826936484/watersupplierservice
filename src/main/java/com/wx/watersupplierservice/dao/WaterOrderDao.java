@@ -44,4 +44,6 @@ public interface  WaterOrderDao extends BaseMapper {
     int updateStatusById(@Param("id") Integer id, @Param("code") String code, @Param("version")Integer version, @Param("userId")Integer userId);
 
     List<OrderDto.OrderSiteBefor> getOrderSiteBeforsList(String custom);
+
+    Integer getOrgOrderCount(OrderListReq orderListReq);
 }

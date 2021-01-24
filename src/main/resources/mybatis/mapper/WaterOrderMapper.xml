@@ -1449,6 +1449,7 @@
         wo.orderbuyerpayablemoney
     FROM
         water_order wo
+        LEFT JOIN order_business ob ON wo.id = ob.order_id
     WHERE
         1=1
         <if test="orderId != null">
@@ -1467,33 +1468,43 @@
                     #{id}
                 </foreach>
             </if>
-        </if>
-        <if test="status != null and status != ''">
-            AND wo.orderStatus = #{status}
-        </if>
-        <if test="searchAddress != null and searchAddress != ''">
-            AND wo.buyerFullAddress like CONCAT('%',#{searchAddress},'%')
-        </if>
-        <if test="searchName != null and searchName != ''">
-            AND wo.buyerFullName like CONCAT('%',#{searchName},'%')
-        </if>
-        <if test="platforms != null and platforms.size() != 0">
-            AND wo.platform in
-            <foreach collection="platforms" item="platform" open="(" close=")" separator=",">
-                #{platform}
-            </foreach>
-        </if>
-        <if test="startTime != null and endTime != null">
-            AND wo.create_time BETWEEN #{startTime} AND #{endTime}
-        </if>
-        <if test="startTime != null and endTime == null">
-            AND #{endTime} >= wo.create_time
-        </if>
-        <if test="startTime == null and endTime != null">
-            AND wo.create_time >= #{startTime}
-        </if>
-        <if test="offset != null and pageSize != null">
-            LIMIT #{offset},#{pageSize}
+            <if test="status != null and status != ''">
+                <if test="status == '32000'">
+                    and (wo.orderStatus = '32000' OR (wo.orderStatus = '20050' and (ob.opt_code = 'L21' or ob.opt_code IS NULL)) OR wo.orderStatus = '20032' OR ob.opt_code = 'L21' OR ob.opt_code IS NULL)
+                    AND wo.orderStatus NOT IN ('20030','20020','20010','20031')
+                </if>
+                <if test="status == '20030'">
+                    AND wo.orderStatus in ('20010','20030')
+                </if>
+                <if test="status == '33040'">
+                    AND(wo.orderStatus = '33040' OR ob.opt_code = 'L20')
+                    AND wo.orderStatus NOT IN ( '20030', '20020', '20010','20031')
+                </if>
+            </if>
+            <if test="searchAddress != null and searchAddress != ''">
+                AND wo.buyerFullAddress like CONCAT('%',#{searchAddress},'%')
+            </if>
+            <if test="searchName != null and searchName != ''">
+                AND wo.buyerFullName like CONCAT('%',#{searchName},'%')
+            </if>
+            <if test="platforms != null and platforms.size() != 0">
+                AND wo.platform in
+                <foreach collection="platforms" item="platform" open="(" close=")" separator=",">
+                    #{platform}
+                </foreach>
+            </if>
+            <if test="startTime != null and endTime != null">
+                AND wo.create_time BETWEEN #{startTime} AND #{endTime}
+            </if>
+            <if test="startTime != null and endTime == null">
+                AND #{endTime} >= wo.create_time
+            </if>
+            <if test="startTime == null and endTime != null">
+                AND wo.create_time >= #{startTime}
+            </if>
+            <if test="offset != null and pageSize != null">
+                LIMIT #{offset},#{pageSize}
+            </if>
         </if>
 
     </select>
@@ -1597,5 +1608,69 @@
         ORDER BY
             wo.create_time DESC
         LIMIT 1
+    </select>
+
+    <select id="getOrgOrderCount" parameterType="com.wx.watersupplierservice.req.OrderListReq" resultType="java.lang.Integer">
+        SELECT
+            count(1)
+        FROM
+        water_order wo
+        LEFT JOIN order_business ob ON wo.id = ob.order_id
+        WHERE
+        1=1
+        <if test="orderId != null">
+            AND wo.id = #{orderId}
+        </if>
+        <if test="orderId == null">
+            <if test="shoplist != null and shoplist.size() != 0">
+                AND wo.deliveryStationNoIsv in
+                <foreach collection="shoplist" item="id" open="(" close=")" separator=",">
+                    #{id}
+                </foreach>
+            </if>
+            <if test="idlist != null and idlist.size() != 0">
+                AND wo.org_id in
+                <foreach collection="idlist" item="id" open="(" close=")" separator=",">
+                    #{id}
+                </foreach>
+            </if>
+            <if test="status != null and status != ''">
+                <if test="status == '32000'">
+                    and (wo.orderStatus = '32000' OR (wo.orderStatus = '20050' and (ob.opt_code = 'L21' or ob.opt_code IS NULL)) OR wo.orderStatus = '20032' OR ob.opt_code = 'L21' OR ob.opt_code IS NULL)
+                    AND wo.orderStatus NOT IN ('20030','20020','20010','20031')
+                </if>
+                <if test="status == '20030'">
+                    AND wo.orderStatus in ('20010','20030')
+                </if>
+                <if test="status == '33040'">
+                    AND(wo.orderStatus = '33040' OR ob.opt_code = 'L20')
+                    AND wo.orderStatus NOT IN ( '20030', '20020', '20010','20031')
+                </if>
+            </if>
+            <if test="searchAddress != null and searchAddress != ''">
+                AND wo.buyerFullAddress like CONCAT('%',#{searchAddress},'%')
+            </if>
+            <if test="searchName != null and searchName != ''">
+                AND wo.buyerFullName like CONCAT('%',#{searchName},'%')
+            </if>
+            <if test="platforms != null and platforms.size() != 0">
+                AND wo.platform in
+                <foreach collection="platforms" item="platform" open="(" close=")" separator=",">
+                    #{platform}
+                </foreach>
+            </if>
+            <if test="startTime != null and endTime != null">
+                AND wo.create_time BETWEEN #{startTime} AND #{endTime}
+            </if>
+            <if test="startTime != null and endTime == null">
+                AND #{endTime} >= wo.create_time
+            </if>
+            <if test="startTime == null and endTime != null">
+                AND wo.create_time >= #{startTime}
+            </if>
+            <if test="offset != null and pageSize != null">
+                LIMIT #{offset},#{pageSize}
+            </if>
+        </if>
     </select>
 </mapper>

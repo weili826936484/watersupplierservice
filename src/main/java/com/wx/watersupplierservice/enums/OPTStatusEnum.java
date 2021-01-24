@@ -29,6 +29,7 @@ public enum OPTStatusEnum {
     SITE_CANCEL_REQ("B91","订单取消申请"),
     SITE_CANCEL_RETUIRN("B92","驳回取消申请"),
     SITE_CANCEL("B90","商家同意取消申请"),
+    SITE_SEND_BACK_ORDER("B93","同意用户拒单"),
     SITE_OK("L90","配送完成"),
     ORDER_OK("L100","订单完成");
 
@@ -65,4 +66,5 @@ public enum OPTStatusEnum {
     public static boolean isSITE_CANCEL_RETUIRN(String code){ return SITE_CANCEL_RETUIRN.code.equals(code); }
     public static boolean isSITE_ORDER_OK(String code){ return ORDER_OK.code.equals(code); }
     public static boolean isSITE_SITE_REMAND(String code){ return SITE_REMAND.code.equals(code); }
+    public static boolean isSITE_SEND_BACK_ORDER(String code){ return SITE_SEND_BACK_ORDER.code.equals(code); }
 }
