@@ -1468,17 +1468,29 @@
                     #{id}
                 </foreach>
             </if>
-            <if test="status != null and status != ''">
-                <if test="status == '32000'">
-                    and (wo.orderStatus = '32000' OR (wo.orderStatus = '20050' and (ob.opt_code = 'L21' or ob.opt_code IS NULL)) OR wo.orderStatus = '20032' OR ob.opt_code = 'L21' OR ob.opt_code IS NULL)
-                    AND wo.orderStatus NOT IN ('20030','20020','20010','20031')
+            <if test='status != null and status != ""'>
+                <if test='status == "32000"'>
+                    AND ((
+                    ob.opt_code IS NULL
+                    AND (
+                    wo.orderStatus IN ( '32000', '20050', '20032' ))
+                    )
+                    OR (
+                    ob.opt_code = 'L21'
+                    AND (
+                    wo.orderStatus IN ( '33040', '20050' )))
+                    OR (
+                    ob.opt_code = 'L23'
+                    AND (
+                    wo.orderStatus IN ( '32000', '20050', '20032' ))
+                    )
+                    )
                 </if>
-                <if test="status == '20030'">
+                <if test='status == "20030"'>
                     AND wo.orderStatus in ('20010','20030')
                 </if>
-                <if test="status == '33040'">
-                    AND(wo.orderStatus = '33040' OR ob.opt_code = 'L20')
-                    AND wo.orderStatus NOT IN ( '20030', '20020', '20010','20031')
+                <if test='status == "33040"'>
+                    AND (wo.orderStatus in ('33040','20050') and ob.opt_code in ('L10','L20'))
                 </if>
             </if>
             <if test="searchAddress != null and searchAddress != ''">
@@ -1502,6 +1514,8 @@
             <if test="startTime == null and endTime != null">
                 AND wo.create_time >= #{startTime}
             </if>
+            ORDER BY
+                wo.id DESC
             <if test="offset != null and pageSize != null">
                 LIMIT #{offset},#{pageSize}
             </if>
@@ -1575,6 +1589,8 @@
         <if test="startTime == null and endTime != null">
             AND wo.create_time >= #{startTime}
         </if>
+        ORDER BY
+            wo.id DESC
         <if test="offset != null and pageSize != null">
             LIMIT #{offset},#{pageSize}
         </if>
@@ -1634,17 +1650,29 @@
                     #{id}
                 </foreach>
             </if>
-            <if test="status != null and status != ''">
-                <if test="status == '32000'">
-                    and (wo.orderStatus = '32000' OR (wo.orderStatus = '20050' and (ob.opt_code = 'L21' or ob.opt_code IS NULL)) OR wo.orderStatus = '20032' OR ob.opt_code = 'L21' OR ob.opt_code IS NULL)
-                    AND wo.orderStatus NOT IN ('20030','20020','20010','20031')
+            <if test='status != null and status != ""'>
+                <if test='status == "32000"'>
+                    AND ((
+                    ob.opt_code IS NULL
+                    AND (
+                    wo.orderStatus IN ( '32000', '20050', '20032' ))
+                    )
+                    OR (
+                    ob.opt_code = 'L21'
+                    AND (
+                    wo.orderStatus IN ( '33040', '20050' )))
+                    OR (
+                    ob.opt_code = 'L23'
+                    AND (
+                    wo.orderStatus IN ( '32000', '20050', '20032' ))
+                    )
+                    )
                 </if>
-                <if test="status == '20030'">
+                <if test='status == "20030"'>
                     AND wo.orderStatus in ('20010','20030')
                 </if>
-                <if test="status == '33040'">
-                    AND(wo.orderStatus = '33040' OR ob.opt_code = 'L20')
-                    AND wo.orderStatus NOT IN ( '20030', '20020', '20010','20031')
+                <if test='status == "33040"'>
+                    AND (wo.orderStatus in ('33040','20050') and ob.opt_code in ('L10','L20'))
                 </if>
             </if>
             <if test="searchAddress != null and searchAddress != ''">

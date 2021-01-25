@@ -1,11 +1,10 @@
 package com.wx.watersupplierservice.util.jddj;
-      
+
 import java.io.IOException;
 import java.net.SocketTimeoutException;
 import java.net.URLEncoder;
 import java.util.Map;
 import java.util.Map.Entry;
-
 import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpStatus;
@@ -101,7 +100,7 @@ public class HttpUtil {
 		}
 		return result;
 	}
-	
+
 	/**
 	 * GET方式发送HTTP请求
 	 * sendSimpleGetRequest </br>

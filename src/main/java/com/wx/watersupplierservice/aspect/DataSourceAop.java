@@ -41,7 +41,7 @@ public class DataSourceAop {
     public void changeHitDataSource(){}
 
 
-    @Before("changeVPSDataSource()")
+//    @Before("changeVPSDataSource()")
     public void doVPSBefore(JoinPoint joinPoint) throws Throwable {
         // 接收到请求
         Object target = joinPoint.getTarget();
@@ -84,7 +84,7 @@ public class DataSourceAop {
 
     }
 
-    @Before("changeHitDataSource()")
+//    @Before("changeHitDataSource()")
     public void doHitBefore(JoinPoint joinPoint) throws Throwable {
         // 接收到请求
         Object target = joinPoint.getTarget();
@@ -115,7 +115,7 @@ public class DataSourceAop {
 
     }
 
-    @Around("changeHitDataSource()")
+//    @Around("changeHitDataSource()")
     public Object doAround(ProceedingJoinPoint joinPoint) throws Throwable {
         Object proceed;
         try {
