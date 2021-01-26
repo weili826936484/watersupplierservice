@@ -25,6 +25,7 @@ public class OrderListReq {
     /**
      * 为null时表示全部,不支持为空
      */
+    private String optCode;
 
     private List<String> platforms;
 
