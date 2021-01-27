@@ -1511,13 +1511,13 @@
                 </foreach>
             </if>
             <if test="startTime != null and endTime != null">
-                AND wo.create_time BETWEEN #{startTime} AND #{endTime}
+                AND wo.orderPreEndDeliveryTime BETWEEN #{startTime} AND #{endTime}
             </if>
             <if test="startTime != null and endTime == null">
-                AND #{endTime} >= wo.create_time
+                AND #{endTime} >= wo.orderPreEndDeliveryTime
             </if>
             <if test="startTime == null and endTime != null">
-                AND wo.create_time >= #{startTime}
+                AND wo.orderPreEndDeliveryTime >= #{startTime}
             </if>
             ORDER BY
                 wo.orderPreEndDeliveryTime
@@ -1586,13 +1586,13 @@
             </foreach>
         </if>
         <if test="startTime != null and endTime != null">
-            AND wo.create_time BETWEEN #{startTime} AND #{endTime}
+            AND wo.orderPreEndDeliveryTime BETWEEN #{startTime} AND #{endTime}
         </if>
         <if test="startTime != null and endTime == null">
-            AND #{endTime} >= wo.create_time
+            AND #{endTime} >= wo.orderPreEndDeliveryTime
         </if>
         <if test="startTime == null and endTime != null">
-            AND wo.create_time >= #{startTime}
+            AND wo.orderPreEndDeliveryTime >= #{startTime}
         </if>
         ORDER BY
             wo.orderPreEndDeliveryTime
@@ -1701,13 +1701,13 @@
                 </foreach>
             </if>
             <if test="startTime != null and endTime != null">
-                AND wo.create_time BETWEEN #{startTime} AND #{endTime}
+                AND wo.orderPreEndDeliveryTime BETWEEN #{startTime} AND #{endTime}
             </if>
             <if test="startTime != null and endTime == null">
-                AND #{endTime} >= wo.create_time
+                AND #{endTime} >= wo.orderPreEndDeliveryTime
             </if>
             <if test="startTime == null and endTime != null">
-                AND wo.create_time >= #{startTime}
+                AND wo.orderPreEndDeliveryTime >= #{startTime}
             </if>
             <if test="offset != null and pageSize != null">
                 LIMIT #{offset},#{pageSize}
