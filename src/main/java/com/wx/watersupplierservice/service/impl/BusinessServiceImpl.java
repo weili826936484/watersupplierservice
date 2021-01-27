@@ -169,9 +169,23 @@ public class BusinessServiceImpl implements BusinessService {
             orderStatus = OrderStatusEnum.ORDER_SEND.getCode();
             preOrderStatus = OrderStatusEnum.ORDER_CANCELED.getCode();
             backOrder(changeOrder,orderStatus,preOrderStatus);
+        }  else if (OPTStatusEnum.isSITE_RECEIVE_REMAND(changeOrder.getOptCode())){
+            orderStatus = OrderStatusEnum.ORDER_SEND.getCode();
+            preOrderStatus = OrderStatusEnum.ORDER_CANCELED.getCode();
+            receiveRmand(changeOrder,orderStatus,preOrderStatus);
         }  else {
             throw new PublicException("不支持当前操作！");
         }
+    }
+
+    /**
+     * 水站接到催单
+     * @param changeOrder
+     * @param orderStatus
+     * @param preOrderStatus
+     */
+    private void receiveRmand(ChangeOrderReq changeOrder, String orderStatus, String preOrderStatus) {
+
     }
 
     private void backOrder(ChangeOrderReq changeOrder, String orderStatus, String preOrderStatus) {
