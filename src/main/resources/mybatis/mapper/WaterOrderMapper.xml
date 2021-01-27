@@ -109,9 +109,11 @@
         <result column="deliveryStationNoIsv" property="deliverystationnoisv"/>
         <result column="deliveryStationName" property="deliverystationname"/>
         <result column="orderbuyerpayablemoney" property="orderbuyerpayablemoney"/>
+        <result column="deliveryConfirmTime" property="deliveryConfirmTime"/>
         <result column="orderBusinessId" property="orderBusinessId"/>
         <result column="optCode" property="optCode"/>
         <result column="remand" property="remand"/>
+        <result column="orderNum" property="orderNum"/>
 
         <collection property="productList" ofType="com.wx.watersupplierservice.dto.OrderDto$ProductDto"
                     select="getProducts" column="id" fetchType="eager">
@@ -145,6 +147,7 @@
         <result column="deliveryStationNoIsv" property="deliverystationnoisv"/>
         <result column="deliveryStationName" property="deliverystationname"/>
         <result column="orderbuyerpayablemoney" property="orderbuyerpayablemoney"/>
+        <result column="deliveryConfirmTime" property="deliveryConfirmTime"/>
         <collection property="productList" ofType="com.wx.watersupplierservice.dto.OrderDto$ProductDto"
                     select="getProducts" column="id" fetchType="eager" >
             <id column="productId" property="productId"/>
@@ -1446,7 +1449,9 @@
         wo.deliveryStationNo,
         wo.deliveryStationNoIsv,
         wo.deliveryStationName,
-        wo.orderbuyerpayablemoney
+        wo.orderbuyerpayablemoney,
+        wo.deliveryConfirmTime,
+        wo.orderNum
     FROM
         water_order wo
         LEFT JOIN order_business ob ON wo.id = ob.order_id
@@ -1495,6 +1500,15 @@
                     </if>
                     <if test="optCode != null and optCode != ''">
                         AND (wo.orderStatus in ('33040','20050') and ob.opt_code = #{optCode})
+                    </if>
+                </if>
+                <if test='status == "33060"'>
+                    AND wo.orderStatus in('33060','90000')
+                    <if test='optCode != null and optCode=="L20"'>
+                        AND ob.opt_code != 'L90'
+                    </if>
+                    <if test='optCode != null and optCode=="L90"'>
+                        AND ob.opt_code = 'L90'
                     </if>
                 </if>
             </if>
@@ -1553,6 +1567,7 @@
         wo.deliveryStationNoIsv,
         wo.deliveryStationName,
         wo.orderbuyerpayablemoney,
+        wo.deliveryConfirmTime,
         ob.id AS orderBusinessId,
         ob.opt_code as optCode,
         ob.remand
@@ -1685,6 +1700,15 @@
                     </if>
                     <if test="optCode != null and optCode != ''">
                         AND (wo.orderStatus in ('33040','20050') and ob.opt_code = #{optCode})
+                    </if>
+                </if>
+                <if test='status == "33060"'>
+                    AND wo.orderStatus in('33060','90000')
+                    <if test='optCode != null and optCode=="L20"'>
+                        AND ob.opt_code != 'L90'
+                    </if>
+                    <if test='optCode != null and optCode=="L90"'>
+                        AND ob.opt_code = 'L90'
                     </if>
                 </if>
             </if>

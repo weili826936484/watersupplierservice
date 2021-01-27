@@ -46,7 +46,7 @@ public class OrderDto {
     private String ordertotalmoney;
     private String ordergoodsmoney;
     private String orderbuyerpayablemoney;
-
+    private String orderNum;
     private Integer orderBusinessId;
     private String optCode;
     private String optCodeName;
@@ -55,6 +55,9 @@ public class OrderDto {
     private String siteTel;
     private int times;
     private Integer remand;
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
+    private String deliveryConfirmTime;
     /**
      * 1表示可以批量分单
      * -1表示不可以
