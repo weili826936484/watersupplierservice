@@ -21,9 +21,9 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public enum PlatformStatusEnum {
-    PLANTFORM_JD("JDDJ","京东到家"),
-    PLANTFORM_MT("MEITUAN","美团"),
-    PLANTFORM_ELM("ELEME","饿了么"),
+    PLANTFORM_JD("JDDJ","JD"),
+    PLANTFORM_MT("MEITUAN","MT"),
+    PLANTFORM_ELM("ELEME","ELME"),
     PLANTFORM_SJZJ("SJZJ","商家自建");
 
     private String code;
