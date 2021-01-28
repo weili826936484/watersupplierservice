@@ -17,7 +17,7 @@ import java.util.List;
  * @date 2021年01月10日
  */
 @Repository
-public interface  WaterOrderDao extends BaseMapper {
+public interface WaterOrderDao extends BaseMapper {
 
     @VPSDataSource(DataSourceType.MASTER)
 	int insert(WaterOrderPo record);

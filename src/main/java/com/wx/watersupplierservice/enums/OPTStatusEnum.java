@@ -23,6 +23,7 @@ import java.util.List;
 public enum OPTStatusEnum {
     SITE_REFUSE("L21","水站拒单"),
     SITE_default("L23","待分单"),
+    SITE_BACK("L25","商户/门店撤单"),
     SITE_REMAND("L22","催单"),
     SITE_RECEIVE_REMAND("L24","水站收到催单"),
     SITE_JIEDAN("L20","水站接单配送"),
@@ -69,5 +70,5 @@ public enum OPTStatusEnum {
     public static boolean isSITE_SITE_REMAND(String code){ return SITE_REMAND.code.equals(code); }
     public static boolean isSITE_SEND_BACK_ORDER(String code){ return SITE_SEND_BACK_ORDER.code.equals(code); }
     public static boolean isSITE_RECEIVE_REMAND(String code){ return SITE_RECEIVE_REMAND.code.equals(code); }
-
+    public static boolean isSITE_BACK(String code){ return SITE_BACK.code.equals(code); }
 }

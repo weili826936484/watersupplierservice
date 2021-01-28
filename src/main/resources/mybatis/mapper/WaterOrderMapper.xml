@@ -1485,6 +1485,10 @@
                     AND (
                     wo.orderStatus IN ( '33040', '20050' )))
                     OR (
+                    ob.opt_code = 'L25'
+                    AND (
+                    wo.orderStatus IN ( '33040', '20050' )))
+                    OR (
                     ob.opt_code = 'L23'
                     AND (
                     wo.orderStatus IN ( '32000', '20050', '20032' ))
@@ -1682,6 +1686,10 @@
                     )
                     OR (
                     ob.opt_code = 'L21'
+                    AND (
+                    wo.orderStatus IN ( '33040', '20050' )))
+                    OR (
+                    ob.opt_code = 'L25'
                     AND (
                     wo.orderStatus IN ( '33040', '20050' )))
                     OR (
