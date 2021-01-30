@@ -1,7 +1,7 @@
 package com.wx.watersupplierservice.controller;
 
 import com.wx.watersupplierservice.dto.UserShopDto;
-import com.wx.watersupplierservice.dto.UserShopSiteDto;
+import com.wx.watersupplierservice.dto.UserShopSites;
 import com.wx.watersupplierservice.dto.UseroOrderPageDto;
 import com.wx.watersupplierservice.dto.WatersPageDto;
 import com.wx.watersupplierservice.po.SysShopPo;
@@ -66,12 +66,15 @@ public class BusinessController {
     }
 
     @PostMapping("/getShopSiteList")
-    public ObjectResults<List<UserShopSiteDto>> getShopSiteList(@RequestBody ShopsSiteReq shopsSiteReq){
-        return ObjectResults.createSuccessResult(businessService.getShopSiteList(shopsSiteReq));
+    public ObjectResults<UserShopSites> getShopSiteList(@RequestBody ShopsSiteReq shopsSiteReq){
+        List<UserShopSites.UserShopSiteDto> shopSiteList = businessService.getShopSiteList(shopsSiteReq);
+        UserShopSites userShopSites = new UserShopSites();
+        userShopSites.setList(shopSiteList);
+        return ObjectResults.createSuccessResult(userShopSites);
     }
 
     @PostMapping("updateShopSite")
-    public ObjectResults updateShopSite(@RequestBody UserShopSiteDto userShopSiteDto){
+    public ObjectResults updateShopSite(@RequestBody UserShopSites.UserShopSiteDto userShopSiteDto){
         businessService.updateShopSite(userShopSiteDto);
         return ObjectResults.createSuccessResult();
     }

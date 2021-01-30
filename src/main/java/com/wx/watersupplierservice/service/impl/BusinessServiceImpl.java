@@ -345,7 +345,7 @@ public class BusinessServiceImpl implements BusinessService {
     }
 
     @Override
-    public List<UserShopSiteDto> getShopSiteList(ShopsSiteReq shopsSiteReq) {
+    public List<UserShopSites.UserShopSiteDto> getShopSiteList(ShopsSiteReq shopsSiteReq) {
         if (shopsSiteReq == null){
             throw new PublicException("参数不全");
         }
@@ -354,12 +354,12 @@ public class BusinessServiceImpl implements BusinessService {
         List<UserShopDto> shopList = sysShopUserDao.getShopList(shopReq);
         List<Integer> shopids = shopList.stream().map(UserShopDto::getShopId).collect(Collectors.toList());
         shopsSiteReq.setShops(shopids);
-        List<UserShopSiteDto> userShopSiteDtos = sysShopSiteDao.getshopsites(shopsSiteReq);
+        List<UserShopSites.UserShopSiteDto> userShopSiteDtos = sysShopSiteDao.getshopsites(shopsSiteReq);
         return userShopSiteDtos;
     }
 
     @Override
-    public void updateShopSite(UserShopSiteDto userShopSiteDto) {
+    public void updateShopSite(UserShopSites.UserShopSiteDto userShopSiteDto) {
         if (userShopSiteDto == null || StringUtils.isBlank(userShopSiteDto.getUserId())){
             throw new PublicException("参数不全");
         }

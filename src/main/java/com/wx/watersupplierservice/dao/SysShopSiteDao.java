@@ -1,6 +1,6 @@
 package com.wx.watersupplierservice.dao;
 
-import com.wx.watersupplierservice.dto.UserShopSiteDto;
+import com.wx.watersupplierservice.dto.UserShopSites;
 import com.wx.watersupplierservice.po.SysShopSitePo;
 import com.wx.watersupplierservice.dto.WatersPageDto;
 import com.wx.watersupplierservice.pojo.SysSitePojo;
@@ -45,5 +45,5 @@ public interface  SysShopSiteDao extends BaseMapper {
 
     List<SysSitePojo> getSiteList(Integer userId);
 
-    List<UserShopSiteDto> getshopsites(ShopsSiteReq shopsSiteReq);
+    List<UserShopSites.UserShopSiteDto> getshopsites(ShopsSiteReq shopsSiteReq);
 }

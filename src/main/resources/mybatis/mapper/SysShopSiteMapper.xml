@@ -172,7 +172,7 @@
             user_id = #{userId}
     </select>
 
-    <select id="getshopsites" resultType="com.wx.watersupplierservice.dto.UserShopSiteDto" parameterType="com.wx.watersupplierservice.req.ShopsSiteReq">
+    <select id="getshopsites" resultType="com.wx.watersupplierservice.dto.UserShopSites$UserShopSiteDto" parameterType="com.wx.watersupplierservice.req.ShopsSiteReq">
         SELECT
             ss.site_id AS siteId,
             ss.site_name AS siteName,

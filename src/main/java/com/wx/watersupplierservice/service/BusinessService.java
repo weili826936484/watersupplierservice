@@ -1,7 +1,7 @@
 package com.wx.watersupplierservice.service;
 
 import com.wx.watersupplierservice.dto.UserShopDto;
-import com.wx.watersupplierservice.dto.UserShopSiteDto;
+import com.wx.watersupplierservice.dto.UserShopSites;
 import com.wx.watersupplierservice.dto.UseroOrderPageDto;
 import com.wx.watersupplierservice.dto.WatersPageDto;
 import com.wx.watersupplierservice.po.SysShopPo;
@@ -31,7 +31,7 @@ public interface BusinessService {
 
     void deleteUserShop(Integer sysShopUserId);
 
-    List<UserShopSiteDto> getShopSiteList(ShopsSiteReq shopsSiteReq);
+    List<UserShopSites.UserShopSiteDto> getShopSiteList(ShopsSiteReq shopsSiteReq);
 
-    void updateShopSite(UserShopSiteDto userShopSiteDto);
+    void updateShopSite(UserShopSites.UserShopSiteDto userShopSiteDto);
 }
