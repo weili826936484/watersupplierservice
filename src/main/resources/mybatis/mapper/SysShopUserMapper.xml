@@ -132,12 +132,41 @@
         for update
     </select>
 
+    <select id="getShopList" resultType="com.wx.watersupplierservice.dto.UserShopDto" parameterType="com.wx.watersupplierservice.req.ShopsReq">
+        SELECT
+            ss.shop_id AS shopId,
+            ss.shop_name AS shopName,
+            ss.platform AS platform,
+            ss.shop_code AS shopCode,
+            ss.shop_address AS shopAddress,
+            ss.shop_leader AS shopLeader,
+            ss.shop_tel AS shopTel,
+            ss.shop_status AS shopStatus,
+            ssu.id as sysShopUserId
+        FROM
+            sys_shop_user ssu
+            INNER JOIN sys_shop ss ON ssu.shop_id = ss.shop_id
+        WHERE
+            ssu.user_id = #{userId}
+            <if test='shopName != null and shopName != ""'>
+                ss.shop_name like CONCAT('%',#{shopName},'%')
+            </if>
+            <if test="status != null">
+                ss.shop_status = #{status}
+            </if>
+    </select>
+
     <select id="getUserShopList" resultType="com.wx.watersupplierservice.dto.UserShopDto">
         SELECT
             ss.shop_id AS shopId,
             ss.shop_name AS shopName,
             ss.platform AS platform,
-            ss.shop_code AS shopCode
+            ss.shop_code AS shopCode,
+            ss.shop_address AS shopAddress,
+            ss.shop_leader AS shopLeader,
+            ss.shop_tel AS shopTel,
+            ss.shop_status AS shopStatus,
+            ssu.id as sysShopUserId
         FROM
             sys_shop_user ssu
             INNER JOIN sys_shop ss ON ssu.shop_id = ss.shop_id

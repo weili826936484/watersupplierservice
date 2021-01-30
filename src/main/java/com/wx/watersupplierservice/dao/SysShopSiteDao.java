@@ -1,12 +1,15 @@
 package com.wx.watersupplierservice.dao;
 
+import com.wx.watersupplierservice.dto.UserShopSiteDto;
 import com.wx.watersupplierservice.po.SysShopSitePo;
 import com.wx.watersupplierservice.dto.WatersPageDto;
 import com.wx.watersupplierservice.pojo.SysSitePojo;
 import com.wx.watersupplierservice.req.SendWatersReq;
+import com.wx.watersupplierservice.req.ShopsSiteReq;
 import com.xdf.pscommon.aop.DataSourceType;
 import com.xdf.pscommon.aop.VPSDataSource;
 import com.xdf.pscommon.dao.base.BaseMapper;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -41,4 +44,6 @@ public interface  SysShopSiteDao extends BaseMapper {
     int getSendWaterCount(SendWatersReq sendWatersReq);
 
     List<SysSitePojo> getSiteList(Integer userId);
+
+    List<UserShopSiteDto> getshopsites(ShopsSiteReq shopsSiteReq);
 }

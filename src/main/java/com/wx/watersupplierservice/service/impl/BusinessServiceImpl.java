@@ -1,10 +1,7 @@
 package com.wx.watersupplierservice.service.impl;
 
 import com.wx.watersupplierservice.dao.*;
-import com.wx.watersupplierservice.dto.OrderDto;
-import com.wx.watersupplierservice.dto.UserShopDto;
-import com.wx.watersupplierservice.dto.UseroOrderPageDto;
-import com.wx.watersupplierservice.dto.WatersPageDto;
+import com.wx.watersupplierservice.dto.*;
 import com.wx.watersupplierservice.enums.OPTStatusEnum;
 import com.wx.watersupplierservice.enums.OrderStatusEnum;
 import com.wx.watersupplierservice.enums.PlatformStatusEnum;
@@ -13,19 +10,12 @@ import com.wx.watersupplierservice.exception.PublicException;
 import com.wx.watersupplierservice.po.*;
 import com.wx.watersupplierservice.pojo.SysOrgPojo;
 import com.wx.watersupplierservice.pojo.SysSitePojo;
-import com.wx.watersupplierservice.req.ChangeOrderReq;
-import com.wx.watersupplierservice.req.OrderListReq;
-import com.wx.watersupplierservice.req.SendWatersReq;
+import com.wx.watersupplierservice.req.*;
 import com.wx.watersupplierservice.service.BusinessService;
-import com.wx.watersupplierservice.util.jddj.JddjOrderUtil;
+import com.wx.watersupplierservice.util.SealBeanCopierUtil;
 import com.xdf.pscommon.mybatis.rt.PMLO;
 import com.xdf.pscommon.mybatis.rt.QueryFilter;
-import com.xdf.pscommon.util.StringUtil;
-import lombok.Data;
-import lombok.extern.log4j.Log4j;
-import org.apache.commons.compress.utils.Lists;
 import org.apache.commons.lang3.StringUtils;
-import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,8 +24,6 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
-import java.lang.reflect.Array;
-import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -78,6 +66,9 @@ public class BusinessServiceImpl implements BusinessService {
 
     @Autowired
     private SysSiteDao sysSiteDao;
+
+    @Autowired
+    private SysShopDao SysShopDao;
 
     @Override
     public WatersPageDto getSendWaterList(SendWatersReq sendWatersReq) {
@@ -176,6 +167,22 @@ public class BusinessServiceImpl implements BusinessService {
         }  else {
             throw new PublicException("不支持当前操作！");
         }
+    }
+
+    @Override
+    @Transactional
+    public void updateUserShop(SysShopPo sysShopPo) {
+        if (sysShopPo == null){
+            throw new PublicException("参数不全！");
+        }
+        sysShopPo.setUpdateTime(new Date());
+        SysShopDao.update(sysShopPo);
+    }
+
+    @Override
+    @Transactional
+    public void deleteUserShop(Integer sysShopUserId) {
+        sysShopUserDao.deleteById(SysShopUserPo.class,sysShopUserId);
     }
 
     /**
@@ -335,6 +342,71 @@ public class BusinessServiceImpl implements BusinessService {
 
 
 
+    }
+
+    @Override
+    public List<UserShopSiteDto> getShopSiteList(ShopsSiteReq shopsSiteReq) {
+        if (shopsSiteReq == null){
+            throw new PublicException("参数不全");
+        }
+        ShopsReq shopReq = new ShopsReq();
+        shopReq.setUserId(shopsSiteReq.getUserId());
+        List<UserShopDto> shopList = sysShopUserDao.getShopList(shopReq);
+        List<Integer> shopids = shopList.stream().map(UserShopDto::getShopId).collect(Collectors.toList());
+        shopsSiteReq.setShops(shopids);
+        List<UserShopSiteDto> userShopSiteDtos = sysShopSiteDao.getshopsites(shopsSiteReq);
+        return userShopSiteDtos;
+    }
+
+    @Override
+    public void updateShopSite(UserShopSiteDto userShopSiteDto) {
+        if (userShopSiteDto == null || StringUtils.isBlank(userShopSiteDto.getUserId())){
+            throw new PublicException("参数不全");
+        }
+        if (userShopSiteDto.getSiteId() == null){
+            SysSitePo sysSitePo = SealBeanCopierUtil.createCopy(userShopSiteDto, SysSitePo.class);
+            int num = sysSiteDao.insert(sysSitePo);
+            if (num == 0){
+                throw new PublicException("请联系管理员");
+            }
+            ShopsReq shopReq = new ShopsReq();
+            shopReq.setUserId(Integer.valueOf(userShopSiteDto.getUserId()));
+            List<UserShopDto> shopList = sysShopUserDao.getShopList(shopReq);
+            if (shopList == null || shopList.isEmpty()){
+                throw new PublicException("该管理员还未分配门店");
+            }
+            shopList.forEach(e->{
+                SysShopSitePo sysShopSitePo = new SysShopSitePo();
+                sysShopSitePo.setShopId(e.getShopId());
+                sysShopSitePo.setSiteId(userShopSiteDto.getSiteId());
+                SysShopSitePo history = sysShopSiteDao.selectOne(sysShopSitePo);
+                if (history != null){
+                    return;
+                }
+                sysShopSiteDao.insert(sysShopSitePo);
+            });
+        }else {
+            List<SysSitePo> list = new ArrayList<>();
+            SysSitePo sysSitePo = SealBeanCopierUtil.createCopy(userShopSiteDto, SysSitePo.class);
+            list.add(sysSitePo);
+            int num = sysSiteDao.updateList(list);
+            ShopsReq shopReq = new ShopsReq();
+            shopReq.setUserId(Integer.valueOf(userShopSiteDto.getUserId()));
+            List<UserShopDto> shopList = sysShopUserDao.getShopList(shopReq);
+            if (shopList == null || shopList.isEmpty()){
+                throw new PublicException("该管理员还未分配门店");
+            }
+            shopList.forEach(e->{
+                SysShopSitePo sysShopSitePo = new SysShopSitePo();
+                sysShopSitePo.setShopId(e.getShopId());
+                sysShopSitePo.setSiteId(userShopSiteDto.getSiteId());
+                SysShopSitePo history = sysShopSiteDao.selectOne(sysShopSitePo);
+                if (history != null){
+                    return;
+                }
+                sysShopSiteDao.insert(sysShopSitePo);
+            });
+        }
     }
 
     private synchronized void remandOrder(ChangeOrderReq changeOrder, String code) {
@@ -1007,10 +1079,23 @@ public class BusinessServiceImpl implements BusinessService {
     }
 
     @Override
-    public List<UserShopDto> getUserShopList(Integer userId) {
-        if (Objects.isNull(userId)){
+    public List<UserShopDto> getUserShopList(ShopsReq shopsReq) {
+        if (Objects.isNull(shopsReq)){
             throw new PublicException("参数不全");
         }
-        return sysShopUserDao.getUserShopList(userId);
+        SysUserPo user = sysUserDao.findById(SysUserPo.class, shopsReq.getUserId());
+        if (Objects.isNull(user) || 1 != user.getUserStatus()){
+            throw new PublicException("员工已离职");
+        }
+        List<UserShopDto> userShopList = null;
+        if (UserRoleEnum.isORG_MANAGER(user.getRoleCode())){
+            userShopList = sysShopUserDao.getShopList(shopsReq);
+        }else if(UserRoleEnum.isSHOP_MANAGER(user.getRoleCode())){
+            userShopList = sysShopUserDao.getShopList(shopsReq);
+        }else {
+            throw new PublicException("用户角色异常");
+        }
+        return userShopList;
     }
+
 }

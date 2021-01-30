@@ -1642,7 +1642,7 @@
         INNER JOIN sys_site ss ON ob.site_id = ss.site_id
         WHERE
             buyerPin = #{custom}
-        AND orderStatus = '33060'
+        AND orderStatus in ('33060','90000')
         AND ss.site_status = '1'
         ORDER BY
             wo.create_time DESC

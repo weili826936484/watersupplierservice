@@ -11,4 +11,14 @@ public class UserShopDto {
     private String platform;
 
     private String shopCode;
+
+    private String shopAddress;
+
+    private String shopLeader;
+
+    private String shopTel;
+
+    private String shopStatus;
+
+    private Integer sysShopUserId;
 }

@@ -171,4 +171,31 @@
         WHERE
             user_id = #{userId}
     </select>
+
+    <select id="getshopsites" resultType="com.wx.watersupplierservice.dto.UserShopSiteDto" parameterType="com.wx.watersupplierservice.req.ShopsSiteReq">
+        SELECT
+            ss.site_id AS siteId,
+            ss.site_name AS siteName,
+            ss.site_address AS siteAddress,
+            ss.site_tel AS siteTel,
+            ss.site_leader AS siteLeader,
+            ss.site_status AS siteStatus
+        FROM
+            sys_shop_site sss
+            INNER JOIN sys_site ss ON sss.site_id = ss.site_id
+        WHERE
+            1=1
+            <if test="shops != null and shops.size() > 0">
+                AND sss.shop_id IN
+                <foreach collection="shops" item="shopid" separator="," open="(" close=")">
+                    #{shopid}
+                </foreach>
+            </if>
+            <if test='siteName != null and siteName !=""'>
+                AND ss.site_name like CONCAT('%',#{siteName},'%')
+            </if>
+            <if test="siteStatus != null">
+                AND ss.site_status = #{siteStatus}
+            </if>
+    </select>
 </mapper>

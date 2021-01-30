@@ -1,12 +1,11 @@
 package com.wx.watersupplierservice.service;
 
 import com.wx.watersupplierservice.dto.UserShopDto;
+import com.wx.watersupplierservice.dto.UserShopSiteDto;
 import com.wx.watersupplierservice.dto.UseroOrderPageDto;
 import com.wx.watersupplierservice.dto.WatersPageDto;
-import com.wx.watersupplierservice.req.ChangeOrderReq;
-import com.wx.watersupplierservice.req.OrderListReq;
-import com.wx.watersupplierservice.req.SendWatersReq;
-import sun.reflect.generics.tree.VoidDescriptor;
+import com.wx.watersupplierservice.po.SysShopPo;
+import com.wx.watersupplierservice.req.*;
 
 import java.util.List;
 
@@ -22,9 +21,17 @@ public interface BusinessService {
 
     WatersPageDto getSendWaterList(SendWatersReq sendWatersReq);
 
-    List<UserShopDto> getUserShopList(Integer userId);
+    List<UserShopDto> getUserShopList(ShopsReq userId);
 
     UseroOrderPageDto getOrderList(OrderListReq getOrderListReq);
 
     void changeOrder(ChangeOrderReq changeOrder);
+
+    void updateUserShop(SysShopPo sysShopPo);
+
+    void deleteUserShop(Integer sysShopUserId);
+
+    List<UserShopSiteDto> getShopSiteList(ShopsSiteReq shopsSiteReq);
+
+    void updateShopSite(UserShopSiteDto userShopSiteDto);
 }
