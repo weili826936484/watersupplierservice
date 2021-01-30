@@ -185,6 +185,9 @@
             INNER JOIN sys_site ss ON sss.site_id = ss.site_id
         WHERE
             1=1
+            <if test="siteId != null">
+                ss.site_id = #{siteId}
+            </if>
             <if test="shops != null and shops.size() > 0">
                 AND sss.shop_id IN
                 <foreach collection="shops" item="shopid" separator="," open="(" close=")">

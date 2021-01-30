@@ -349,11 +349,13 @@ public class BusinessServiceImpl implements BusinessService {
         if (shopsSiteReq == null){
             throw new PublicException("参数不全");
         }
-        ShopsReq shopReq = new ShopsReq();
-        shopReq.setUserId(shopsSiteReq.getUserId());
-        List<UserShopDto> shopList = sysShopUserDao.getShopList(shopReq);
-        List<Integer> shopids = shopList.stream().map(UserShopDto::getShopId).collect(Collectors.toList());
-        shopsSiteReq.setShops(shopids);
+        if (shopsSiteReq.getSiteId() == null){
+            ShopsReq shopReq = new ShopsReq();
+            shopReq.setUserId(shopsSiteReq.getUserId());
+            List<UserShopDto> shopList = sysShopUserDao.getShopList(shopReq);
+            List<Integer> shopids = shopList.stream().map(UserShopDto::getShopId).collect(Collectors.toList());
+            shopsSiteReq.setShops(shopids);
+        }
         List<UserShopSites.UserShopSiteDto> userShopSiteDtos = sysShopSiteDao.getshopsites(shopsSiteReq);
         return userShopSiteDtos;
     }
