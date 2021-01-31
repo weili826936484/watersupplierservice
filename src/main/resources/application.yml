@@ -6,9 +6,9 @@ mybatis:
 
 defaultsql:
   datasource:
-    url: jdbc:mysql://101.200.187.135:3306/water_supplier?useSSL=false&allowMultiQueries=true&characterEncoding=utf8&characterSetResults=utf8
+    url: jdbc:mysql://rm-2ze8a4ahn220ckja1wo.mysql.rds.aliyuncs.com:3306/water_supplier?useSSL=false&allowMultiQueries=true&characterEncoding=utf8&characterSetResults=utf8
     username: root
-    password: Marry583@&%!
+    password: Wql719473
     driver-class-name: com.mysql.jdbc.Driver
     minIdle: 5
     maxActive: 50
@@ -27,9 +27,9 @@ defaultsql:
     connectionInitSqls: ["set names utf8mb4;"]
   slave1:
     datasource:
-      url: jdbc:mysql://101.200.187.135:3306/water_supplier?useSSL=false&allowMultiQueries=true&characterEncoding=utf8&characterSetResults=utf8
+      url: jdbc:mysql://rm-2ze8a4ahn220ckja1wo.mysql.rds.aliyuncs.com:3306/water_supplier?useSSL=false&allowMultiQueries=true&characterEncoding=utf8&characterSetResults=utf8
       username: root
-      password: Marry583@&%!
+      password: Wql719473
       driver-class-name: com.mysql.jdbc.Driver
       minIdle: 5
       maxActive: 50
