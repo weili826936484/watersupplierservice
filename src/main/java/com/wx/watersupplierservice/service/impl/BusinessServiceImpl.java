@@ -364,6 +364,7 @@ public class BusinessServiceImpl implements BusinessService {
     }
 
     @Override
+    @Transactional
     public synchronized void updateShopSite(UserShopSites.UserShopSiteDto userShopSiteDto) {
         if (userShopSiteDto == null || StringUtils.isBlank(userShopSiteDto.getUserId())){
             throw new PublicException("参数不全");
