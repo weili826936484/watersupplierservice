@@ -24,6 +24,10 @@ public class UserShopSites{
         private String siteStatus;
 
         private String userId;
+
+        private String siteUserName;
+
+
     }
 }
 

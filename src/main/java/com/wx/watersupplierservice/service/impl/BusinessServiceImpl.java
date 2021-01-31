@@ -70,6 +70,9 @@ public class BusinessServiceImpl implements BusinessService {
     @Autowired
     private SysShopDao SysShopDao;
 
+    @Autowired
+    private SysSiteUserDao sysSiteUserDao;
+
     @Override
     public WatersPageDto getSendWaterList(SendWatersReq sendWatersReq) {
         if (Objects.isNull(sendWatersReq) || Objects.isNull(sendWatersReq.getPageIndex())
@@ -387,6 +390,26 @@ public class BusinessServiceImpl implements BusinessService {
                 }
                 sysShopSiteDao.insert(sysShopSitePo);
             });
+            //入user表
+            SysUserPo userPo = new SysUserPo();
+            userPo.setUserName(userShopSiteDto.getSiteLeader());
+            userPo.setRoleCode("SITE_MANAGER");
+            SysUserPo userHistory = sysUserDao.selectOne(userPo);
+            if (userHistory == null){
+                userPo.setPassword("ab123456");
+                userPo.setUserTel(userShopSiteDto.getSiteTel());
+                userPo.setUserStatus(1);
+                sysUserDao.insert(userPo);
+            }else {
+                userPo = userHistory;
+            }
+            SysSiteUserPo sysSiteUserPo = new SysSiteUserPo();
+            sysSiteUserPo.setSiteId(sysSitePo.getSiteId());
+            sysSiteUserPo.setUserId(userPo.getUserId());
+            SysSiteUserPo sysSiteUserPo1 = sysSiteUserDao.selectOne(sysSiteUserPo);
+            if (sysSiteUserPo1 == null){
+                sysSiteUserDao.insert(sysSiteUserPo1);
+            }
         }else {
             List<SysSitePo> list = new ArrayList<>();
             SysSitePo sysSitePo = SealBeanCopierUtil.createCopy(userShopSiteDto, SysSitePo.class);
@@ -408,6 +431,26 @@ public class BusinessServiceImpl implements BusinessService {
                 }
                 sysShopSiteDao.insert(sysShopSitePo);
             });
+            //入user表
+            SysUserPo userPo = new SysUserPo();
+            userPo.setUserName(userShopSiteDto.getSiteLeader());
+            userPo.setRoleCode("SITE_MANAGER");
+            SysUserPo userHistory = sysUserDao.selectOne(userPo);
+            if (userHistory == null){
+                userPo.setPassword("ab123456");
+                userPo.setUserTel(userShopSiteDto.getSiteTel());
+                userPo.setUserStatus(1);
+                sysUserDao.insert(userPo);
+            }else {
+                userPo = userHistory;
+            }
+            SysSiteUserPo sysSiteUserPo = new SysSiteUserPo();
+            sysSiteUserPo.setSiteId(sysSitePo.getSiteId());
+            sysSiteUserPo.setUserId(userPo.getUserId());
+            SysSiteUserPo sysSiteUserPo1 = sysSiteUserDao.selectOne(sysSiteUserPo);
+            if (sysSiteUserPo1 == null){
+                sysSiteUserDao.insert(sysSiteUserPo1);
+            }
         }
     }
 
