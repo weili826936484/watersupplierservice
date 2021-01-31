@@ -2,6 +2,7 @@ package com.wx.watersupplierservice.dao;
 
 import com.wx.watersupplierservice.dto.UserShopDto;
 import com.wx.watersupplierservice.po.SysShopUserPo;
+import com.wx.watersupplierservice.req.ShopsReq;
 import com.xdf.pscommon.aop.DataSourceType;
 import com.xdf.pscommon.aop.VPSDataSource;
 import com.xdf.pscommon.dao.base.BaseMapper;
@@ -35,4 +36,6 @@ public interface  SysShopUserDao extends BaseMapper {
 	SysShopUserPo selectForUpdate(SysShopUserPo record);
 
     List<UserShopDto> getUserShopList(Integer userId);
+
+    List<UserShopDto> getShopList(ShopsReq shopsReq);
 }
