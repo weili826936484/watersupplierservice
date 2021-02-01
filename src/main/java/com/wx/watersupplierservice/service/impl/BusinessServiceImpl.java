@@ -458,7 +458,7 @@ public class BusinessServiceImpl implements BusinessService {
             shopList.forEach(e->{
                 SysShopSitePo sysShopSitePo = new SysShopSitePo();
                 sysShopSitePo.setShopId(e.getShopId());
-                sysShopSitePo.setSiteId(userShopSiteDto.getSiteId());
+                sysShopSitePo.setSiteId(sysSitePo.getSiteId());
                 SysShopSitePo history = sysShopSiteDao.selectOne(sysShopSitePo);
                 if (history != null){
                     return;
@@ -483,7 +483,7 @@ public class BusinessServiceImpl implements BusinessService {
             sysSiteUserPo.setUserId(userPo.getUserId());
             SysSiteUserPo sysSiteUserPo1 = sysSiteUserDao.selectOne(sysSiteUserPo);
             if (sysSiteUserPo1 == null){
-                sysSiteUserDao.insert(sysSiteUserPo1);
+                sysSiteUserDao.insert(sysSiteUserPo);
             }
         }else {
             List<SysSitePo> list = new ArrayList<>();
@@ -524,7 +524,7 @@ public class BusinessServiceImpl implements BusinessService {
             sysSiteUserPo.setUserId(userPo.getUserId());
             SysSiteUserPo sysSiteUserPo1 = sysSiteUserDao.selectOne(sysSiteUserPo);
             if (sysSiteUserPo1 == null){
-                sysSiteUserDao.insert(sysSiteUserPo1);
+                sysSiteUserDao.insert(sysSiteUserPo);
             }
         }
     }
