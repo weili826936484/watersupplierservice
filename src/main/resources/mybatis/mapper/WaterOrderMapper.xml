@@ -148,6 +148,9 @@
         <result column="deliveryStationName" property="deliverystationname"/>
         <result column="orderbuyerpayablemoney" property="orderbuyerpayablemoney"/>
         <result column="deliveryConfirmTime" property="deliveryConfirmTime"/>
+        <result column="orderBusinessId" property="orderBusinessId"/>
+        <result column="optCode" property="optCode"/>
+        <result column="remand" property="remand"/>
         <collection property="productList" ofType="com.wx.watersupplierservice.dto.OrderDto$ProductDto"
                     select="getProducts" column="id" fetchType="eager" >
             <id column="productId" property="productId"/>
@@ -1451,7 +1454,10 @@
         wo.deliveryStationName,
         wo.orderbuyerpayablemoney,
         wo.deliveryConfirmTime,
-        wo.orderNum
+        wo.orderNum,
+        ob.id AS orderBusinessId,
+        ob.opt_code as optCode,
+        ob.remand
     FROM
         water_order wo
         LEFT JOIN order_business ob ON wo.id = ob.order_id
