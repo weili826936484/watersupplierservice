@@ -200,5 +200,6 @@
             <if test="siteStatus != null">
                 AND ss.site_status = #{siteStatus}
             </if>
+        GROUP BY ss.site_id
     </select>
 </mapper>
