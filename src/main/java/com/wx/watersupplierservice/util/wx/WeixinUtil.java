@@ -124,6 +124,7 @@ public class WeixinUtil {
             SNSUserInfo snsuserinfo = new SNSUserInfo();
             snsuserinfo.setOpenId(jsonObject.optString("openid"));
             snsuserinfo.setNickname(jsonObject.optString("nickname"));
+            snsuserinfo.setHeadImgUrl(jsonObject.optString("headImgUrl"));
             
             //snsuserinfo.setPrivilegeList(JSONArray._fromArray(jsonObject.getString("privilege"),String.class));
             return snsuserinfo;
