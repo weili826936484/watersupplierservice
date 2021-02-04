@@ -1521,6 +1521,9 @@
                         AND ob.opt_code = 'L90'
                     </if>
                 </if>
+                <if test='status == "20020"'>
+                    AND wo.orderStatus in ('20020','20031')
+                </if>
             </if>
             <if test="searchAddress != null and searchAddress != ''">
                 AND wo.buyerFullAddress like CONCAT('%',#{searchAddress},'%')
@@ -1724,6 +1727,9 @@
                     <if test='optCode != null and optCode=="L90"'>
                         AND ob.opt_code = 'L90'
                     </if>
+                </if>
+                <if test='status == "20020"'>
+                    AND wo.orderStatus in ('20020','20031')
                 </if>
             </if>
             <if test="searchAddress != null and searchAddress != ''">
