@@ -1012,7 +1012,7 @@ public class BusinessServiceImpl implements BusinessService {
             e.setPlatformName(PlatformStatusEnum.getName(e.getPlatform()));
             e.setOrderStatusName(OrderStatusEnum.getName(e.getOrderstatus()));
             e.setOptCodeName(OPTStatusEnum.getName(e.getOptCode()));
-            long diff=(e.getOrderpreenddeliverytime().getTime() - new Date().getTime())/1000/60;
+            long diff=(e.getOrderpreenddeliverytime().getTime() - System.currentTimeMillis())/1000/60;
             e.setLessTime(diff);
         });
         useroOrderPageDto.setList(orders);
@@ -1113,7 +1113,7 @@ public class BusinessServiceImpl implements BusinessService {
                 e.setSiteName("无");
                 e.setRemand(-1);
             }
-            long diff=(e.getOrderpreenddeliverytime().getTime()-new Date().getTime())/1000/60;
+            long diff=(e.getOrderpreenddeliverytime().getTime()- System.currentTimeMillis())/1000/60;
             e.setLessTime(diff);
         });
         useroOrderPageDto.setList(orders);
@@ -1223,7 +1223,7 @@ public class BusinessServiceImpl implements BusinessService {
                 e.setSiteName("无");
                 e.setRemand(-1);
             }
-            long diff=(e.getOrderpreenddeliverytime().getTime() - new Date().getTime())/1000/60;
+            long diff=(e.getOrderpreenddeliverytime().getTime() - System.currentTimeMillis())/1000/60;
             e.setLessTime(diff);
         });
         useroOrderPageDto.setList(orders);
