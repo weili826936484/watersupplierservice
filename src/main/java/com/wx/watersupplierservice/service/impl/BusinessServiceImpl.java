@@ -13,18 +13,22 @@ import com.wx.watersupplierservice.pojo.SysSitePojo;
 import com.wx.watersupplierservice.req.*;
 import com.wx.watersupplierservice.service.BusinessService;
 import com.wx.watersupplierservice.util.SealBeanCopierUtil;
+import com.wx.watersupplierservice.util.jddj.JddjOrderUtil;
 import com.wx.watersupplierservice.util.wx.SendWxMessage2;
 import com.xdf.pscommon.mybatis.rt.PMLO;
 import com.xdf.pscommon.mybatis.rt.QueryFilter;
 import org.apache.commons.lang3.StringUtils;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -74,8 +78,8 @@ public class BusinessServiceImpl implements BusinessService {
     @Autowired
     private SysSiteUserDao sysSiteUserDao;
 
-    @Autowired
-    private SendWxMessage2 sendWxMessage2;
+    @Value("${jd.flag}")
+    private boolean flag;
 
     @Override
     public WatersPageDto getSendWaterList(SendWatersReq sendWatersReq) {
@@ -334,23 +338,25 @@ public class BusinessServiceImpl implements BusinessService {
                 throw new PublicException("选中订单状态有变化，请重新选择");
             }
             //todo 向京东推送取消订单及退款
-//        Date now = new Date();
-//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-//        JSONObject orgJson = new JSONObject();
-//        orgJson.put("orderId",waterOrderPo.getOrderid());
-//        orgJson.put("operPin",waterOrderPo.getBuyerpin());
-//        orgJson.put("operTime",sdf.format(now));
-//        orgJson.put("operRemark",changeOrder.getRemark());
-//        try {
-//            JddjOrderUtil.cancelAndRefund(orgJson,waterOrderPo.getOrderid(), waterOrderPo.getBuyerpin(),sdf.format(now),changeOrder.getRemark());
-//        } catch (Exception e) {
-//            try {
-//                JddjOrderUtil.cancelAndRefund(orgJson,waterOrderPo.getOrderid(), waterOrderPo.getBuyerpin(),sdf.format(now),changeOrder.getRemark());
-//            } catch (Exception exception) {
-//                logger.info("retry:{}","失败！");
-//            }
-//            logger.info("retry:{}",1);
-//        }
+            if (flag){
+                Date now = new Date();
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                JSONObject orgJson = new JSONObject();
+                orgJson.put("orderId",waterOrderPo.getOrderid());
+                orgJson.put("operPin",waterOrderPo.getBuyerpin());
+                orgJson.put("operTime",sdf.format(now));
+                orgJson.put("operRemark",changeOrder.getRemark());
+                try {
+                    JddjOrderUtil.cancelAndRefund(orgJson,waterOrderPo.getOrderid(), waterOrderPo.getBuyerpin(),sdf.format(now),changeOrder.getRemark());
+                } catch (Exception e) {
+                    try {
+                        JddjOrderUtil.cancelAndRefund(orgJson,waterOrderPo.getOrderid(), waterOrderPo.getBuyerpin(),sdf.format(now),changeOrder.getRemark());
+                    } catch (Exception exception) {
+                        logger.info("retry:{}","失败！");
+                    }
+                    logger.info("retry:{}",1);
+                }
+            }
         }
 
     }
@@ -411,23 +417,25 @@ public class BusinessServiceImpl implements BusinessService {
                     throw new PublicException("选中订单状态有变化，请重新选择");
                 }
                 //todo 向京东推送已妥投
-//            Date now = new Date();
-//            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-//            JSONObject orgJson = new JSONObject();
-//            orgJson.put("orderId",waterOrderPo.getOrderid());
-//            orgJson.put("operPin",waterOrderPo.getBuyerpin());
-//            orgJson.put("operTime",sdf.format(now));
-//
-//            try {
-//                JddjOrderUtil.sendDeliveryEndOrder(orgJson,waterOrderPo.getOrderid(), waterOrderPo.getBuyerpin(),sdf.format(now));
-//            } catch (Exception e) {
-//                try {
-//                    JddjOrderUtil.sendDeliveryEndOrder(orgJson,waterOrderPo.getOrderid(), waterOrderPo.getBuyerpin(),sdf.format(now));
-//                } catch (Exception exception) {
-//                    logger.info("retry:{}","失败！");
-//                }
-//                logger.info("retry:{}",1);
-//            }
+                if (flag){
+                    Date now = new Date();
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    JSONObject orgJson = new JSONObject();
+                    orgJson.put("orderId",waterOrderPo.getOrderid());
+                    orgJson.put("operPin",waterOrderPo.getBuyerpin());
+                    orgJson.put("operTime",sdf.format(now));
+
+                    try {
+                        JddjOrderUtil.sendDeliveryEndOrder(orgJson,waterOrderPo.getOrderid(), waterOrderPo.getBuyerpin(),sdf.format(now));
+                    } catch (Exception e) {
+                        try {
+                            JddjOrderUtil.sendDeliveryEndOrder(orgJson,waterOrderPo.getOrderid(), waterOrderPo.getBuyerpin(),sdf.format(now));
+                        } catch (Exception exception) {
+                            logger.info("retry:{}","失败！");
+                        }
+                        logger.info("retry:{}",1);
+                    }
+                }
             }
         }
 
@@ -616,25 +624,26 @@ public class BusinessServiceImpl implements BusinessService {
 //            throw new PublicException("选中订单状态有变化，请重新选择");
 //        }
             //todo 向京东推送驳回
-//        SysUserPo user = sysUserDao.findById(SysUserPo.class, changeOrder.getUserId());
-//        JSONObject orgJson = new JSONObject();
-//        orgJson.put("orderId",waterOrderPo.getOrderid());
-//        orgJson.put("operator",user.getUserName());
-//        orgJson.put("isAgreed",false);
-//        orgJson.put("remark",changeOrder.getRemark());
-//
-//        try {
-//            JddjOrderUtil.sendOrderCancelOperate(orgJson,waterOrderPo.getOrderid(), true, user.getUserName(), changeOrder.getRemark());
-//        } catch (Exception e) {
-//            try {
-//                JddjOrderUtil.sendOrderCancelOperate(orgJson,waterOrderPo.getOrderid(), true, user.getUserName(), changeOrder.getRemark());
-//            } catch (Exception exception) {
-//                logger.info("retry:{}","失败！");
-//            }
-//            logger.info("retry:{}",1);
-//        }
-        }
+            if (flag){
+                SysUserPo user = sysUserDao.findById(SysUserPo.class, changeOrder.getUserId());
+                JSONObject orgJson = new JSONObject();
+                orgJson.put("orderId",waterOrderPo.getOrderid());
+                orgJson.put("operator",user.getUserName());
+                orgJson.put("isAgreed",false);
+                orgJson.put("remark",changeOrder.getRemark());
 
+                try {
+                    JddjOrderUtil.sendOrderCancelOperate(orgJson,waterOrderPo.getOrderid(), true, user.getUserName(), changeOrder.getRemark());
+                } catch (Exception e) {
+                    try {
+                        JddjOrderUtil.sendOrderCancelOperate(orgJson,waterOrderPo.getOrderid(), true, user.getUserName(), changeOrder.getRemark());
+                    } catch (Exception exception) {
+                        logger.info("retry:{}","失败！");
+                    }
+                    logger.info("retry:{}",1);
+                }
+            }
+        }
     }
 
     private void refuseOrder(ChangeOrderReq changeOrder, String orderStatus, String preOrderStatus) {
@@ -741,21 +750,23 @@ public class BusinessServiceImpl implements BusinessService {
                     throw new PublicException("选中订单状态有变化，请重新选择");
                 }
                 //todo 向京东推送已妥投
-//            JSONObject orgJson = new JSONObject();
-//            orgJson.put("orderId",waterOrderPo.getOrderid());
-//            orgJson.put("operPin",waterOrderPo.getBuyerpin());
-//            orgJson.put("operTime",new Date());
-//
-//            try {
-//                JddjOrderUtil.sendDeliveryEndOrder(orgJson,waterOrderPo.getOrderid(), waterOrderPo.getOrderid(), waterOrderPo.getBuyerpin());
-//            } catch (Exception e) {
-//                try {
-//                    JddjOrderUtil.sendDeliveryEndOrder(orgJson,waterOrderPo.getOrderid(), waterOrderPo.getOrderid(), waterOrderPo.getBuyerpin());
-//                } catch (Exception exception) {
-//                    logger.info("retry:{}","失败！");
-//                }
-//                logger.info("retry:{}",1);
-//            }
+                if (flag){
+                    JSONObject orgJson = new JSONObject();
+                    orgJson.put("orderId",waterOrderPo.getOrderid());
+                    orgJson.put("operPin",waterOrderPo.getBuyerpin());
+                    orgJson.put("operTime",new Date());
+
+                    try {
+                        JddjOrderUtil.sendDeliveryEndOrder(orgJson,waterOrderPo.getOrderid(), waterOrderPo.getOrderid(), waterOrderPo.getBuyerpin());
+                    } catch (Exception e) {
+                        try {
+                            JddjOrderUtil.sendDeliveryEndOrder(orgJson,waterOrderPo.getOrderid(), waterOrderPo.getOrderid(), waterOrderPo.getBuyerpin());
+                        } catch (Exception exception) {
+                            logger.info("retry:{}","失败！");
+                        }
+                        logger.info("retry:{}",1);
+                    }
+                }
             }
         }
 
@@ -877,19 +888,21 @@ public class BusinessServiceImpl implements BusinessService {
 
             for(OrderBusinessPo orderBusinessPo : orderBusinessPos){
                 //todo 向京东推送配送中信息
-//            JSONObject orgJson = new JSONObject();
-//            orgJson.put("orderId",ordermap.get(orderBusinessPo.getOrderId()).getOrderid());
-//            orgJson.put("operator",user.getUserName());
-//            try {
-//                JddjOrderUtil.sendOrderSerllerDelivery(orgJson,ordermap.get(orderBusinessPo.getOrderId()).getOrderid(),user.getUserName());
-//            } catch (Exception e) {
-//                try {
-//                    JddjOrderUtil.sendOrderSerllerDelivery(orgJson,ordermap.get(orderBusinessPo.getOrderId()).getOrderid(),user.getUserName());
-//                } catch (Exception exception) {
-//                    logger.info("retry:{}","失败！");
-//                }
-//                logger.info("retry:{}",1);
-//            }
+                if (flag){
+                    JSONObject orgJson = new JSONObject();
+                    orgJson.put("orderId",ordermap.get(orderBusinessPo.getOrderId()).getOrderid());
+                    orgJson.put("operator",user.getUserName());
+                    try {
+                        JddjOrderUtil.sendOrderSerllerDelivery(orgJson,ordermap.get(orderBusinessPo.getOrderId()).getOrderid(),user.getUserName());
+                    } catch (Exception e) {
+                        try {
+                            JddjOrderUtil.sendOrderSerllerDelivery(orgJson,ordermap.get(orderBusinessPo.getOrderId()).getOrderid(),user.getUserName());
+                        } catch (Exception exception) {
+                            logger.info("retry:{}","失败！");
+                        }
+                        logger.info("retry:{}",1);
+                    }
+                }
                 //todo 微信推送order_business信息
                 OrderListReq req = new OrderListReq();
                 req.setOrderId(orderBusinessPo.getOrderId());
@@ -952,23 +965,25 @@ public class BusinessServiceImpl implements BusinessService {
                 throw new PublicException("选中订单状态有变化，请重新选择");
             }
             //todo 向京东推送同意取消
-//        SysUserPo user = sysUserDao.findById(SysUserPo.class, changeOrder.getUserId());
-//        JSONObject orgJson = new JSONObject();
-//        orgJson.put("orderId",waterOrderPo.getOrderid());
-//        orgJson.put("operator",user.getUserName());
-//        orgJson.put("isAgreed",true);
-//        orgJson.put("remark",changeOrder.getRemark());
-//
-//        try {
-//            JddjOrderUtil.sendOrderCancelOperate(orgJson,waterOrderPo.getOrderid(), true, user.getUserName(), changeOrder.getRemark());
-//        } catch (Exception e) {
-//            try {
-//                JddjOrderUtil.sendOrderCancelOperate(orgJson,waterOrderPo.getOrderid(), true, user.getUserName(), changeOrder.getRemark());
-//            } catch (Exception exception) {
-//                logger.info("retry:{}","失败！");
-//            }
-//            logger.info("retry:{}",1);
-//        }
+            if (flag){
+                SysUserPo user = sysUserDao.findById(SysUserPo.class, changeOrder.getUserId());
+                JSONObject orgJson = new JSONObject();
+                orgJson.put("orderId",waterOrderPo.getOrderid());
+                orgJson.put("operator",user.getUserName());
+                orgJson.put("isAgreed",true);
+                orgJson.put("remark",changeOrder.getRemark());
+
+                try {
+                    JddjOrderUtil.sendOrderCancelOperate(orgJson,waterOrderPo.getOrderid(), true, user.getUserName(), changeOrder.getRemark());
+                } catch (Exception e) {
+                    try {
+                        JddjOrderUtil.sendOrderCancelOperate(orgJson,waterOrderPo.getOrderid(), true, user.getUserName(), changeOrder.getRemark());
+                    } catch (Exception exception) {
+                        logger.info("retry:{}","失败！");
+                    }
+                    logger.info("retry:{}",1);
+                }
+            }
         }
     }
 

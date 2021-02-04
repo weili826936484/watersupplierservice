@@ -1,4 +1,5 @@
-
+jd:
+  flag: false
 
 mybatis:
   mapperLocations: classpath*:/mybatis/mapper/*.xml
@@ -57,3 +58,4 @@ server:
   port: 8080
   servlet:
     context-path: /bservice
+
