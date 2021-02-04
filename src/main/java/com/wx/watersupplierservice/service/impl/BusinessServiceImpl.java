@@ -13,6 +13,7 @@ import com.wx.watersupplierservice.pojo.SysSitePojo;
 import com.wx.watersupplierservice.req.*;
 import com.wx.watersupplierservice.service.BusinessService;
 import com.wx.watersupplierservice.util.SealBeanCopierUtil;
+import com.wx.watersupplierservice.util.wx.SendWxMessage2;
 import com.xdf.pscommon.mybatis.rt.PMLO;
 import com.xdf.pscommon.mybatis.rt.QueryFilter;
 import org.apache.commons.lang3.StringUtils;
@@ -72,6 +73,9 @@ public class BusinessServiceImpl implements BusinessService {
 
     @Autowired
     private SysSiteUserDao sysSiteUserDao;
+
+    @Autowired
+    private SendWxMessage2 sendWxMessage2;
 
     @Override
     public WatersPageDto getSendWaterList(SendWatersReq sendWatersReq) {
@@ -179,8 +183,12 @@ public class BusinessServiceImpl implements BusinessService {
             throw new PublicException("参数不全");
         }
         synchronized (this){
-            WaterOrderPo waterOrderPo = waterOrderDao.findById(WaterOrderPo.class, changeOrder.getOrderId());
-            if (waterOrderPo.getOrderstatus().equals(OrderStatusEnum.ORDER_LOCK.getCode())){
+            OrderListReq req = new OrderListReq();
+            req.setOrderId(changeOrder.getOrderId());
+            List<OrderDto> orgOrderList = waterOrderDao.getOrgOrderList(req);
+            OrderDto orderDto = orgOrderList.get(0);
+
+            if (orderDto.getOrderstatus().equals(OrderStatusEnum.ORDER_LOCK.getCode())){
                 throw new PublicException("订单状态已锁定");
             }
             OrderBusinessPo orderBusinessPo = orderBusinessDao.findByOrderId(changeOrder.getOrderId());
@@ -189,9 +197,9 @@ public class BusinessServiceImpl implements BusinessService {
             String oldOptCode = null;
             if (orderBusinessPo == null){
                 OrderBusinessPo po = new OrderBusinessPo();
-                po.setOrderId(waterOrderPo.getId());
+                po.setOrderId(orderDto.getId());
                 po.setOptCode(OPTStatusEnum.SITE_BACK.getCode());
-                po.setPlatform(waterOrderPo.getPlatform());
+                po.setPlatform(orderDto.getPlatform());
                 po.setCreateBy(changeOrder.getUserId());
                 orderBusinessPos.add(po);
                 num = orderBusinessDao.insertList(orderBusinessPos);
@@ -219,7 +227,12 @@ public class BusinessServiceImpl implements BusinessService {
             }
             //todo 给水站发消息
             if (oldOptCode != null && !Objects.equals(oldOptCode,"L23")){
-
+                //根据siteid 获取user
+                Integer siteId = orderBusinessPo.getSiteId();
+                List<String> users = sysSiteUserDao.getuserbysite(siteId);
+                if(users != null  && !users.isEmpty()){
+                    SendWxMessage2.sendCancleOrder(orderDto,null,users);
+                }
             }
         }
     }
@@ -270,6 +283,7 @@ public class BusinessServiceImpl implements BusinessService {
         orderBusinessPo.setRemand(2);
         orderBusinessDao.update(orderBusinessPo);
         //todo 向水站推送催单
+
     }
 
     private void backOrder(ChangeOrderReq changeOrder, String orderStatus, String preOrderStatus) {
@@ -627,8 +641,11 @@ public class BusinessServiceImpl implements BusinessService {
         if (Objects.isNull(changeOrder.getOrderId())){
             throw new PublicException("参数不全");
         }
-        WaterOrderPo waterOrderPo = waterOrderDao.findById(WaterOrderPo.class, changeOrder.getOrderId());
-        if (waterOrderPo.getOrderstatus().equals(OrderStatusEnum.ORDER_LOCK.getCode())){
+        OrderListReq req = new OrderListReq();
+        req.setOrderId(changeOrder.getOrderId());
+        List<OrderDto> orgOrderList = waterOrderDao.getOrgOrderList(req);
+        OrderDto orderDto = orgOrderList.get(0);
+        if (orderDto.getOrderstatus().equals(OrderStatusEnum.ORDER_LOCK.getCode())){
             throw new PublicException("订单状态已锁定");
         }
         OrderBusinessPo orderBusinessPo = orderBusinessDao.findByOrderId(changeOrder.getOrderId());
@@ -642,6 +659,7 @@ public class BusinessServiceImpl implements BusinessService {
             orderBusinessProcessPo.setCreateBy(changeOrder.getUserId());
             orderBusinessProcessPo.setOptCode(changeOrder.getOptCode());
             orderBusinessProcessPo.setUpdateTime(new Date());
+            orderBusinessProcessPo.setCreateTime(new Date());
             if (StringUtils.isNotBlank(changeOrder.getRemark())){
                 orderBusinessProcessPo.setResultInfo(changeOrder.getRemark());
             }
@@ -658,6 +676,12 @@ public class BusinessServiceImpl implements BusinessService {
 //            throw new PublicException("选中订单状态有变化，请重新选择");
 //        }
             //todo 向商户推送
+            String deliverystationnoisv = orderDto.getDeliverystationnoisv();
+            Integer shopid = sysShopUserDao.getIdByCode(deliverystationnoisv);
+            List<String> users = sysShopUserDao.getUserByShop(shopid);
+            if(users != null && !users.isEmpty()){
+                SendWxMessage2.sendRefuseOrder(orderDto,null,users,orderBusinessProcessPo.getCreateTime(),orderBusinessProcessPo.getResultInfo());
+            }
         }
     }
 
@@ -867,6 +891,15 @@ public class BusinessServiceImpl implements BusinessService {
 //                logger.info("retry:{}",1);
 //            }
                 //todo 微信推送order_business信息
+                OrderListReq req = new OrderListReq();
+                req.setOrderId(orderBusinessPo.getOrderId());
+                List<OrderDto> orgOrderList = waterOrderDao.getOrgOrderList(req);
+                OrderDto orderDto = orgOrderList.get(0);
+                Integer siteId = orderBusinessPo.getSiteId();
+                List<String> users = sysSiteUserDao.getuserbysite(siteId);
+                if(users != null  && !users.isEmpty()){
+                    SendWxMessage2.sendNewOrder(orderDto,orderDto.getProductList(),users);
+                }
             }
         }
     }

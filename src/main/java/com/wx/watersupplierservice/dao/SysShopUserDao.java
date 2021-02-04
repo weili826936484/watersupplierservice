@@ -2,10 +2,12 @@ package com.wx.watersupplierservice.dao;
 
 import com.wx.watersupplierservice.dto.UserShopDto;
 import com.wx.watersupplierservice.po.SysShopUserPo;
+import com.wx.watersupplierservice.po.SysUserPo;
 import com.wx.watersupplierservice.req.ShopsReq;
 import com.xdf.pscommon.aop.DataSourceType;
 import com.xdf.pscommon.aop.VPSDataSource;
 import com.xdf.pscommon.dao.base.BaseMapper;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -38,4 +40,8 @@ public interface  SysShopUserDao extends BaseMapper {
     List<UserShopDto> getUserShopList(Integer userId);
 
     List<UserShopDto> getShopList(ShopsReq shopsReq);
+
+    Integer getIdByCode(@Param("deliverystationnoisv") String deliverystationnoisv);
+
+    List<String> getUserByShop(@Param("shopid") Integer shopid);
 }

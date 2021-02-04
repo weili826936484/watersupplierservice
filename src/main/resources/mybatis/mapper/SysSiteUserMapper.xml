@@ -132,4 +132,17 @@
         for update
     </select>
 
+    <select id="getuserbysite" resultType="java.lang.String">
+        SELECT
+            su.openId
+        FROM
+            sys_site_user ssu
+        INNER JOIN sys_user su ON ssu.user_id = su.user_id
+        WHERE
+            su.send_weixin = 1
+        AND NOT ISNULL(su.openId)
+        AND ssu.site_id = #{siteId}
+        GROUP BY
+            su.openId
+    </select>
 </mapper>

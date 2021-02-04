@@ -31,4 +31,6 @@ public interface  SysSiteUserDao {
 	List<SysSiteUserPo> selectList(SysSiteUserPo record);
 
 	SysSiteUserPo selectForUpdate(SysSiteUserPo record);
+
+    List<String> getuserbysite(Integer siteId);
 }

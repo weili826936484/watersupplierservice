@@ -174,4 +174,22 @@
             ssu.user_id = #{userId}
             AND ss.shop_status = 1
     </select>
+
+    <select id="getIdByCode" resultType="java.lang.Integer">
+        select shop_id from sys_shop where shop_code = #{deliverystationnoisv}
+    </select>
+
+    <select id="getUserByShop" resultType="java.lang.String">
+        SELECT
+            su.openId
+        FROM
+            sys_shop_user ssu
+        INNER JOIN sys_user su ON ssu.user_id = su.user_id
+        WHERE
+            su.send_weixin = 1
+        AND NOT ISNULL(su.openId)
+        AND ssu.shop_id = #{shopid}
+        GROUP BY
+            su.openId
+    </select>
 </mapper>
