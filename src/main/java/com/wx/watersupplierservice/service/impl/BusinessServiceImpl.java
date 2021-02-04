@@ -876,7 +876,7 @@ public class BusinessServiceImpl implements BusinessService {
             throw new PublicException("参数不全");
         }
         WaterOrderPo waterOrderPo = waterOrderDao.findById(WaterOrderPo.class, changeOrder.getOrderId());
-        if (Objects.isNull(waterOrderPo) || !orderStatus.equals(waterOrderPo.getOrderstatus()) || !OrderStatusEnum.ORDER_LOCK.getCode().equals(waterOrderPo.getOrderstatus())){
+        if (Objects.isNull(waterOrderPo) && !orderStatus.equals(waterOrderPo.getOrderstatus()) && !OrderStatusEnum.ORDER_LOCK.getCode().equals(waterOrderPo.getOrderstatus())){
             throw new PublicException("订单状态有变化，请重新选择！");
         }
         synchronized (this){

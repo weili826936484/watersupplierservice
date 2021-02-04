@@ -87,6 +87,7 @@ public class SendWxMessage {
 	/**
 	 * 用户取消申请
 	 * @param orderInfo
+	 *
 	 * @param productList
 	 * @param
 	 */
