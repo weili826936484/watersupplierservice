@@ -1,5 +1,6 @@
 package com.wx.watersupplierservice.util;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Properties;
 public class Cfg {
 	/**
@@ -9,8 +10,10 @@ public class Cfg {
     
     static {
         try {
-        	properties.load(Cfg.class.getClassLoader().getResourceAsStream(
-                    "wx.properties"));
+            InputStream resourceAsStream = Cfg.class.getClassLoader().getResourceAsStream(
+                    "wx/wx.properties");
+            System.out.println("resourceAsStream"+resourceAsStream);
+            properties.load(resourceAsStream);
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -917,6 +917,14 @@ public class BusinessServiceImpl implements BusinessService {
         }
     }
 
+    public static void main(String[] args) {
+        OrderDto orderDto = new OrderDto();
+        List<String> users = new ArrayList<>();
+        List<OrderDto.ProductDto> ProductDto = new ArrayList<>();
+        users.add("or7Zrs0uOipGVpZTj3bkZpHRRtEo");
+        SendWxMessage2.sendNewOrder(orderDto,ProductDto,users);
+    }
+
     private void cancelOrder(ChangeOrderReq changeOrder, String orderStatus, String preOrderStatus) {
         if (Objects.isNull(changeOrder.getOrderId())){
             throw new PublicException("参数不全");
