@@ -200,4 +200,55 @@ public class SendWxMessage2 {
 		}
 	}
 
+    /**
+     * 商家催单    用户催单提醒
+     * @param orderInfo
+     * @param userList
+     */
+    public static void reSendOrder(OrderDto orderInfo, List<String> userList) {
+
+        //新订单通知模板
+        String templatId = "18LxlAldRYHCMuIkavTUgeDYsaO8mPzKBQV8CqTNzKg";
+        String clickUrl = "";
+
+        //拼接推送消息模板
+        String topColor = "";
+        JSONObject jsc = new JSONObject();
+
+        JSONObject first = new JSONObject();
+        first.put("value", "您收到了一条催单提醒，请及时处理！");
+        first.put("color", "#173177");
+        jsc.put("first", first);
+
+        JSONObject keyword1 = new JSONObject();
+        keyword1.put("value", orderInfo.getOrderid());
+        keyword1.put("color", "#173177");
+        jsc.put("keyword1", keyword1);
+
+        JSONObject keyword2 = new JSONObject();
+        keyword2.put("value", orderInfo.getOptCodeName());    //订单配送状态
+        keyword2.put("color", "#173177");
+        jsc.put("keyword2", keyword2);
+
+        JSONObject keyword3 = new JSONObject();
+        keyword3.put("value", "***"); //此处不用改
+        keyword3.put("color", "#173177");
+        jsc.put("keyword2", keyword3);
+
+        JSONObject remark = new JSONObject();
+        remark.put("value", "客户信息：" +orderInfo.getBuyerfullname() + orderInfo.getBuyertelephone());
+        remark.put("color", "#173177");
+        jsc.put("remark", remark);
+
+        if(userList.size() > 0) {
+            for(int m=0;m<userList.size();m++) {
+                String openId = userList.get(m);
+                if (StringUtils.isNotBlank(openId)) {
+                    //向管理员推送微信
+                    String result =  WeixinUtil.sendNotify(openId, templatId, clickUrl, topColor, jsc);
+                }
+
+            }
+        }
+    }
 }

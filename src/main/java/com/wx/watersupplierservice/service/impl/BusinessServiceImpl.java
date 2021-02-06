@@ -646,9 +646,30 @@ public class BusinessServiceImpl implements BusinessService {
         if (Objects.isNull(changeOrder.getOrderId())){
             throw new PublicException("参数不全");
         }
+        WaterOrderPo waterOrderPo = waterOrderDao.findById(WaterOrderPo.class, changeOrder.getOrderId());
+        if (Objects.isNull(waterOrderPo)){
+            throw new PublicException("参数有误");
+        }
         OrderBusinessPo orderBusinessPo = orderBusinessDao.findByOrderId(changeOrder.getOrderId());
-        if (Objects.isNull(orderBusinessPo)){
-            throw new PublicException("参数错误");
+        List<OrderBusinessPo> orderBusinessPos = new ArrayList<>();
+        int num;
+        if (orderBusinessPo == null){
+            OrderBusinessPo po = new OrderBusinessPo();
+            po.setOrderId(waterOrderPo.getId());
+            po.setOptCode(OPTStatusEnum.SITE_default.getCode());
+            po.setPlatform(waterOrderPo.getPlatform());
+            po.setCreateBy(changeOrder.getUserId());
+            po.setRemand(1);
+            orderBusinessPos.add(po);
+            num = orderBusinessDao.insertList(orderBusinessPos);
+            if (num == 0){
+                throw new PublicException("操作失败");
+            }
+            orderBusinessPo = orderBusinessPos.get(0);
+        }else {
+            //更新状态
+            orderBusinessPo.setRemand(1);
+            orderBusinessDao.update(orderBusinessPo);
         }
         //如操作明细表
         OrderBusinessProcessPo orderBusinessProcessPo = new OrderBusinessProcessPo();
@@ -659,15 +680,18 @@ public class BusinessServiceImpl implements BusinessService {
         if (StringUtils.isNotBlank(changeOrder.getRemark())){
             orderBusinessProcessPo.setResultInfo(changeOrder.getRemark());
         }
-        int num = orderBusinessProcessDao.insert(orderBusinessProcessPo);
+        num = orderBusinessProcessDao.insert(orderBusinessProcessPo);
         if (num == 0){
             throw new PublicException("操作失败！");
         }
-        //更新状态
-        orderBusinessPo.setRemand(1);
-        orderBusinessDao.update(orderBusinessPo);
         //todo 向水站推送催单
-
+        OrderListReq req = new OrderListReq();
+        req.setOrderId(orderBusinessPo.getOrderId());
+        List<OrderDto> orgOrderList = waterOrderDao.getOrgOrderList(req);
+        OrderDto orderDto = orgOrderList.get(0);
+        Integer siteId = orderBusinessPo.getSiteId();
+        List<String> users = sysSiteUserDao.getuserbysite(siteId);
+        SendWxMessage2.reSendOrder(orderDto,users);
     }
 
     private void cancelReturnOrder(ChangeOrderReq changeOrder, String orderStatus, String preOrderStatus) {
