@@ -1,5 +1,9 @@
 package com.wx.watersupplierservice.service.impl;
 
+import com.sankuai.meituan.shangou.open.sdk.domain.SystemParam;
+import com.sankuai.meituan.shangou.open.sdk.exception.SgOpenException;
+import com.sankuai.meituan.shangou.open.sdk.request.*;
+import com.sankuai.meituan.shangou.open.sdk.response.SgOpenResponse;
 import com.wx.watersupplierservice.dao.*;
 import com.wx.watersupplierservice.dto.*;
 import com.wx.watersupplierservice.enums.OPTStatusEnum;
@@ -82,6 +86,17 @@ public class BusinessServiceImpl implements BusinessService {
 
     @Value("${jd.flag}")
     private boolean jdflag;
+
+    @Value("${mt.flag}")
+    private boolean mtflag;
+
+    @Value("mt.appSecret")
+    private String appSecret;
+
+    @Value("${mt.appId}")
+    private String appId;
+
+
 
     @Override
     public WatersPageDto getSendWaterList(SendWatersReq sendWatersReq) {
@@ -362,9 +377,44 @@ public class BusinessServiceImpl implements BusinessService {
                             logger.info("retry:{}",1);
                         }
                     }
+                case "MT":
+                    if (mtflag){
+                        try {
+                            orderCancel(waterOrderPo.getOrderid());
+                        }catch (Exception e){
+                            logger.info("retry:{}",1);
+                            try {
+                                orderCancel(waterOrderPo.getOrderid());
+                            } catch (Exception e1){
+                                logger.info("retry:{}","2失败！");
+                            }
+                        }
+                    }
             }
         }
 
+    }
+
+    public void orderCancel(String orderId){
+        SystemParam systemParam = new SystemParam(appId, appSecret);
+        OrderCancelRequest orderCancelRequest = new OrderCancelRequest(systemParam);
+        orderCancelRequest.setOrder_id(orderId);
+        SgOpenResponse sgOpenResponse;
+        try {
+            sgOpenResponse = orderCancelRequest.doRequest();
+        } catch (SgOpenException e) {
+            e.printStackTrace();
+            return;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return;
+        }
+        //发起请求时的sig，用来联系美团员工排查问题时使用
+        String requestSig = sgOpenResponse.getRequestSig();
+        System.out.println(requestSig);
+        //请求返回的结果，按照官网的接口文档自行解析即可
+        String requestResult = sgOpenResponse.getRequestResult();
+        System.out.println(requestResult);
     }
 
     private void okOrder(ChangeOrderReq changeOrder, String orderStatus, String preOrderStatus) {
@@ -439,17 +489,49 @@ public class BusinessServiceImpl implements BusinessService {
                                 try {
                                     JddjOrderUtil.sendDeliveryEndOrder(orgJson,waterOrderPo.getOrderid(), waterOrderPo.getBuyerpin(),sdf.format(now));
                                 } catch (Exception exception) {
-                                    logger.info("retry:{}","失败！");
+                                    logger.info("retry:{}","2失败！");
                                 }
                                 logger.info("retry:{}",1);
+                            }
+                        }
+                    case "MT":
+                        if (mtflag){
+                            try {
+                                orderArrived(waterOrderPo.getOrderid());
+                            }catch (Exception e){
+                                logger.info("retry:{}",1);
+                                try {
+                                    orderArrived(waterOrderPo.getOrderid());
+                                } catch (Exception e1){
+                                    logger.info("retry:{}","2失败！");
+                                }
                             }
                         }
                 }
             }
         }
+    }
 
-
-
+    public void orderArrived(String orderId){
+        SystemParam systemParam = new SystemParam(appId, appSecret);
+        OrderArrivedRequest request = new OrderArrivedRequest(systemParam);
+        request.setOrder_id(orderId);
+        SgOpenResponse sgOpenResponse;
+        try {
+            sgOpenResponse = request.doRequest();
+        } catch (SgOpenException e) {
+            e.printStackTrace();
+            return;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return;
+        }
+        //发起请求时的sig，用来联系美团员工排查问题时使用
+        String requestSig = sgOpenResponse.getRequestSig();
+        System.out.println(requestSig);
+        //请求返回的结果，按照官网的接口文档自行解析即可
+        String requestResult = sgOpenResponse.getRequestResult();
+        System.out.println(requestResult);
     }
 
     @Override
@@ -655,9 +737,45 @@ public class BusinessServiceImpl implements BusinessService {
                             logger.info("retry:{}",1);
                         }
                     }
+                case "MT":
+                    if (mtflag){
+                        try {
+                            orderRefundReject(waterOrderPo.getOrderid(),changeOrder.getRemark());
+                        }catch (Exception e){
+                            logger.info("retry:{}",1);
+                            try {
+                                orderRefundReject(waterOrderPo.getOrderid(),changeOrder.getRemark());
+                            } catch (Exception e1){
+                                logger.info("retry:{}","2失败！");
+                            }
+                        }
+                    }
             }
         }
     }
+    public void orderRefundReject (String orderId, String reason){
+        SystemParam systemParam = new SystemParam(appId, appSecret);
+        OrderRefundRejectRequest request = new OrderRefundRejectRequest(systemParam);
+        request.setOrder_id(orderId);
+        request.setReason(reason);
+        SgOpenResponse sgOpenResponse;
+        try {
+            sgOpenResponse = request.doRequest();
+        } catch (SgOpenException e) {
+            e.printStackTrace();
+            return;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return;
+        }
+        //发起请求时的sig，用来联系美团员工排查问题时使用
+        String requestSig = sgOpenResponse.getRequestSig();
+        System.out.println(requestSig);
+        //请求返回的结果，按照官网的接口文档自行解析即可
+        String requestResult = sgOpenResponse.getRequestResult();
+        System.out.println(requestResult);
+    }
+
 
     private void refuseOrder(ChangeOrderReq changeOrder, String orderStatus, String preOrderStatus) {
         if (Objects.isNull(changeOrder.getOrderId())){
@@ -780,6 +898,19 @@ public class BusinessServiceImpl implements BusinessService {
                                     logger.info("retry:{}","失败！");
                                 }
                                 logger.info("retry:{}",1);
+                            }
+                        }
+                    case "MT":
+                        if (mtflag){
+                            try {
+                                orderArrived(waterOrderPo.getOrderid());
+                            }catch (Exception e){
+                                logger.info("retry:{}",1);
+                                try {
+                                    orderArrived(waterOrderPo.getOrderid());
+                                } catch (Exception e1){
+                                    logger.info("retry:{}","2失败！");
+                                }
                             }
                         }
                 }
@@ -922,6 +1053,19 @@ public class BusinessServiceImpl implements BusinessService {
                                 logger.info("retry:{}",1);
                             }
                         }
+                    case "MT":
+                        if (mtflag){
+                            try {
+                                orderDelivering(ordermap.get(orderBusinessPo.getOrderId()).getOrderid());
+                            }catch (Exception e){
+                                logger.info("retry:{}",1);
+                                try {
+                                    orderDelivering(ordermap.get(orderBusinessPo.getOrderId()).getOrderid());
+                                } catch (Exception e1){
+                                    logger.info("retry:{}","2失败！");
+                                }
+                            }
+                        }
                 }
 
                 //todo 微信推送order_business信息
@@ -936,6 +1080,28 @@ public class BusinessServiceImpl implements BusinessService {
                 }
             }
         }
+    }
+
+    public void orderDelivering (String orderId){
+        SystemParam systemParam = new SystemParam(appId, appSecret);
+        OrderDeliveringRequest request = new OrderDeliveringRequest(systemParam);
+        request.setOrder_id(orderId);
+        SgOpenResponse sgOpenResponse;
+        try {
+            sgOpenResponse = request.doRequest();
+        } catch (SgOpenException e) {
+            e.printStackTrace();
+            return;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return;
+        }
+        //发起请求时的sig，用来联系美团员工排查问题时使用
+        String requestSig = sgOpenResponse.getRequestSig();
+        System.out.println(requestSig);
+        //请求返回的结果，按照官网的接口文档自行解析即可
+        String requestResult = sgOpenResponse.getRequestResult();
+        System.out.println(requestResult);
     }
 
     public static void main(String[] args) {
@@ -1016,8 +1182,44 @@ public class BusinessServiceImpl implements BusinessService {
                             logger.info("retry:{}",1);
                         }
                     }
+                case "MT":
+                    if (mtflag){
+                        try {
+                            orderRefundAgree(waterOrderPo.getOrderid(),changeOrder.getRemark());
+                        }catch (Exception e){
+                            logger.info("retry:{}",1);
+                            try {
+                                orderRefundAgree(waterOrderPo.getOrderid(),changeOrder.getRemark());
+                            } catch (Exception e1){
+                                logger.info("retry:{}","2失败！");
+                            }
+                        }
+                    }
             }
         }
+    }
+
+    public void orderRefundAgree (String orderId, String reason){
+        SystemParam systemParam = new SystemParam(appId, appSecret);
+        OrderRefundAgreeRequest request = new OrderRefundAgreeRequest(systemParam);
+        request.setOrder_id(orderId);
+        request.setReason(reason);
+        SgOpenResponse sgOpenResponse;
+        try {
+            sgOpenResponse = request.doRequest();
+        } catch (SgOpenException e) {
+            e.printStackTrace();
+            return;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return;
+        }
+        //发起请求时的sig，用来联系美团员工排查问题时使用
+        String requestSig = sgOpenResponse.getRequestSig();
+        System.out.println(requestSig);
+        //请求返回的结果，按照官网的接口文档自行解析即可
+        String requestResult = sgOpenResponse.getRequestResult();
+        System.out.println(requestResult);
     }
 
     private UseroOrderPageDto getSenderOrderList(OrderListReq orderListReq, UseroOrderPageDto useroOrderPageDto) {

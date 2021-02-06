@@ -1,6 +1,9 @@
 jd:
   flag: false
-
+mt:
+  flag: false
+  appSecretL: xxx
+  appId: xxx
 mybatis:
   mapperLocations: classpath*:/mybatis/mapper/*.xml
   configLocation: classpath:/mybatis/mybatis-config.xml
