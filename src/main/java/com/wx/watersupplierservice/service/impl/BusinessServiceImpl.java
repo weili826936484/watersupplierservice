@@ -367,14 +367,13 @@ public class BusinessServiceImpl implements BusinessService {
                         orgJson.put("operTime",sdf.format(now));
                         orgJson.put("operRemark",changeOrder.getRemark());
                         try {
-                            JddjOrderUtil.cancelAndRefund(orgJson,waterOrderPo.getOrderid(), waterOrderPo.getBuyerpin(),sdf.format(now),changeOrder.getRemark());
-                        } catch (Exception e) {
-                            try {
-                                JddjOrderUtil.cancelAndRefund(orgJson,waterOrderPo.getOrderid(), waterOrderPo.getBuyerpin(),sdf.format(now),changeOrder.getRemark());
-                            } catch (Exception exception) {
-                                logger.info("retry:{}","失败！");
+                            String s = JddjOrderUtil.cancelAndRefund(orgJson, waterOrderPo.getOrderid(), waterOrderPo.getBuyerpin(), sdf.format(now), changeOrder.getRemark());
+                            com.alibaba.fastjson.JSONObject jsonObject = com.alibaba.fastjson.JSONObject.parseObject(s);
+                            if (!"0".equals(jsonObject.get("code").toString())){
+                                throw new PublicException(jsonObject.get("msg").toString());
                             }
-                            logger.info("retry:{}",1);
+                        } catch (Exception e) {
+                            throw new PublicException("服务开小差，请重试");
                         }
                     }
                 case "MT":
@@ -484,14 +483,13 @@ public class BusinessServiceImpl implements BusinessService {
                             orgJson.put("operTime",sdf.format(now));
 
                             try {
-                                JddjOrderUtil.sendDeliveryEndOrder(orgJson,waterOrderPo.getOrderid(), waterOrderPo.getBuyerpin(),sdf.format(now));
-                            } catch (Exception e) {
-                                try {
-                                    JddjOrderUtil.sendDeliveryEndOrder(orgJson,waterOrderPo.getOrderid(), waterOrderPo.getBuyerpin(),sdf.format(now));
-                                } catch (Exception exception) {
-                                    logger.info("retry:{}","2失败！");
+                                String s = JddjOrderUtil.sendDeliveryEndOrder(orgJson, waterOrderPo.getOrderid(), waterOrderPo.getBuyerpin(), sdf.format(now));
+                                com.alibaba.fastjson.JSONObject jsonObject = com.alibaba.fastjson.JSONObject.parseObject(s);
+                                if (!"0".equals(jsonObject.get("code").toString())){
+                                    throw new PublicException(jsonObject.get("msg").toString());
                                 }
-                                logger.info("retry:{}",1);
+                            } catch (Exception e) {
+                                throw new PublicException("服务开小差，请重试");
                             }
                         }
                     case "MT":
@@ -751,14 +749,13 @@ public class BusinessServiceImpl implements BusinessService {
                         orgJson.put("remark",changeOrder.getRemark());
 
                         try {
-                            JddjOrderUtil.sendOrderCancelOperate(orgJson,waterOrderPo.getOrderid(), true, user.getUserName(), changeOrder.getRemark());
-                        } catch (Exception e) {
-                            try {
-                                JddjOrderUtil.sendOrderCancelOperate(orgJson,waterOrderPo.getOrderid(), true, user.getUserName(), changeOrder.getRemark());
-                            } catch (Exception exception) {
-                                logger.info("retry:{}","失败！");
+                            String s = JddjOrderUtil.sendOrderCancelOperate(orgJson, waterOrderPo.getOrderid(), true, user.getUserName(), changeOrder.getRemark());
+                            com.alibaba.fastjson.JSONObject jsonObject = com.alibaba.fastjson.JSONObject.parseObject(s);
+                            if (!"0".equals(jsonObject.get("code").toString())){
+                                throw new PublicException(jsonObject.get("msg").toString());
                             }
-                            logger.info("retry:{}",1);
+                        } catch (Exception e) {
+                            throw new PublicException("服务开小差，请重试");
                         }
                     }
                 case "MT":
@@ -914,14 +911,13 @@ public class BusinessServiceImpl implements BusinessService {
                             orgJson.put("operTime",new Date());
 
                             try {
-                                JddjOrderUtil.sendDeliveryEndOrder(orgJson,waterOrderPo.getOrderid(), waterOrderPo.getOrderid(), waterOrderPo.getBuyerpin());
-                            } catch (Exception e) {
-                                try {
-                                    JddjOrderUtil.sendDeliveryEndOrder(orgJson,waterOrderPo.getOrderid(), waterOrderPo.getOrderid(), waterOrderPo.getBuyerpin());
-                                } catch (Exception exception) {
-                                    logger.info("retry:{}","失败！");
+                                String s = JddjOrderUtil.sendDeliveryEndOrder(orgJson,waterOrderPo.getOrderid(), waterOrderPo.getOrderid(), waterOrderPo.getBuyerpin());
+                                com.alibaba.fastjson.JSONObject jsonObject = com.alibaba.fastjson.JSONObject.parseObject(s);
+                                if (!"0".equals(jsonObject.get("code").toString())){
+                                    throw new PublicException(jsonObject.get("msg").toString());
                                 }
-                                logger.info("retry:{}",1);
+                            } catch (Exception e) {
+                               throw new PublicException("服务开小差，请重试");
                             }
                         }
                     case "MT":
@@ -1067,14 +1063,13 @@ public class BusinessServiceImpl implements BusinessService {
                             orgJson.put("orderId",ordermap.get(orderBusinessPo.getOrderId()).getOrderid());
                             orgJson.put("operator",user.getUserName());
                             try {
-                                JddjOrderUtil.sendOrderSerllerDelivery(orgJson,ordermap.get(orderBusinessPo.getOrderId()).getOrderid(),user.getUserName());
-                            } catch (Exception e) {
-                                try {
-                                    JddjOrderUtil.sendOrderSerllerDelivery(orgJson,ordermap.get(orderBusinessPo.getOrderId()).getOrderid(),user.getUserName());
-                                } catch (Exception exception) {
-                                    logger.info("retry:{}","失败！");
+                                String s = JddjOrderUtil.sendOrderSerllerDelivery(orgJson,ordermap.get(orderBusinessPo.getOrderId()).getOrderid(),user.getUserName());
+                                com.alibaba.fastjson.JSONObject jsonObject = com.alibaba.fastjson.JSONObject.parseObject(s);
+                                if (!"0".equals(jsonObject.get("code").toString())){
+                                    throw new PublicException(jsonObject.get("msg").toString());
                                 }
-                                logger.info("retry:{}",1);
+                            } catch (Exception e) {
+                               throw new PublicException("服务开小差，请重试");
                             }
                         }
                     case "MT":
@@ -1196,14 +1191,13 @@ public class BusinessServiceImpl implements BusinessService {
                         orgJson.put("remark",changeOrder.getRemark());
 
                         try {
-                            JddjOrderUtil.sendOrderCancelOperate(orgJson,waterOrderPo.getOrderid(), true, user.getUserName(), changeOrder.getRemark());
-                        } catch (Exception e) {
-                            try {
-                                JddjOrderUtil.sendOrderCancelOperate(orgJson,waterOrderPo.getOrderid(), true, user.getUserName(), changeOrder.getRemark());
-                            } catch (Exception exception) {
-                                logger.info("retry:{}","失败！");
+                            String s = JddjOrderUtil.sendOrderCancelOperate(orgJson,waterOrderPo.getOrderid(), true, user.getUserName(), changeOrder.getRemark());
+                            com.alibaba.fastjson.JSONObject jsonObject = com.alibaba.fastjson.JSONObject.parseObject(s);
+                            if (!"0".equals(jsonObject.get("code").toString())){
+                                throw new PublicException(jsonObject.get("msg").toString());
                             }
-                            logger.info("retry:{}",1);
+                        } catch (Exception e) {
+                            throw new PublicException("服务开小差，请重试");
                         }
                     }
                 case "MT":
