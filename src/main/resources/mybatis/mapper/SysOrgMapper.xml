@@ -270,4 +270,13 @@
         for update
     </select>
 
+    <select id="findByCode" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column"/>
+        from
+        <include refid="Table_Name"/>
+        where
+        orgcode = #{orgcode}
+        limit 1
+    </select>
 </mapper>

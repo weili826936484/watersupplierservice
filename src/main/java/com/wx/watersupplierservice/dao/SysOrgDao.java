@@ -32,4 +32,6 @@ public interface  SysOrgDao extends BaseMapper {
 	List<SysOrgPo> selectList(SysOrgPo record);
 
 	SysOrgPo selectForUpdate(SysOrgPo record);
+
+    SysOrgPo findByCode(String orgcode);
 }

@@ -84,6 +84,9 @@ public class BusinessServiceImpl implements BusinessService {
     @Autowired
     private SysSiteUserDao sysSiteUserDao;
 
+    @Autowired
+    private SysOrgDao sysOrgDao;
+
     @Value("${jd.flag}")
     private boolean jdflag;
 
@@ -366,6 +369,11 @@ public class BusinessServiceImpl implements BusinessService {
                         orgJson.put("operPin",waterOrderPo.getBuyerpin());
                         orgJson.put("operTime",sdf.format(now));
                         orgJson.put("operRemark",changeOrder.getRemark());
+                        //根据orgcode获取
+                        SysOrgPo sysOrgPo = sysOrgDao.findByCode(waterOrderPo.getOrgcode());
+                        orgJson.put("app_key",sysOrgPo.getAppKey());
+                        orgJson.put("app_secret",sysOrgPo.getAppSecret());
+                        orgJson.put("token",sysOrgPo.getToken());
                         try {
                             String s = JddjOrderUtil.cancelAndRefund(orgJson, waterOrderPo.getOrderid(), waterOrderPo.getBuyerpin(), sdf.format(now), changeOrder.getRemark());
                             com.alibaba.fastjson.JSONObject jsonObject = com.alibaba.fastjson.JSONObject.parseObject(s);
@@ -481,7 +489,11 @@ public class BusinessServiceImpl implements BusinessService {
                             orgJson.put("orderId",waterOrderPo.getOrderid());
                             orgJson.put("operPin",waterOrderPo.getBuyerpin());
                             orgJson.put("operTime",sdf.format(now));
-
+                            //根据orgcode获取
+                            SysOrgPo sysOrgPo = sysOrgDao.findByCode(waterOrderPo.getOrgcode());
+                            orgJson.put("app_key",sysOrgPo.getAppKey());
+                            orgJson.put("app_secret",sysOrgPo.getAppSecret());
+                            orgJson.put("token",sysOrgPo.getToken());
                             try {
                                 String s = JddjOrderUtil.sendDeliveryEndOrder(orgJson, waterOrderPo.getOrderid(), waterOrderPo.getBuyerpin(), sdf.format(now));
                                 com.alibaba.fastjson.JSONObject jsonObject = com.alibaba.fastjson.JSONObject.parseObject(s);
@@ -747,7 +759,11 @@ public class BusinessServiceImpl implements BusinessService {
                         orgJson.put("operator",user.getUserName());
                         orgJson.put("isAgreed",false);
                         orgJson.put("remark",changeOrder.getRemark());
-
+                        //根据orgcode获取
+                        SysOrgPo sysOrgPo = sysOrgDao.findByCode(waterOrderPo.getOrgcode());
+                        orgJson.put("app_key",sysOrgPo.getAppKey());
+                        orgJson.put("app_secret",sysOrgPo.getAppSecret());
+                        orgJson.put("token",sysOrgPo.getToken());
                         try {
                             String s = JddjOrderUtil.sendOrderCancelOperate(orgJson, waterOrderPo.getOrderid(), true, user.getUserName(), changeOrder.getRemark());
                             com.alibaba.fastjson.JSONObject jsonObject = com.alibaba.fastjson.JSONObject.parseObject(s);
@@ -909,7 +925,11 @@ public class BusinessServiceImpl implements BusinessService {
                             orgJson.put("orderId",waterOrderPo.getOrderid());
                             orgJson.put("operPin",waterOrderPo.getBuyerpin());
                             orgJson.put("operTime",new Date());
-
+                            //根据orgcode获取
+                            SysOrgPo sysOrgPo = sysOrgDao.findByCode(waterOrderPo.getOrgcode());
+                            orgJson.put("app_key",sysOrgPo.getAppKey());
+                            orgJson.put("app_secret",sysOrgPo.getAppSecret());
+                            orgJson.put("token",sysOrgPo.getToken());
                             try {
                                 String s = JddjOrderUtil.sendDeliveryEndOrder(orgJson,waterOrderPo.getOrderid(), waterOrderPo.getOrderid(), waterOrderPo.getBuyerpin());
                                 com.alibaba.fastjson.JSONObject jsonObject = com.alibaba.fastjson.JSONObject.parseObject(s);
@@ -1059,9 +1079,15 @@ public class BusinessServiceImpl implements BusinessService {
                 switch (platform) {
                     case "JDDJ":
                         if (jdflag){
+
                             JSONObject orgJson = new JSONObject();
                             orgJson.put("orderId",ordermap.get(orderBusinessPo.getOrderId()).getOrderid());
                             orgJson.put("operator",user.getUserName());
+                            //根据orgcode获取
+                            SysOrgPo sysOrgPo = sysOrgDao.findByCode(ordermap.get(orderBusinessPo.getOrderId()).getOrgcode());
+                            orgJson.put("app_key",sysOrgPo.getAppKey());
+                            orgJson.put("app_secret",sysOrgPo.getAppSecret());
+                            orgJson.put("token",sysOrgPo.getToken());
                             try {
                                 String s = JddjOrderUtil.sendOrderSerllerDelivery(orgJson,ordermap.get(orderBusinessPo.getOrderId()).getOrderid(),user.getUserName());
                                 com.alibaba.fastjson.JSONObject jsonObject = com.alibaba.fastjson.JSONObject.parseObject(s);
@@ -1189,7 +1215,11 @@ public class BusinessServiceImpl implements BusinessService {
                         orgJson.put("operator",user.getUserName());
                         orgJson.put("isAgreed",true);
                         orgJson.put("remark",changeOrder.getRemark());
-
+                        //根据orgcode获取
+                        SysOrgPo sysOrgPo = sysOrgDao.findByCode(waterOrderPo.getOrgcode());
+                        orgJson.put("app_key",sysOrgPo.getAppKey());
+                        orgJson.put("app_secret",sysOrgPo.getAppSecret());
+                        orgJson.put("token",sysOrgPo.getToken());
                         try {
                             String s = JddjOrderUtil.sendOrderCancelOperate(orgJson,waterOrderPo.getOrderid(), true, user.getUserName(), changeOrder.getRemark());
                             com.alibaba.fastjson.JSONObject jsonObject = com.alibaba.fastjson.JSONObject.parseObject(s);
