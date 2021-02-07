@@ -34,6 +34,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -924,14 +925,18 @@ public class BusinessServiceImpl implements BusinessService {
                             JSONObject orgJson = new JSONObject();
                             orgJson.put("orderId",waterOrderPo.getOrderid());
                             orgJson.put("operPin",waterOrderPo.getBuyerpin());
-                            orgJson.put("operTime",new Date());
+
                             //根据orgcode获取
                             SysOrgPo sysOrgPo = sysOrgDao.findByCode(waterOrderPo.getOrgcode());
                             orgJson.put("app_key",sysOrgPo.getAppKey());
                             orgJson.put("app_secret",sysOrgPo.getAppSecret());
                             orgJson.put("token",sysOrgPo.getToken());
+                            DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                            String now = format.format(new Date());
+                            orgJson.put("operTime",now);
+
                             try {
-                                String s = JddjOrderUtil.sendDeliveryEndOrder(orgJson,waterOrderPo.getOrderid(), waterOrderPo.getOrderid(), waterOrderPo.getBuyerpin());
+                                String s = JddjOrderUtil.sendDeliveryEndOrder(orgJson,waterOrderPo.getOrderid(), waterOrderPo.getBuyerpin(), now);
                                 com.alibaba.fastjson.JSONObject jsonObject = com.alibaba.fastjson.JSONObject.parseObject(s);
                                 if (!"0".equals(jsonObject.get("code").toString())){
                                     throw new PublicException(jsonObject.get("msg").toString());
