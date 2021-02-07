@@ -206,9 +206,10 @@ public class SendWxMessage2 {
      * @param userList
      */
     public static void reSendOrder(OrderDto orderInfo, List<String> userList) {
-
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date now = new Date();
         //新订单通知模板
-        String templatId = "18LxlAldRYHCMuIkavTUgeDYsaO8mPzKBQV8CqTNzKg";
+        String templatId = "JRVnmrkFff4gjePj5wAAru1Co8e_D-cgT5A9k83gM_M";
         String clickUrl = "";
 
         //拼接推送消息模板
@@ -231,12 +232,12 @@ public class SendWxMessage2 {
         jsc.put("keyword2", keyword2);
 
         JSONObject keyword3 = new JSONObject();
-        keyword3.put("value", "***"); //此处不用改
+        keyword3.put("value", sdf.format(now)); //此处不用改
         keyword3.put("color", "#173177");
         jsc.put("keyword2", keyword3);
 
         JSONObject remark = new JSONObject();
-        remark.put("value", "客户信息：" +orderInfo.getBuyerfullname() + orderInfo.getBuyertelephone());
+        remark.put("value", orderInfo.getBuyerfullname() + orderInfo.getBuyertelephone());
         remark.put("color", "#173177");
         jsc.put("remark", remark);
 
