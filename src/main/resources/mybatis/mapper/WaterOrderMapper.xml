@@ -161,7 +161,7 @@
     </resultMap>
 
     <sql id="Table_Name">
-        water_supplier.water_order
+        water_order
     </sql>
 
     <sql id="Base_Column">

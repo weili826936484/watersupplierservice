@@ -9,7 +9,7 @@
     </resultMap>
 
     <sql id="Table_Name">
-        water_supplier.sys_site_user
+        sys_site_user
     </sql>
 
     <sql id="Base_Column">

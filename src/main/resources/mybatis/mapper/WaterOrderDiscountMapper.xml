@@ -20,7 +20,7 @@
     </resultMap>
 
     <sql id="Table_Name">
-        water_supplier.water_order_discount
+        water_order_discount
     </sql>
 
     <sql id="Base_Column">
