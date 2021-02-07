@@ -2,8 +2,8 @@ jd:
   flag: false
 mt:
   flag: false
-  appSecretL: xxx
-  appId: xxx
+  appSecret: fcd4c3b4094a571db8884de25974071d
+  appId: 6054
 mybatis:
   mapperLocations: classpath*:/mybatis/mapper/*.xml
   configLocation: classpath:/mybatis/mybatis-config.xml
