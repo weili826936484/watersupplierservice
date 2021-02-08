@@ -21,9 +21,7 @@ import com.wx.watersupplierservice.util.jddj.JddjOrderUtil;
 import com.wx.watersupplierservice.util.wx.SendWxMessage2;
 import com.xdf.pscommon.mybatis.rt.PMLO;
 import com.xdf.pscommon.mybatis.rt.QueryFilter;
-import javafx.application.Platform;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.ibatis.annotations.Case;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -93,12 +91,6 @@ public class BusinessServiceImpl implements BusinessService {
 
     @Value("${mt.flag}")
     private boolean mtflag;
-
-    @Value("mt.appSecret")
-    private String appSecret;
-
-    @Value("${mt.appId}")
-    private String appId;
 
 
 
@@ -388,14 +380,12 @@ public class BusinessServiceImpl implements BusinessService {
                 case "MT":
                     if (mtflag){
                         try {
-                            orderCancel(waterOrderPo.getOrderid());
+                            SysOrgPo sysOrgPo = sysOrgDao.findByCode(waterOrderPo.getOrgcode());
+                            String appId = sysOrgPo.getAppKey();
+                            String appSecret = sysOrgPo.getAppSecret();
+                            orderCancel(waterOrderPo.getOrderid(),appId,appSecret);
                         }catch (Exception e){
-                            logger.info("retry:{}",1);
-                            try {
-                                orderCancel(waterOrderPo.getOrderid());
-                            } catch (Exception e1){
-                                logger.info("retry:{}","2失败！");
-                            }
+                            throw new PublicException("网络开小差，请联系管理员");
                         }
                     }
             }
@@ -403,7 +393,7 @@ public class BusinessServiceImpl implements BusinessService {
 
     }
 
-    public void orderCancel(String orderId){
+    public void orderCancel(String orderId, String appId, String appSecret){
         SystemParam systemParam = new SystemParam(appId, appSecret);
         OrderCancelRequest orderCancelRequest = new OrderCancelRequest(systemParam);
         orderCancelRequest.setOrder_id(orderId);
@@ -508,14 +498,12 @@ public class BusinessServiceImpl implements BusinessService {
                     case "MT":
                         if (mtflag){
                             try {
-                                orderArrived(waterOrderPo.getOrderid());
+                                SysOrgPo sysOrgPo = sysOrgDao.findByCode(waterOrderPo.getOrgcode());
+                                String appId = sysOrgPo.getAppKey();
+                                String appSecret = sysOrgPo.getAppSecret();
+                                orderArrived(waterOrderPo.getOrderid(),appId,appSecret);
                             }catch (Exception e){
-                                logger.info("retry:{}",1);
-                                try {
-                                    orderArrived(waterOrderPo.getOrderid());
-                                } catch (Exception e1){
-                                    logger.info("retry:{}","2失败！");
-                                }
+                                throw new PublicException("网络开小差，请联系管理员");
                             }
                         }
                 }
@@ -523,10 +511,10 @@ public class BusinessServiceImpl implements BusinessService {
         }
     }
 
-    public void orderArrived(String orderId){
+    public void orderArrived(String orderid, String appId, String appSecret){
         SystemParam systemParam = new SystemParam(appId, appSecret);
         OrderArrivedRequest request = new OrderArrivedRequest(systemParam);
-        request.setOrder_id(orderId);
+        request.setOrder_id(orderid);
         SgOpenResponse sgOpenResponse;
         try {
             sgOpenResponse = request.doRequest();
@@ -778,20 +766,18 @@ public class BusinessServiceImpl implements BusinessService {
                 case "MT":
                     if (mtflag){
                         try {
-                            orderRefundReject(waterOrderPo.getOrderid(),changeOrder.getRemark());
+                            SysOrgPo sysOrgPo = sysOrgDao.findByCode(waterOrderPo.getOrgcode());
+                            String appId = sysOrgPo.getAppKey();
+                            String appSecret = sysOrgPo.getAppSecret();
+                            orderRefundReject(waterOrderPo.getOrderid(),changeOrder.getRemark(),appId,appSecret);
                         }catch (Exception e){
-                            logger.info("retry:{}",1);
-                            try {
-                                orderRefundReject(waterOrderPo.getOrderid(),changeOrder.getRemark());
-                            } catch (Exception e1){
-                                logger.info("retry:{}","2失败！");
-                            }
+                            throw new PublicException("网络开小差，请联系管理员");
                         }
                     }
             }
         }
     }
-    public void orderRefundReject (String orderId, String reason){
+    public void orderRefundReject (String orderId, String reason,String appId,String appSecret){
         SystemParam systemParam = new SystemParam(appId, appSecret);
         OrderRefundRejectRequest request = new OrderRefundRejectRequest(systemParam);
         request.setOrder_id(orderId);
@@ -948,14 +934,12 @@ public class BusinessServiceImpl implements BusinessService {
                     case "MT":
                         if (mtflag){
                             try {
-                                orderArrived(waterOrderPo.getOrderid());
+                                SysOrgPo sysOrgPo = sysOrgDao.findByCode(waterOrderPo.getOrgcode());
+                                String appId = sysOrgPo.getAppKey();
+                                String appSecret = sysOrgPo.getAppSecret();
+                                orderArrived(waterOrderPo.getOrderid(),appId,appSecret);
                             }catch (Exception e){
-                                logger.info("retry:{}",1);
-                                try {
-                                    orderArrived(waterOrderPo.getOrderid());
-                                } catch (Exception e1){
-                                    logger.info("retry:{}","2失败！");
-                                }
+                                throw new PublicException("网络开小差，请联系管理员");
                             }
                         }
                 }
@@ -1106,14 +1090,12 @@ public class BusinessServiceImpl implements BusinessService {
                     case "MT":
                         if (mtflag){
                             try {
-                                orderDelivering(ordermap.get(orderBusinessPo.getOrderId()).getOrderid());
+                                SysOrgPo sysOrgPo = sysOrgDao.findByCode(ordermap.get(orderBusinessPo.getOrderId()).getOrgcode());
+                                String appId = sysOrgPo.getAppKey();
+                                String appSecret = sysOrgPo.getAppSecret();
+                                orderDelivering(ordermap.get(orderBusinessPo.getOrderId()).getOrderid(),appId,appSecret);
                             }catch (Exception e){
-                                logger.info("retry:{}",1);
-                                try {
-                                    orderDelivering(ordermap.get(orderBusinessPo.getOrderId()).getOrderid());
-                                } catch (Exception e1){
-                                    logger.info("retry:{}","2失败！");
-                                }
+                                throw new PublicException("网络开小差，请联系管理员");
                             }
                         }
                 }
@@ -1132,7 +1114,7 @@ public class BusinessServiceImpl implements BusinessService {
         }
     }
 
-    public void orderDelivering (String orderId){
+    public void orderDelivering (String orderId,String appId,String appSecret){
         SystemParam systemParam = new SystemParam(appId, appSecret);
         OrderDeliveringRequest request = new OrderDeliveringRequest(systemParam);
         request.setOrder_id(orderId);
@@ -1238,21 +1220,19 @@ public class BusinessServiceImpl implements BusinessService {
                 case "MT":
                     if (mtflag){
                         try {
-                            orderRefundAgree(waterOrderPo.getOrderid(),changeOrder.getRemark());
+                            SysOrgPo sysOrgPo = sysOrgDao.findByCode(waterOrderPo.getOrgcode());
+                            String appId = sysOrgPo.getAppKey();
+                            String appSecret = sysOrgPo.getAppSecret();
+                            orderRefundAgree(waterOrderPo.getOrderid(),changeOrder.getRemark(),appId,appSecret);
                         }catch (Exception e){
-                            logger.info("retry:{}",1);
-                            try {
-                                orderRefundAgree(waterOrderPo.getOrderid(),changeOrder.getRemark());
-                            } catch (Exception e1){
-                                logger.info("retry:{}","2失败！");
-                            }
+                            throw new PublicException("网络开小差，请重试");
                         }
                     }
             }
         }
     }
 
-    public void orderRefundAgree (String orderId, String reason){
+    public void orderRefundAgree (String orderId, String reason,String appId,String appSecret){
         SystemParam systemParam = new SystemParam(appId, appSecret);
         OrderRefundAgreeRequest request = new OrderRefundAgreeRequest(systemParam);
         request.setOrder_id(orderId);
