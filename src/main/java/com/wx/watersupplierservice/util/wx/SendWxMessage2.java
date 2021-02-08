@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.wx.watersupplierservice.dto.OrderDto;
+import com.wx.watersupplierservice.util.Cfg;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
 import org.springframework.stereotype.Component;
@@ -23,8 +24,8 @@ public class SendWxMessage2 {
                                     List<String> userList) {
 		
 		//新订单通知模板
-		String templatId = "MNnysHBph8N-gPiUIUoLgl_Uju9gdnlIjCfN-wh2Xwk";
-		String clickUrl = "http://www.yhzav.cn/wx/siteNewOrder.html";
+        String templatId = Cfg.getConfig("templatId_newOrder");
+        String clickUrl = Cfg.getConfig("web.url") + "/wx/siteNewOrder.html";
 		
 		//拼接商品信息
 		StringBuffer str = new StringBuffer(); 
@@ -97,9 +98,10 @@ public class SendWxMessage2 {
 	public static void sendRefuseOrder(OrderDto orderDto, List<JSONObject> productList,
                                        List<String> userList, Date refuseTime,String refuseReason) {
 		
-		//新订单通知模板
-		String templatId = "fpyeyXcYEWnmQ6HDIyYJzqd7xDCb6Mhrwof7_NP6Q-E";
-		String clickUrl = "http://www.yhzav.cn/wx/orderNew.html";
+
+        //订单拒绝通知模板
+        String templatId = Cfg.getConfig("templatId_refuseOrder");
+        String clickUrl = Cfg.getConfig("web.url") + "/wx/orderNew.html";
 			
 		//拼接推送消息模板				
         String topColor = "";
@@ -159,10 +161,10 @@ public class SendWxMessage2 {
 	 */
 	public static void sendCancleOrder(OrderDto orderDto, List<JSONObject> productList,
 			List<String> userList) {
-		
-		//新订单通知模板
-		String templatId = "A5lnP2T1KF6Hq8VBvnAnLrErvzi95VY17UEtZgoPsv8";
-		String clickUrl = "";
+
+        //订单拒绝通知模板
+        String templatId = Cfg.getConfig("templatId_cancleOrder");
+        String clickUrl = Cfg.getConfig("web.url") + "/wx/orderNew.html";
 			
 		//拼接推送消息模板				
         String topColor = "";
@@ -209,8 +211,17 @@ public class SendWxMessage2 {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date now = new Date();
         //新订单通知模板
-        String templatId = "JRVnmrkFff4gjePj5wAAru1Co8e_D-cgT5A9k83gM_M";
+        String templatId = Cfg.getConfig("templatId_reSendOrder");
         String clickUrl = "";
+
+        if ("L10".equals(orderInfo.getOptCode())) {
+            //水站未接单  跳转到水站新订单页面
+            clickUrl = Cfg.getConfig("web.url") + "/wx/siteNewOrder.html";
+        }
+        if ("L20".equals(orderInfo.getOptCode())) {
+            //水站接单  跳转到水站配送中页面
+            clickUrl = Cfg.getConfig("web.url") + "/wx/siteSendingOrder.html";
+        }
 
         //拼接推送消息模板
         String topColor = "";
@@ -234,7 +245,7 @@ public class SendWxMessage2 {
         JSONObject keyword3 = new JSONObject();
         keyword3.put("value", sdf.format(now)); //此处不用改
         keyword3.put("color", "#173177");
-        jsc.put("keyword2", keyword3);
+        jsc.put("keyword3", keyword3);
 
         JSONObject remark = new JSONObject();
         remark.put("value", orderInfo.getBuyerfullname() + orderInfo.getBuyertelephone());
