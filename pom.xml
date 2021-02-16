@@ -175,6 +175,11 @@
             <artifactId>shangou</artifactId>    <!--自定义-->
             <version>1.1.0</version>
         </dependency>
+        <dependency>
+            <groupId>com.ocean</groupId>  <!--自定义-->
+            <artifactId>eleme</artifactId>    <!--自定义-->
+            <version>1.1.0</version>
+        </dependency>
         <!--        <dependency>-->
 <!--            <groupId>log4j</groupId>-->
 <!--            <artifactId>log4j</artifactId>-->
