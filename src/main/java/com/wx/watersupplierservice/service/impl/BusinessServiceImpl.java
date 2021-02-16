@@ -1,5 +1,8 @@
 package com.wx.watersupplierservice.service.impl;
 
+import com.alibaba.ocean.rawsdk.ApiExecutor;
+import com.alibaba.ocean.rawsdk.client.policy.RequestPolicy;
+import com.alibaba.ocean.rawsdk.common.BizResultWrapper;
 import com.sankuai.meituan.shangou.open.sdk.domain.SystemParam;
 import com.sankuai.meituan.shangou.open.sdk.exception.SgOpenException;
 import com.sankuai.meituan.shangou.open.sdk.request.*;
@@ -21,6 +24,7 @@ import com.wx.watersupplierservice.util.jddj.JddjOrderUtil;
 import com.wx.watersupplierservice.util.wx.SendWxMessage2;
 import com.xdf.pscommon.mybatis.rt.PMLO;
 import com.xdf.pscommon.mybatis.rt.QueryFilter;
+import me.ele.retail.param.*;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -32,6 +36,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -91,6 +96,9 @@ public class BusinessServiceImpl implements BusinessService {
 
     @Value("${mt.flag}")
     private boolean mtflag;
+
+    @Value("${elm.flag}")
+    private boolean elmflag;
 
 
 
@@ -388,9 +396,40 @@ public class BusinessServiceImpl implements BusinessService {
                             throw new PublicException("网络开小差，请联系管理员");
                         }
                     }
+                case "ELM":
+                    if (elmflag){
+                        try {
+                            SysOrgPo sysOrgPo = sysOrgDao.findByCode(waterOrderPo.getOrgcode());
+                            String appId = sysOrgPo.getAppKey();
+                            String appSecret = sysOrgPo.getAppSecret();
+                            ApiExecutor apiExecutor = new ApiExecutor(appId,appSecret);
+                            orderCancelELM(waterOrderPo.getOrderid(),apiExecutor);
+                        }catch (Exception e){
+                            throw new PublicException("网络开小差，请联系管理员");
+                        }
+                    }
             }
         }
 
+    }
+
+    private void orderCancelELM(String orderid, ApiExecutor apiExecutor) throws IOException {
+        String accessToken = "{the access token}";
+        OrderCancelParam orderCancelParam = new OrderCancelParam();
+        RequestPolicy oceanRequestPolicy = new RequestPolicy();
+        oceanRequestPolicy.setHttpMethod(RequestPolicy.HttpMethodPolicy.POST)
+                .setUseHttps(true).setUseSignture(true);
+        orderCancelParam.setOceanRequestPolicy(oceanRequestPolicy);
+        MeEleRetailOrderCancelInputParam param = new MeEleRetailOrderCancelInputParam();
+        param.setOrder_id(orderid);
+        param.setType("5");
+        param.setReason("用户拒单");
+        orderCancelParam.setBody(param);
+        BizResultWrapper<OrderCancelResult> result = apiExecutor.execute(orderCancelParam, accessToken);
+        if (!result.getBody().getErrno().equals("0")){
+            logger.error(result.getBody().getError());
+            throw new PublicException(result.getBody().getError());
+        }
     }
 
     public void orderCancel(String orderId, String appId, String appSecret){
@@ -506,8 +545,38 @@ public class BusinessServiceImpl implements BusinessService {
                                 throw new PublicException("网络开小差，请联系管理员");
                             }
                         }
+                    case "ELM":
+                        if (elmflag){
+                            try {
+                                SysOrgPo sysOrgPo = sysOrgDao.findByCode(waterOrderPo.getOrgcode());
+                                String appId = sysOrgPo.getAppKey();
+                                String appSecret = sysOrgPo.getAppSecret();
+                                ApiExecutor apiExecutor = new ApiExecutor(appId,appSecret);
+                                orderArrivedELM(waterOrderPo.getOrderid(),apiExecutor,sysOrgPo.getOrgTel());
+                            }catch (Exception e){
+                                throw new PublicException("网络开小差，请联系管理员");
+                            }
+                        }
                 }
             }
+        }
+    }
+
+    private void orderArrivedELM(String orderid, ApiExecutor apiExecutor, String orgTel) throws IOException {
+        String accessToken = "{the access token}";
+        OrderCompleteParam orderCompleteParam = new OrderCompleteParam();
+        RequestPolicy oceanRequestPolicy = new RequestPolicy();
+        oceanRequestPolicy.setHttpMethod(RequestPolicy.HttpMethodPolicy.POST)
+                .setUseHttps(true).setUseSignture(true);
+        orderCompleteParam.setOceanRequestPolicy(oceanRequestPolicy);
+        MeEleNopDoaApiParamRequestOrderOrderCompleteReqDto param = new MeEleNopDoaApiParamRequestOrderOrderCompleteReqDto();
+        param.setOrder_id(orderid);
+        param.setPhone(orgTel);
+        orderCompleteParam.setBody(param);
+        BizResultWrapper<OrderCompleteResult> result = apiExecutor.execute(orderCompleteParam, accessToken);
+        if (!result.getBody().getErrno().equals("0")){
+            logger.error(result.getBody().getError());
+            throw new PublicException(result.getBody().getError());
         }
     }
 
@@ -774,9 +843,41 @@ public class BusinessServiceImpl implements BusinessService {
                             throw new PublicException("网络开小差，请联系管理员");
                         }
                     }
+                case "ELM":
+                    if (elmflag){
+                        try {
+                            SysOrgPo sysOrgPo = sysOrgDao.findByCode(waterOrderPo.getOrgcode());
+                            String appId = sysOrgPo.getAppKey();
+                            String appSecret = sysOrgPo.getAppSecret();
+                            ApiExecutor apiExecutor = new ApiExecutor(appId,appSecret);
+                            orderRefundRejectELM(waterOrderPo.getOrderid(),waterOrderPo.getStarOrderid(),apiExecutor,changeOrder.getRemark());
+                        }catch (Exception e){
+                            throw new PublicException("网络开小差，请联系管理员");
+                        }
+                    }
             }
         }
     }
+
+    private void orderRefundRejectELM(String orderid, String starOrderid, ApiExecutor apiExecutor, String remark) throws IOException {
+        String accessToken = "{the access token}";
+        OrderDisagreerefundParam orderDisagreerefundParam = new OrderDisagreerefundParam();
+        RequestPolicy oceanRequestPolicy = new RequestPolicy();
+        oceanRequestPolicy.setHttpMethod(RequestPolicy.HttpMethodPolicy.POST)
+                .setUseHttps(true).setUseSignture(true);
+        orderDisagreerefundParam.setOceanRequestPolicy(oceanRequestPolicy);
+        MeEleRetailOrderDisagreerefundInputParam param = new MeEleRetailOrderDisagreerefundInputParam();
+        param.setOrder_id(orderid);
+        param.setRefuse_reason(remark);
+        param.setRefund_order_id(starOrderid);
+        orderDisagreerefundParam.setBody(param);
+        BizResultWrapper<OrderDisagreerefundResult> result = apiExecutor.execute(orderDisagreerefundParam, accessToken);
+        if (!result.getBody().getErrno().equals("0")){
+            logger.error(result.getBody().getError());
+            throw new PublicException(result.getBody().getError());
+        }
+    }
+
     public void orderRefundReject (String orderId, String reason,String appId,String appSecret){
         SystemParam systemParam = new SystemParam(appId, appSecret);
         OrderRefundRejectRequest request = new OrderRefundRejectRequest(systemParam);
@@ -942,6 +1043,18 @@ public class BusinessServiceImpl implements BusinessService {
                                 throw new PublicException("网络开小差，请联系管理员");
                             }
                         }
+                    case "ELM":
+                        if (elmflag){
+                            try {
+                                SysOrgPo sysOrgPo = sysOrgDao.findByCode(waterOrderPo.getOrgcode());
+                                String appId = sysOrgPo.getAppKey();
+                                String appSecret = sysOrgPo.getAppSecret();
+                                ApiExecutor apiExecutor = new ApiExecutor(appId,appSecret);
+                                orderArrivedELM(waterOrderPo.getOrderid(),apiExecutor,sysOrgPo.getOrgTel());
+                            }catch (Exception e){
+                                throw new PublicException("网络开小差，请联系管理员");
+                            }
+                        }
                 }
             }
         }
@@ -1098,6 +1211,18 @@ public class BusinessServiceImpl implements BusinessService {
                                 throw new PublicException("网络开小差，请联系管理员");
                             }
                         }
+                    case "ELM":
+                        if (elmflag){
+                            try {
+                                SysOrgPo sysOrgPo = sysOrgDao.findByCode(ordermap.get(orderBusinessPo.getOrderId()).getOrgcode());
+                                String appId = sysOrgPo.getAppKey();
+                                String appSecret = sysOrgPo.getAppSecret();
+                                ApiExecutor apiExecutor = new ApiExecutor(appId,appSecret);
+                                orderDeliveringELM(ordermap.get(orderBusinessPo.getOrderId()).getOrderid(),apiExecutor,sysOrgPo.getOrgTel());
+                            }catch (Exception e){
+                                throw new PublicException("网络开小差，请联系管理员");
+                            }
+                        }
                 }
 
                 //todo 微信推送order_business信息
@@ -1111,6 +1236,24 @@ public class BusinessServiceImpl implements BusinessService {
                     SendWxMessage2.sendNewOrder(orderDto,orderDto.getProductList(),users);
                 }
             }
+        }
+    }
+
+    private void orderDeliveringELM(String orderid, ApiExecutor apiExecutor, String orgTel) throws IOException {
+        String accessToken = "{the access token}";
+        OrderSendoutParam orderSendoutParam = new OrderSendoutParam();
+        RequestPolicy oceanRequestPolicy = new RequestPolicy();
+        oceanRequestPolicy.setHttpMethod(RequestPolicy.HttpMethodPolicy.POST)
+                .setUseHttps(true).setUseSignture(true);
+        orderSendoutParam.setOceanRequestPolicy(oceanRequestPolicy);
+        MeEleRetailOrderSendoutInputParam param = new MeEleRetailOrderSendoutInputParam();
+        param.setOrder_id(orderid);
+        param.setPhone(orgTel);
+        orderSendoutParam.setBody(param);
+        BizResultWrapper<OrderSendoutResult> result = apiExecutor.execute(orderSendoutParam, accessToken);
+        if (!result.getBody().getErrno().equals("0")){
+            logger.error(result.getBody().getError());
+            throw new PublicException(result.getBody().getError());
         }
     }
 
@@ -1228,7 +1371,37 @@ public class BusinessServiceImpl implements BusinessService {
                             throw new PublicException("网络开小差，请重试");
                         }
                     }
+                case "ELM":
+                    if (elmflag){
+                        try {
+                            SysOrgPo sysOrgPo = sysOrgDao.findByCode(waterOrderPo.getOrgcode());
+                            String appId = sysOrgPo.getAppKey();
+                            String appSecret = sysOrgPo.getAppSecret();
+                            ApiExecutor apiExecutor = new ApiExecutor(appId,appSecret);
+                            orderRefundAgreeELM(waterOrderPo.getOrderid(),apiExecutor,waterOrderPo.getStarOrderid());
+                        }catch (Exception e){
+                            throw new PublicException("网络开小差，请联系管理员");
+                        }
+                    }
             }
+        }
+    }
+
+    private void orderRefundAgreeELM(String orderid, ApiExecutor apiExecutor, String starOrderid) throws IOException {
+        String accessToken = "{the access token}";
+        OrderAgreerefundParam orderAgreerefundParam = new OrderAgreerefundParam();
+        RequestPolicy oceanRequestPolicy = new RequestPolicy();
+        oceanRequestPolicy.setHttpMethod(RequestPolicy.HttpMethodPolicy.POST)
+                .setUseHttps(true).setUseSignture(true);
+        orderAgreerefundParam.setOceanRequestPolicy(oceanRequestPolicy);
+        MeEleRetailOrderAgreerefundInputParam param = new MeEleRetailOrderAgreerefundInputParam();
+        param.setOrder_id(orderid);
+        param.setRefund_order_id(starOrderid);
+        orderAgreerefundParam.setBody(param);
+        BizResultWrapper<OrderAgreerefundResult> result = apiExecutor.execute(orderAgreerefundParam, accessToken);
+        if (!result.getBody().getErrno().equals("0")){
+            logger.error(result.getBody().getError());
+            throw new PublicException(result.getBody().getError());
         }
     }
 

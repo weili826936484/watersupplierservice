@@ -2,12 +2,14 @@ package com.wx.watersupplierservice.po;
 
 import java.util.Date;
 
+import com.xdf.pscommon.annotation.alias.Column;
 import com.xdf.pscommon.annotation.alias.ID;
 import com.xdf.pscommon.annotation.alias.Identity;
 import com.xdf.pscommon.annotation.alias.Table;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import lombok.Value;
 
 import java.io.Serializable;
 
@@ -28,6 +30,9 @@ public class WaterOrderPo {
     private String platform;
     @ApiModelProperty(value = "订单号")
     private String orderid;
+    @ApiModelProperty(value = "订单号")
+    @Column(name="star_orderId")
+    private String starOrderid;
     @ApiModelProperty(value = "订单来源类型(0:原订单，10:退款单，20:补货单，30:直赔商品 ，40:退货)")
     private String srcinnertype;
     @ApiModelProperty(value = "订单类型（10000：从门店出的订单）")
