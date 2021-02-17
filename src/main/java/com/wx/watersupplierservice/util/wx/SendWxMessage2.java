@@ -101,8 +101,15 @@ public class SendWxMessage2 {
 
         //订单拒绝通知模板
         String templatId = Cfg.getConfig("templatId_refuseOrder");
-        String clickUrl = Cfg.getConfig("web.url") + "/wx/orderNew.html";
-			
+        String clickUrl = "";
+        if ("JDDJ".equals(orderDto.getPlatform())) {
+            clickUrl = Cfg.getConfig("web.url") + "/wx/orderNew.html";
+        } else if("MT".equals(orderDto.getPlatform())) {
+            clickUrl = Cfg.getConfig("web.url") + "/wx/orderNewMT.html";
+        } else if("ELEME".equals(orderDto.getPlatform())) {
+            clickUrl = Cfg.getConfig("web.url") + "/wx/orderNewELEME.html";
+        }
+
 		//拼接推送消息模板				
         String topColor = "";
         JSONObject jsc = new JSONObject();
@@ -164,8 +171,8 @@ public class SendWxMessage2 {
 
         //订单拒绝通知模板
         String templatId = Cfg.getConfig("templatId_cancleOrder");
-        String clickUrl = Cfg.getConfig("web.url") + "/wx/orderNew.html";
-			
+//        String clickUrl = Cfg.getConfig("web.url") + "/wx/orderNew.html";
+        String clickUrl = "";
 		//拼接推送消息模板				
         String topColor = "";
         JSONObject jsc = new JSONObject();

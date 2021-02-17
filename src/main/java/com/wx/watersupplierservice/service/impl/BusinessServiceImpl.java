@@ -377,6 +377,7 @@ public class BusinessServiceImpl implements BusinessService {
                         orgJson.put("token",sysOrgPo.getToken());
                         try {
                             String s = JddjOrderUtil.cancelAndRefund(orgJson, waterOrderPo.getOrderid(), waterOrderPo.getBuyerpin(), sdf.format(now), changeOrder.getRemark());
+                            logger.info("return jd :{}",s);
                             com.alibaba.fastjson.JSONObject jsonObject = com.alibaba.fastjson.JSONObject.parseObject(s);
                             if (!"0".equals(jsonObject.get("code").toString())){
                                 throw new PublicException(jsonObject.get("msg").toString());
@@ -385,6 +386,7 @@ public class BusinessServiceImpl implements BusinessService {
                             throw new PublicException("服务开小差，请重试");
                         }
                     }
+                    break;
                 case "MT":
                     if (mtflag){
                         try {
@@ -396,7 +398,8 @@ public class BusinessServiceImpl implements BusinessService {
                             throw new PublicException("网络开小差，请联系管理员");
                         }
                     }
-                case "ELM":
+                    break;
+                case "ELEME":
                     if (elmflag){
                         try {
                             SysOrgPo sysOrgPo = sysOrgDao.findByCode(waterOrderPo.getOrgcode());
@@ -408,6 +411,9 @@ public class BusinessServiceImpl implements BusinessService {
                             throw new PublicException("网络开小差，请联系管理员");
                         }
                     }
+                    break;
+                default:
+                    throw new PublicException("订单来源平台有误");
             }
         }
 
@@ -526,6 +532,7 @@ public class BusinessServiceImpl implements BusinessService {
                             orgJson.put("token",sysOrgPo.getToken());
                             try {
                                 String s = JddjOrderUtil.sendDeliveryEndOrder(orgJson, waterOrderPo.getOrderid(), waterOrderPo.getBuyerpin(), sdf.format(now));
+                                logger.info("return jd :{}",s);
                                 com.alibaba.fastjson.JSONObject jsonObject = com.alibaba.fastjson.JSONObject.parseObject(s);
                                 if (!"0".equals(jsonObject.get("code").toString())){
                                     throw new PublicException(jsonObject.get("msg").toString());
@@ -534,6 +541,7 @@ public class BusinessServiceImpl implements BusinessService {
                                 throw new PublicException("服务开小差，请重试");
                             }
                         }
+                        break;
                     case "MT":
                         if (mtflag){
                             try {
@@ -545,7 +553,8 @@ public class BusinessServiceImpl implements BusinessService {
                                 throw new PublicException("网络开小差，请联系管理员");
                             }
                         }
-                    case "ELM":
+                        break;
+                    case "ELEME":
                         if (elmflag){
                             try {
                                 SysOrgPo sysOrgPo = sysOrgDao.findByCode(waterOrderPo.getOrgcode());
@@ -557,6 +566,9 @@ public class BusinessServiceImpl implements BusinessService {
                                 throw new PublicException("网络开小差，请联系管理员");
                             }
                         }
+                        break;
+                    default:
+                        throw new PublicException("订单来源平台有误");
                 }
             }
         }
@@ -824,6 +836,7 @@ public class BusinessServiceImpl implements BusinessService {
                         orgJson.put("token",sysOrgPo.getToken());
                         try {
                             String s = JddjOrderUtil.sendOrderCancelOperate(orgJson, waterOrderPo.getOrderid(), true, user.getUserName(), changeOrder.getRemark());
+                            logger.info("return jd :{}",s);
                             com.alibaba.fastjson.JSONObject jsonObject = com.alibaba.fastjson.JSONObject.parseObject(s);
                             if (!"0".equals(jsonObject.get("code").toString())){
                                 throw new PublicException(jsonObject.get("msg").toString());
@@ -832,6 +845,7 @@ public class BusinessServiceImpl implements BusinessService {
                             throw new PublicException("服务开小差，请重试");
                         }
                     }
+                    break;
                 case "MT":
                     if (mtflag){
                         try {
@@ -843,7 +857,8 @@ public class BusinessServiceImpl implements BusinessService {
                             throw new PublicException("网络开小差，请联系管理员");
                         }
                     }
-                case "ELM":
+                    break;
+                case "ELEME":
                     if (elmflag){
                         try {
                             SysOrgPo sysOrgPo = sysOrgDao.findByCode(waterOrderPo.getOrgcode());
@@ -855,6 +870,9 @@ public class BusinessServiceImpl implements BusinessService {
                             throw new PublicException("网络开小差，请联系管理员");
                         }
                     }
+                    break;
+                default:
+                    throw new PublicException("订单来源平台有误");
             }
         }
     }
@@ -1024,6 +1042,7 @@ public class BusinessServiceImpl implements BusinessService {
 
                             try {
                                 String s = JddjOrderUtil.sendDeliveryEndOrder(orgJson,waterOrderPo.getOrderid(), waterOrderPo.getBuyerpin(), now);
+                                logger.info("return jd :{}",s);
                                 com.alibaba.fastjson.JSONObject jsonObject = com.alibaba.fastjson.JSONObject.parseObject(s);
                                 if (!"0".equals(jsonObject.get("code").toString())){
                                     throw new PublicException(jsonObject.get("msg").toString());
@@ -1032,6 +1051,7 @@ public class BusinessServiceImpl implements BusinessService {
                                throw new PublicException("服务开小差，请重试");
                             }
                         }
+                        break;
                     case "MT":
                         if (mtflag){
                             try {
@@ -1043,7 +1063,8 @@ public class BusinessServiceImpl implements BusinessService {
                                 throw new PublicException("网络开小差，请联系管理员");
                             }
                         }
-                    case "ELM":
+                        break;
+                    case "ELEME":
                         if (elmflag){
                             try {
                                 SysOrgPo sysOrgPo = sysOrgDao.findByCode(waterOrderPo.getOrgcode());
@@ -1055,6 +1076,9 @@ public class BusinessServiceImpl implements BusinessService {
                                 throw new PublicException("网络开小差，请联系管理员");
                             }
                         }
+                        break;
+                    default:
+                        throw new PublicException("订单来源平台有误");
                 }
             }
         }
@@ -1192,6 +1216,7 @@ public class BusinessServiceImpl implements BusinessService {
                             orgJson.put("token",sysOrgPo.getToken());
                             try {
                                 String s = JddjOrderUtil.sendOrderSerllerDelivery(orgJson,ordermap.get(orderBusinessPo.getOrderId()).getOrderid(),user.getUserName());
+                                logger.info("return jd :{}",s);
                                 com.alibaba.fastjson.JSONObject jsonObject = com.alibaba.fastjson.JSONObject.parseObject(s);
                                 if (!"0".equals(jsonObject.get("code").toString())){
                                     throw new PublicException(jsonObject.get("msg").toString());
@@ -1200,6 +1225,7 @@ public class BusinessServiceImpl implements BusinessService {
                                throw new PublicException("服务开小差，请重试");
                             }
                         }
+                        break;
                     case "MT":
                         if (mtflag){
                             try {
@@ -1211,7 +1237,8 @@ public class BusinessServiceImpl implements BusinessService {
                                 throw new PublicException("网络开小差，请联系管理员");
                             }
                         }
-                    case "ELM":
+                        break;
+                    case "ELEME":
                         if (elmflag){
                             try {
                                 SysOrgPo sysOrgPo = sysOrgDao.findByCode(ordermap.get(orderBusinessPo.getOrderId()).getOrgcode());
@@ -1223,6 +1250,7 @@ public class BusinessServiceImpl implements BusinessService {
                                 throw new PublicException("网络开小差，请联系管理员");
                             }
                         }
+                        break;
                 }
 
                 //todo 微信推送order_business信息
@@ -1352,6 +1380,7 @@ public class BusinessServiceImpl implements BusinessService {
                         orgJson.put("token",sysOrgPo.getToken());
                         try {
                             String s = JddjOrderUtil.sendOrderCancelOperate(orgJson,waterOrderPo.getOrderid(), true, user.getUserName(), changeOrder.getRemark());
+                            logger.info("return jd :{}",s);
                             com.alibaba.fastjson.JSONObject jsonObject = com.alibaba.fastjson.JSONObject.parseObject(s);
                             if (!"0".equals(jsonObject.get("code").toString())){
                                 throw new PublicException(jsonObject.get("msg").toString());
@@ -1360,6 +1389,7 @@ public class BusinessServiceImpl implements BusinessService {
                             throw new PublicException("服务开小差，请重试");
                         }
                     }
+                    break;
                 case "MT":
                     if (mtflag){
                         try {
@@ -1371,7 +1401,8 @@ public class BusinessServiceImpl implements BusinessService {
                             throw new PublicException("网络开小差，请重试");
                         }
                     }
-                case "ELM":
+                    break;
+                case "ELEME":
                     if (elmflag){
                         try {
                             SysOrgPo sysOrgPo = sysOrgDao.findByCode(waterOrderPo.getOrgcode());
@@ -1383,6 +1414,9 @@ public class BusinessServiceImpl implements BusinessService {
                             throw new PublicException("网络开小差，请联系管理员");
                         }
                     }
+                    break;
+                default:
+                    throw new PublicException("订单来源平台有误");
             }
         }
     }
