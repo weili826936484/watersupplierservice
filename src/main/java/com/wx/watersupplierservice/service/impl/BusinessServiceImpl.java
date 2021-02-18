@@ -384,6 +384,7 @@ public class BusinessServiceImpl implements BusinessService {
                                 throw new PublicException(jsonObject.get("msg").toString());
                             }
                         } catch (Exception e) {
+                            logger.error("jd error:{}",e);
                             throw new PublicException("服务开小差，请重试");
                         }
                     }
@@ -396,6 +397,7 @@ public class BusinessServiceImpl implements BusinessService {
                             String appSecret = sysOrgPo.getAppSecret();
                             orderCancel(waterOrderPo.getOrderid(),appId,appSecret);
                         }catch (Exception e){
+                            logger.error("mt error:{}",e);
                             throw new PublicException("网络开小差，请联系管理员");
                         }
                     }
@@ -409,6 +411,7 @@ public class BusinessServiceImpl implements BusinessService {
                             ApiExecutor apiExecutor = new ApiExecutor(appId,appSecret);
                             orderCancelELM(waterOrderPo.getOrderid(),apiExecutor);
                         }catch (Exception e){
+                            logger.error("eleme error:{}",e);
                             throw new PublicException("网络开小差，请联系管理员");
                         }
                     }
@@ -435,11 +438,12 @@ public class BusinessServiceImpl implements BusinessService {
         orderCancelParam.setBody(param);
         BizResultWrapper<OrderCancelResult> result = apiExecutor.execute(orderCancelParam, accessToken);
         String s = JSON.toJSONString(result);
+        logger.info("eleme result:{}",s);
         com.alibaba.fastjson.JSONObject jsonObject = com.alibaba.fastjson.JSONObject.parseObject(s);
-        OrderCancelResult body1 = jsonObject.getObject("body", OrderCancelResult.class);
-        if (!body1.getErrno().equals("0")){
-            logger.error(result.getBody().getError());
-            throw new PublicException(result.getBody().getError());
+        com.alibaba.fastjson.JSONObject body1 = jsonObject.getJSONObject("body");
+        if (!body1.getString("errno").equals("0")){
+            logger.error(body1.getString("error"));
+            throw new PublicException(body1.getString("error"));
         }
     }
 
@@ -543,6 +547,7 @@ public class BusinessServiceImpl implements BusinessService {
                                     throw new PublicException(jsonObject.get("msg").toString());
                                 }
                             } catch (Exception e) {
+                                logger.error("jd error:{}",e);
                                 throw new PublicException("服务开小差，请重试");
                             }
                         }
@@ -555,6 +560,7 @@ public class BusinessServiceImpl implements BusinessService {
                                 String appSecret = sysOrgPo.getAppSecret();
                                 orderArrived(waterOrderPo.getOrderid(),appId,appSecret);
                             }catch (Exception e){
+                                logger.error("mt error:{}",e);
                                 throw new PublicException("网络开小差，请联系管理员");
                             }
                         }
@@ -568,6 +574,7 @@ public class BusinessServiceImpl implements BusinessService {
                                 ApiExecutor apiExecutor = new ApiExecutor(appId,appSecret);
                                 orderArrivedELM(waterOrderPo.getOrderid(),apiExecutor,sysOrgPo.getOrgTel());
                             }catch (Exception e){
+                                logger.error("eleme error:{}",e);
                                 throw new PublicException("网络开小差，请联系管理员");
                             }
                         }
@@ -593,11 +600,12 @@ public class BusinessServiceImpl implements BusinessService {
         orderCompleteParam.setBody(param);
         BizResultWrapper<OrderCompleteResult> result = apiExecutor.execute(orderCompleteParam, accessToken);
         String s = JSON.toJSONString(result);
+        logger.info("eleme result:{}",s);
         com.alibaba.fastjson.JSONObject jsonObject = com.alibaba.fastjson.JSONObject.parseObject(s);
-        OrderCompleteResult body1 = jsonObject.getObject("body", OrderCompleteResult.class);
-        if (!body1.getErrno().equals("0")){
-            logger.error(result.getBody().getError());
-            throw new PublicException(result.getBody().getError());
+        com.alibaba.fastjson.JSONObject body1 = jsonObject.getJSONObject("body");
+        if (!body1.getString("errno").equals("0")){
+            logger.error(body1.getString("error"));
+            throw new PublicException(body1.getString("error"));
         }
     }
 
@@ -851,6 +859,7 @@ public class BusinessServiceImpl implements BusinessService {
                                 throw new PublicException(jsonObject.get("msg").toString());
                             }
                         } catch (Exception e) {
+                            logger.error("jd error:{}",e);
                             throw new PublicException("服务开小差，请重试");
                         }
                     }
@@ -863,6 +872,7 @@ public class BusinessServiceImpl implements BusinessService {
                             String appSecret = sysOrgPo.getAppSecret();
                             orderRefundReject(waterOrderPo.getOrderid(),changeOrder.getRemark(),appId,appSecret);
                         }catch (Exception e){
+                            logger.error("mt error:{}",e);
                             throw new PublicException("网络开小差，请联系管理员");
                         }
                     }
@@ -876,6 +886,7 @@ public class BusinessServiceImpl implements BusinessService {
                             ApiExecutor apiExecutor = new ApiExecutor(appId,appSecret);
                             orderRefundRejectELM(waterOrderPo.getOrderid(),waterOrderPo.getStarOrderid(),apiExecutor,changeOrder.getRemark());
                         }catch (Exception e){
+                            logger.error("eleme error:{}",e);
                             throw new PublicException("网络开小差，请联系管理员");
                         }
                     }
@@ -901,11 +912,12 @@ public class BusinessServiceImpl implements BusinessService {
         orderDisagreerefundParam.setBody(param);
         BizResultWrapper<OrderDisagreerefundResult> result = apiExecutor.execute(orderDisagreerefundParam, accessToken);
         String s = JSON.toJSONString(result);
+        logger.info("eleme result:{}",s);
         com.alibaba.fastjson.JSONObject jsonObject = com.alibaba.fastjson.JSONObject.parseObject(s);
-        OrderDisagreerefundResult body1 = jsonObject.getObject("body", OrderDisagreerefundResult.class);
-        if (!body1.getErrno().equals("0")){
-            logger.error(result.getBody().getError());
-            throw new PublicException(result.getBody().getError());
+        com.alibaba.fastjson.JSONObject body1 = jsonObject.getJSONObject("body");
+        if (!body1.getString("errno").equals("0")){
+            logger.error(body1.getString("error"));
+            throw new PublicException(body1.getString("error"));
         }
     }
 
@@ -1061,6 +1073,7 @@ public class BusinessServiceImpl implements BusinessService {
                                     throw new PublicException(jsonObject.get("msg").toString());
                                 }
                             } catch (Exception e) {
+                               logger.error("jd error:{}",e);
                                throw new PublicException("服务开小差，请重试");
                             }
                         }
@@ -1073,6 +1086,7 @@ public class BusinessServiceImpl implements BusinessService {
                                 String appSecret = sysOrgPo.getAppSecret();
                                 orderArrived(waterOrderPo.getOrderid(),appId,appSecret);
                             }catch (Exception e){
+                                logger.error("mt error:{}",e);
                                 throw new PublicException("网络开小差，请联系管理员");
                             }
                         }
@@ -1086,6 +1100,7 @@ public class BusinessServiceImpl implements BusinessService {
                                 ApiExecutor apiExecutor = new ApiExecutor(appId,appSecret);
                                 orderArrivedELM(waterOrderPo.getOrderid(),apiExecutor,sysOrgPo.getOrgTel());
                             }catch (Exception e){
+                                logger.error("eleme error:{}",e);
                                 throw new PublicException("网络开小差，请联系管理员");
                             }
                         }
@@ -1235,6 +1250,7 @@ public class BusinessServiceImpl implements BusinessService {
                                     throw new PublicException(jsonObject.get("msg").toString());
                                 }
                             } catch (Exception e) {
+                                logger.error("jd error:{}",e);
                                throw new PublicException("服务开小差，请重试");
                             }
                         }
@@ -1247,6 +1263,7 @@ public class BusinessServiceImpl implements BusinessService {
                                 String appSecret = sysOrgPo.getAppSecret();
                                 orderDelivering(ordermap.get(orderBusinessPo.getOrderId()).getOrderid(),appId,appSecret);
                             }catch (Exception e){
+                                logger.error("mt error:{}",e);
                                 throw new PublicException("网络开小差，请联系管理员");
                             }
                         }
@@ -1260,7 +1277,7 @@ public class BusinessServiceImpl implements BusinessService {
                                 ApiExecutor apiExecutor = new ApiExecutor(appId,appSecret);
                                 orderDeliveringELM(ordermap.get(orderBusinessPo.getOrderId()).getOrderid(),apiExecutor,sysOrgPo.getOrgTel());
                             }catch (Exception e){
-                                logger.error("error:{}",e);
+                                logger.error("eleme error:{}",e);
                                 throw new PublicException("网络开小差，请联系管理员");
                             }
                         }
@@ -1300,11 +1317,12 @@ public class BusinessServiceImpl implements BusinessService {
         orderSendoutParam.setBody(param);
         BizResultWrapper<OrderSendoutResult> result = apiExecutor.execute(orderSendoutParam, accessToken);
         String s = JSON.toJSONString(result);
+        logger.info("eleme result:{}",s);
         com.alibaba.fastjson.JSONObject jsonObject = com.alibaba.fastjson.JSONObject.parseObject(s);
-        OrderSendoutResult body1 = jsonObject.getObject("body", OrderSendoutResult.class);
-        if (!body1.getErrno().equals("0")){
-            logger.error(result.getBody().getError());
-            throw new PublicException(result.getBody().getError());
+        com.alibaba.fastjson.JSONObject body1 = jsonObject.getJSONObject("body");
+        if (!body1.getString("errno").equals("0")){
+            logger.error(body1.getString("error"));
+            throw new PublicException(body1.getString("error"));
         }
     }
 
@@ -1409,6 +1427,7 @@ public class BusinessServiceImpl implements BusinessService {
                                 throw new PublicException(jsonObject.get("msg").toString());
                             }
                         } catch (Exception e) {
+                            logger.error("jd error:{}",e);
                             throw new PublicException("服务开小差，请重试");
                         }
                     }
@@ -1421,6 +1440,7 @@ public class BusinessServiceImpl implements BusinessService {
                             String appSecret = sysOrgPo.getAppSecret();
                             orderRefundAgree(waterOrderPo.getOrderid(),changeOrder.getRemark(),appId,appSecret);
                         }catch (Exception e){
+                            logger.error("mt error:{}",e);
                             throw new PublicException("网络开小差，请重试");
                         }
                     }
@@ -1434,6 +1454,7 @@ public class BusinessServiceImpl implements BusinessService {
                             ApiExecutor apiExecutor = new ApiExecutor(appId,appSecret);
                             orderRefundAgreeELM(waterOrderPo.getOrderid(),apiExecutor,waterOrderPo.getStarOrderid());
                         }catch (Exception e){
+                            logger.error("eleme error:{}",e);
                             throw new PublicException("网络开小差，请联系管理员");
                         }
                     }
@@ -1458,14 +1479,35 @@ public class BusinessServiceImpl implements BusinessService {
         orderAgreerefundParam.setBody(param);
         BizResultWrapper<OrderAgreerefundResult> result = apiExecutor.execute(orderAgreerefundParam, accessToken);
         String s = JSON.toJSONString(result);
+        logger.info("eleme result:{}",s);
         com.alibaba.fastjson.JSONObject jsonObject = com.alibaba.fastjson.JSONObject.parseObject(s);
-        OrderAgreerefundResult body1 = jsonObject.getObject("body", OrderAgreerefundResult.class);
-        if (!body1.getErrno().equals("0")){
-            logger.error(result.getBody().getError());
-            throw new PublicException(result.getBody().getError());
+        com.alibaba.fastjson.JSONObject body1 = jsonObject.getJSONObject("body");
+        if (!body1.getString("errno").equals("0")){
+            logger.error(body1.getString("error"));
+            throw new PublicException(body1.getString("error"));
         }
     }
+    public static String agreerefundOrder(ApiExecutor apiExecutor,String orderId) throws IOException {
+        String accessToken = "{the access token}";
+        OrderAgreerefundParam param = new OrderAgreerefundParam();
 
+        RequestPolicy oceanRequestPolicy = new RequestPolicy();
+        oceanRequestPolicy.setHttpMethod(RequestPolicy.HttpMethodPolicy.POST)
+                .setUseHttps(true).setUseSignture(true);
+        param.setOceanRequestPolicy(oceanRequestPolicy);
+
+        MeEleRetailOrderAgreerefundInputParam body = new MeEleRetailOrderAgreerefundInputParam();
+        body.setOrder_id(orderId);
+        body.setRefund_order_id(orderId);
+        param.setBody(body);
+
+        param.setTicket(UUID.randomUUID().toString().toUpperCase());
+
+        BizResultWrapper<OrderAgreerefundResult> result = apiExecutor.execute(param, accessToken);
+
+        return JSON.toJSONString(result);
+
+    }
     public void orderRefundAgree (String orderId, String reason,String appId,String appSecret){
         SystemParam systemParam = new SystemParam(appId, appSecret);
         OrderRefundAgreeRequest request = new OrderRefundAgreeRequest(systemParam);
