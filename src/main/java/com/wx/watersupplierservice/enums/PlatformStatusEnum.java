@@ -22,7 +22,7 @@ import java.util.List;
 @AllArgsConstructor
 public enum PlatformStatusEnum {
     PLANTFORM_JD("JDDJ","JD"),
-    PLANTFORM_MT("MEITUAN","MT"),
+    PLANTFORM_MT("MT","MT"),
     PLANTFORM_ELM("ELEME","ELME"),
     PLANTFORM_SJZJ("SJZJ","商家自建");
 
