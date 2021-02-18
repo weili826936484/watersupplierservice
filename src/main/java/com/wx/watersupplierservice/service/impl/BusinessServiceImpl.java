@@ -1,5 +1,6 @@
 package com.wx.watersupplierservice.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.ocean.rawsdk.ApiExecutor;
 import com.alibaba.ocean.rawsdk.client.policy.RequestPolicy;
 import com.alibaba.ocean.rawsdk.common.BizResultWrapper;
@@ -425,6 +426,7 @@ public class BusinessServiceImpl implements BusinessService {
         RequestPolicy oceanRequestPolicy = new RequestPolicy();
         oceanRequestPolicy.setHttpMethod(RequestPolicy.HttpMethodPolicy.POST)
                 .setUseHttps(true).setUseSignture(true);
+        orderCancelParam.setTicket(getUUID());
         orderCancelParam.setOceanRequestPolicy(oceanRequestPolicy);
         MeEleRetailOrderCancelInputParam param = new MeEleRetailOrderCancelInputParam();
         param.setOrder_id(orderid);
@@ -432,7 +434,10 @@ public class BusinessServiceImpl implements BusinessService {
         param.setReason("用户拒单");
         orderCancelParam.setBody(param);
         BizResultWrapper<OrderCancelResult> result = apiExecutor.execute(orderCancelParam, accessToken);
-        if (!result.getBody().getErrno().equals("0")){
+        String s = JSON.toJSONString(result);
+        com.alibaba.fastjson.JSONObject jsonObject = com.alibaba.fastjson.JSONObject.parseObject(s);
+        OrderCancelResult body1 = jsonObject.getObject("body", OrderCancelResult.class);
+        if (!body1.getErrno().equals("0")){
             logger.error(result.getBody().getError());
             throw new PublicException(result.getBody().getError());
         }
@@ -581,12 +586,16 @@ public class BusinessServiceImpl implements BusinessService {
         oceanRequestPolicy.setHttpMethod(RequestPolicy.HttpMethodPolicy.POST)
                 .setUseHttps(true).setUseSignture(true);
         orderCompleteParam.setOceanRequestPolicy(oceanRequestPolicy);
+        orderCompleteParam.setTicket(getUUID());
         MeEleNopDoaApiParamRequestOrderOrderCompleteReqDto param = new MeEleNopDoaApiParamRequestOrderOrderCompleteReqDto();
         param.setOrder_id(orderid);
         param.setPhone(orgTel);
         orderCompleteParam.setBody(param);
         BizResultWrapper<OrderCompleteResult> result = apiExecutor.execute(orderCompleteParam, accessToken);
-        if (!result.getBody().getErrno().equals("0")){
+        String s = JSON.toJSONString(result);
+        com.alibaba.fastjson.JSONObject jsonObject = com.alibaba.fastjson.JSONObject.parseObject(s);
+        OrderCompleteResult body1 = jsonObject.getObject("body", OrderCompleteResult.class);
+        if (!body1.getErrno().equals("0")){
             logger.error(result.getBody().getError());
             throw new PublicException(result.getBody().getError());
         }
@@ -884,13 +893,17 @@ public class BusinessServiceImpl implements BusinessService {
         oceanRequestPolicy.setHttpMethod(RequestPolicy.HttpMethodPolicy.POST)
                 .setUseHttps(true).setUseSignture(true);
         orderDisagreerefundParam.setOceanRequestPolicy(oceanRequestPolicy);
+        orderDisagreerefundParam.setTicket(getUUID());
         MeEleRetailOrderDisagreerefundInputParam param = new MeEleRetailOrderDisagreerefundInputParam();
         param.setOrder_id(orderid);
         param.setRefuse_reason(remark);
         param.setRefund_order_id(starOrderid);
         orderDisagreerefundParam.setBody(param);
         BizResultWrapper<OrderDisagreerefundResult> result = apiExecutor.execute(orderDisagreerefundParam, accessToken);
-        if (!result.getBody().getErrno().equals("0")){
+        String s = JSON.toJSONString(result);
+        com.alibaba.fastjson.JSONObject jsonObject = com.alibaba.fastjson.JSONObject.parseObject(s);
+        OrderDisagreerefundResult body1 = jsonObject.getObject("body", OrderDisagreerefundResult.class);
+        if (!body1.getErrno().equals("0")){
             logger.error(result.getBody().getError());
             throw new PublicException(result.getBody().getError());
         }
@@ -1247,6 +1260,7 @@ public class BusinessServiceImpl implements BusinessService {
                                 ApiExecutor apiExecutor = new ApiExecutor(appId,appSecret);
                                 orderDeliveringELM(ordermap.get(orderBusinessPo.getOrderId()).getOrderid(),apiExecutor,sysOrgPo.getOrgTel());
                             }catch (Exception e){
+                                logger.error("error:{}",e);
                                 throw new PublicException("网络开小差，请联系管理员");
                             }
                         }
@@ -1267,19 +1281,28 @@ public class BusinessServiceImpl implements BusinessService {
         }
     }
 
+    public static String getUUID() {
+        String uuid = UUID.randomUUID().toString();
+        return uuid.toUpperCase();
+    }
+
     private void orderDeliveringELM(String orderid, ApiExecutor apiExecutor, String orgTel) throws IOException {
         String accessToken = "{the access token}";
         OrderSendoutParam orderSendoutParam = new OrderSendoutParam();
         RequestPolicy oceanRequestPolicy = new RequestPolicy();
         oceanRequestPolicy.setHttpMethod(RequestPolicy.HttpMethodPolicy.POST)
                 .setUseHttps(true).setUseSignture(true);
+        orderSendoutParam.setTicket(getUUID());
         orderSendoutParam.setOceanRequestPolicy(oceanRequestPolicy);
         MeEleRetailOrderSendoutInputParam param = new MeEleRetailOrderSendoutInputParam();
         param.setOrder_id(orderid);
         param.setPhone(orgTel);
         orderSendoutParam.setBody(param);
         BizResultWrapper<OrderSendoutResult> result = apiExecutor.execute(orderSendoutParam, accessToken);
-        if (!result.getBody().getErrno().equals("0")){
+        String s = JSON.toJSONString(result);
+        com.alibaba.fastjson.JSONObject jsonObject = com.alibaba.fastjson.JSONObject.parseObject(s);
+        OrderSendoutResult body1 = jsonObject.getObject("body", OrderSendoutResult.class);
+        if (!body1.getErrno().equals("0")){
             logger.error(result.getBody().getError());
             throw new PublicException(result.getBody().getError());
         }
@@ -1428,12 +1451,16 @@ public class BusinessServiceImpl implements BusinessService {
         oceanRequestPolicy.setHttpMethod(RequestPolicy.HttpMethodPolicy.POST)
                 .setUseHttps(true).setUseSignture(true);
         orderAgreerefundParam.setOceanRequestPolicy(oceanRequestPolicy);
+        orderAgreerefundParam.setTicket(getUUID());
         MeEleRetailOrderAgreerefundInputParam param = new MeEleRetailOrderAgreerefundInputParam();
         param.setOrder_id(orderid);
         param.setRefund_order_id(starOrderid);
         orderAgreerefundParam.setBody(param);
         BizResultWrapper<OrderAgreerefundResult> result = apiExecutor.execute(orderAgreerefundParam, accessToken);
-        if (!result.getBody().getErrno().equals("0")){
+        String s = JSON.toJSONString(result);
+        com.alibaba.fastjson.JSONObject jsonObject = com.alibaba.fastjson.JSONObject.parseObject(s);
+        OrderAgreerefundResult body1 = jsonObject.getObject("body", OrderAgreerefundResult.class);
+        if (!body1.getErrno().equals("0")){
             logger.error(result.getBody().getError());
             throw new PublicException(result.getBody().getError());
         }
