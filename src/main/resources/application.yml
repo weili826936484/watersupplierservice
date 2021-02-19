@@ -57,6 +57,22 @@ spring:
       enabled: false
   application:
     name: bservice
+  redis:
+    database: 1
+    host: 39.96.44.58
+    port: 6379
+#    password: Wql719473.
+    timeout: 1000
+    jedis:
+      pool:
+        max-active: 1000
+        max-idle: 500
+        max-wait: 1000
+        min-idle: 50
+        maxWaitMillis: 60000
+        maxTotal: 50
+        testObBorrow: false
+
 server:
   port: 8080
   servlet:
