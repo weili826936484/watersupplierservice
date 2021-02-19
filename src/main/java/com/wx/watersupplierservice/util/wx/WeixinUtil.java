@@ -1,12 +1,19 @@
 package com.wx.watersupplierservice.util.wx;
 
 
+import com.wx.watersupplierservice.config.RedisTemplateUtil;
 import com.wx.watersupplierservice.util.Cfg;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Configuration;
+
+import java.util.concurrent.TimeUnit;
 
 
+@Configuration
 public class WeixinUtil {
-    
+    @Value("${vx.accessToken}")
+    private static String vx_accessToken_key;
     /**
      * 
      * <B>方法名称：</B>微信接口令牌地址<BR>
@@ -54,25 +61,15 @@ public class WeixinUtil {
      * <B>概要说明：</B><BR>
      * @return WxParams.token 
      */
-    public static synchronized String getAccessToken() {     
-        
-        if (WxParams.token == null || WxParams.tokenTime == null || WxParams.tokenExpires == null) {            
+    public static synchronized String getAccessToken() {
+        String accessToken = RedisTemplateUtil.get(vx_accessToken_key);
+        if (accessToken == null) {
             setToken();
+            RedisTemplateUtil.set(WxParams.token,vx_accessToken_key,7000000, TimeUnit.MILLISECONDS);
             return WxParams.token;
-            
         } else {
-            long tokenTimeLong = Long.parseLong(WxParams.tokenTime);
-            long tokenExpiresLong = Long.parseLong(WxParams.tokenExpires);
-            long differ = (System.currentTimeMillis() - tokenTimeLong) / 1000;
-           
-            if (differ > (tokenExpiresLong - 1800)) {
-                // token失效                
-                setToken();                
-                return WxParams.token;
-            } else {
-                return WxParams.token; 
-            }
-        } 
+            return accessToken;
+        }
     }
     
     /**

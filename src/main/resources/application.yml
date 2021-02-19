@@ -78,3 +78,6 @@ server:
   servlet:
     context-path: /bservice
 
+vx:
+  accessToken: bao_wx39ee3af41c7d5c1e
+
