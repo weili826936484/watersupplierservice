@@ -39,6 +39,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -379,7 +380,7 @@ public class BusinessServiceImpl implements BusinessService {
                         orgJson.put("app_secret",sysOrgPo.getAppSecret());
                         orgJson.put("token",sysOrgPo.getToken());
                         try {
-                            String s = JddjOrderUtil.cancelAndRefund(orgJson, waterOrderPo.getOrderid(), waterOrderPo.getBuyerpin(), sdf.format(now), changeOrder.getRemark());
+                            String s = JddjOrderUtil.cancelAndRefund(orgJson, waterOrderPo.getOrderid(), waterOrderPo.getBuyerpin(), sdf.format(now), URLEncoder.encode(changeOrder.getRemark(),"UTF-8"));
                             logger.info("return jd :{}",s);
                             com.alibaba.fastjson.JSONObject jsonObject = com.alibaba.fastjson.JSONObject.parseObject(s);
                             if (!"0".equals(jsonObject.get("code").toString())){
@@ -436,7 +437,7 @@ public class BusinessServiceImpl implements BusinessService {
         MeEleRetailOrderCancelInputParam param = new MeEleRetailOrderCancelInputParam();
         param.setOrder_id(orderid);
         param.setType("5");
-        param.setReason("用户拒单");
+        param.setReason(URLEncoder.encode("用户拒单","UTF-8"));
         orderCancelParam.setBody(param);
         BizResultWrapper<OrderCancelResult> result = apiExecutor.execute(orderCancelParam, accessToken);
         String s = JSON.toJSONString(result);
@@ -854,7 +855,7 @@ public class BusinessServiceImpl implements BusinessService {
                         orgJson.put("app_secret",sysOrgPo.getAppSecret());
                         orgJson.put("token",sysOrgPo.getToken());
                         try {
-                            String s = JddjOrderUtil.sendOrderCancelOperate(orgJson, waterOrderPo.getOrderid(), true, user.getUserName(), changeOrder.getRemark());
+                            String s = JddjOrderUtil.sendOrderCancelOperate(orgJson, waterOrderPo.getOrderid(), true, user.getUserName(), URLEncoder.encode(changeOrder.getRemark(),"UTF-8"));
                             logger.info("return jd :{}",s);
                             com.alibaba.fastjson.JSONObject jsonObject = com.alibaba.fastjson.JSONObject.parseObject(s);
                             if (!"0".equals(jsonObject.get("code").toString())){
@@ -872,7 +873,7 @@ public class BusinessServiceImpl implements BusinessService {
                             SysOrgPo sysOrgPo = sysOrgDao.findByCode(waterOrderPo.getOrgcode());
                             String appId = sysOrgPo.getAppKey();
                             String appSecret = sysOrgPo.getAppSecret();
-                            orderRefundReject(waterOrderPo.getOrderid(),changeOrder.getRemark(),appId,appSecret);
+                            orderRefundReject(waterOrderPo.getOrderid(),URLEncoder.encode(changeOrder.getRemark(),"UTF-8"),appId,appSecret);
                         }catch (Exception e){
                             logger.error("mt error:{}",e);
                             throw new PublicException("网络开小差，请联系管理员");
@@ -886,7 +887,7 @@ public class BusinessServiceImpl implements BusinessService {
                             String appId = sysOrgPo.getAppKey();
                             String appSecret = sysOrgPo.getAppSecret();
                             ApiExecutor apiExecutor = new ApiExecutor(appId,appSecret);
-                            orderRefundRejectELM(waterOrderPo.getOrderid(),waterOrderPo.getStarOrderid(),apiExecutor,changeOrder.getRemark());
+                            orderRefundRejectELM(waterOrderPo.getOrderid(),waterOrderPo.getStarOrderid(),apiExecutor,URLEncoder.encode(changeOrder.getRemark(),"UTF-8"));
                         }catch (Exception e){
                             logger.error("eleme error:{}",e);
                             throw new PublicException("网络开小差，请联系管理员");
@@ -1422,7 +1423,7 @@ public class BusinessServiceImpl implements BusinessService {
                         orgJson.put("app_secret",sysOrgPo.getAppSecret());
                         orgJson.put("token",sysOrgPo.getToken());
                         try {
-                            String s = JddjOrderUtil.sendOrderCancelOperate(orgJson,waterOrderPo.getOrderid(), true, user.getUserName(), changeOrder.getRemark());
+                            String s = JddjOrderUtil.sendOrderCancelOperate(orgJson,waterOrderPo.getOrderid(), true, user.getUserName(), URLEncoder.encode(changeOrder.getRemark(),"UTF-8"));
                             logger.info("return jd :{}",s);
                             com.alibaba.fastjson.JSONObject jsonObject = com.alibaba.fastjson.JSONObject.parseObject(s);
                             if (!"0".equals(jsonObject.get("code").toString())){
@@ -1440,7 +1441,7 @@ public class BusinessServiceImpl implements BusinessService {
                             SysOrgPo sysOrgPo = sysOrgDao.findByCode(waterOrderPo.getOrgcode());
                             String appId = sysOrgPo.getAppKey();
                             String appSecret = sysOrgPo.getAppSecret();
-                            orderRefundAgree(waterOrderPo.getOrderid(),changeOrder.getRemark(),appId,appSecret);
+                            orderRefundAgree(waterOrderPo.getOrderid(),URLEncoder.encode(changeOrder.getRemark(),"UTF-8"),appId,appSecret);
                         }catch (Exception e){
                             logger.error("mt error:{}",e);
                             throw new PublicException("网络开小差，请重试");
