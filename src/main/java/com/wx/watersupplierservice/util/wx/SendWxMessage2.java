@@ -171,9 +171,8 @@ public class SendWxMessage2 {
 
         //订单拒绝通知模板
         String templatId = Cfg.getConfig("templatId_cancleOrder");
-//        String clickUrl = Cfg.getConfig("web.url") + "/wx/orderNew.html";
-        String clickUrl = "";
-		//拼接推送消息模板				
+        String clickUrl = Cfg.getConfig("web.url") + "/wx/orderDetail.html?orderBusinessId="+orderDto.getOrderBusinessId()+"&platform="+orderDto.getPlatform()+"&flag=siteFinish&orderId=" + orderDto.getId();
+		//拼接推送消息模板
         String topColor = "";
         JSONObject jsc = new JSONObject();
         
@@ -196,7 +195,7 @@ public class SendWxMessage2 {
         remark.put("value", "客户信息：" + orderDto.getBuyerfullname() + orderDto.getBuyertelephone());
         remark.put("color", "#173177");
         jsc.put("remark", remark);
-        
+
 		if(userList.size() > 0) {
 			for(int m=0;m<userList.size();m++) {
 				String openId = userList.get(m);

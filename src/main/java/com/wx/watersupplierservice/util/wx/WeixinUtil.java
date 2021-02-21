@@ -1,11 +1,14 @@
 package com.wx.watersupplierservice.util.wx;
 
 
+import com.dianping.lion.client.util.StringUtils;
 import com.wx.watersupplierservice.config.RedisTemplateUtil;
 import com.wx.watersupplierservice.util.Cfg;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.core.RedisTemplate;
 
 import java.util.concurrent.TimeUnit;
 
@@ -14,6 +17,9 @@ import java.util.concurrent.TimeUnit;
 public class WeixinUtil {
     @Value("${vx.accessToken}")
     private static String vx_accessToken_key;
+
+    @Autowired
+    private RedisTemplate redisTemplate;
     /**
      * 
      * <B>方法名称：</B>微信接口令牌地址<BR>
@@ -62,10 +68,13 @@ public class WeixinUtil {
      * @return WxParams.token 
      */
     public static synchronized String getAccessToken() {
-        String accessToken = RedisTemplateUtil.get(vx_accessToken_key);
-        if (accessToken == null) {
+        String accessToken = RedisTemplateUtil.get("accessToken");
+        System.out.println("redis 取出的"+RedisTemplateUtil.get("accessToken"));
+        if (StringUtils.isBlank(accessToken) || "null".equals(accessToken)) {
             setToken();
-            RedisTemplateUtil.set(WxParams.token,vx_accessToken_key,7000000, TimeUnit.MILLISECONDS);
+            RedisTemplateUtil.set("accessToken",WxParams.token,7000000, TimeUnit.MILLISECONDS);
+            System.out.println("本地缓存中的"+WxParams.token);
+            System.out.println("set后redis 取出的"+RedisTemplateUtil.get("accessToken"));
             return WxParams.token;
         } else {
             return accessToken;

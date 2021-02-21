@@ -122,7 +122,7 @@ public class JddjOrderUtil {
         reqparams.put("operator", operator);
         reqparams.put("remark", remark);
         String jd_param_json = reqparams.toString();
-        
+		System.out.println("jd_param_json:{}" + jd_param_json);
 	    //拣货完成且商家自送接口  商家将拣货完成状态推送给京东
 	    String result = HttpUtil.sendJdPostRequest(url, addJddjParam(orgJson, jd_param_json));
 	    

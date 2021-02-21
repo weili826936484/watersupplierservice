@@ -233,6 +233,7 @@
                 <configuration>
                     <fork>false</fork>
                     <includeSystemScope>true</includeSystemScope>
+                    <jvmArguments>-Dfile.encoding=UTF-8</jvmArguments>
                 </configuration>
                 <executions>
                     <execution>

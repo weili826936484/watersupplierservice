@@ -10,6 +10,8 @@ import com.wx.watersupplierservice.resp.ObjectResults;
 import com.wx.watersupplierservice.service.BusinessService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -94,7 +96,7 @@ public class BusinessController {
      * @return
      */
     @PostMapping("/changeOrder")
-    public ObjectResults changeOrder(@RequestBody ChangeOrderReq changeOrder){
+    public ObjectResults changeOrder(@RequestBody ChangeOrderReq changeOrder) throws UnsupportedEncodingException {
         businessService.changeOrder(changeOrder);
         return ObjectResults.createSuccessResult();
     }

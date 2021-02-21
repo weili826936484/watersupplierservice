@@ -1,5 +1,5 @@
 jd:
-  flag: false
+  flag: flase
 mt:
   flag: false
 elm:
@@ -58,8 +58,8 @@ spring:
   application:
     name: bservice
   redis:
-    database: 1
-    host: 39.96.44.58
+    database: 0
+    host: localhost
     port: 6379
 #    password: Wql719473.
     timeout: 1000

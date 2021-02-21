@@ -39,6 +39,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -156,7 +157,7 @@ public class BusinessServiceImpl implements BusinessService {
 
     @Override
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
-    public void changeOrder(ChangeOrderReq changeOrder) {
+    public void changeOrder(ChangeOrderReq changeOrder) throws UnsupportedEncodingException {
         if (Objects.isNull(changeOrder) ||Objects.isNull(changeOrder.getOptCode())){
             throw new PublicException("参数不全！");
         }
@@ -373,14 +374,14 @@ public class BusinessServiceImpl implements BusinessService {
                         orgJson.put("orderId",waterOrderPo.getOrderid());
                         orgJson.put("operPin",waterOrderPo.getBuyerpin());
                         orgJson.put("operTime",sdf.format(now));
-                        orgJson.put("operRemark",changeOrder.getRemark());
+                        orgJson.put("operRemark","用户拒收");
                         //根据orgcode获取
                         SysOrgPo sysOrgPo = sysOrgDao.findByCode(waterOrderPo.getOrgcode());
                         orgJson.put("app_key",sysOrgPo.getAppKey());
                         orgJson.put("app_secret",sysOrgPo.getAppSecret());
                         orgJson.put("token",sysOrgPo.getToken());
                         try {
-                            String s = JddjOrderUtil.cancelAndRefund(orgJson, waterOrderPo.getOrderid(), waterOrderPo.getBuyerpin(), sdf.format(now), URLEncoder.encode(changeOrder.getRemark(),"UTF-8"));
+                            String s = JddjOrderUtil.cancelAndRefund(orgJson, waterOrderPo.getOrderid(), waterOrderPo.getBuyerpin(), sdf.format(now), "用户拒收");
                             logger.info("return jd :{}",s);
                             com.alibaba.fastjson.JSONObject jsonObject = com.alibaba.fastjson.JSONObject.parseObject(s);
                             if (!"0".equals(jsonObject.get("code").toString())){
@@ -422,6 +423,9 @@ public class BusinessServiceImpl implements BusinessService {
                 default:
                     throw new PublicException("订单来源平台有误");
             }
+            //给水站发送拒单消息
+
+
         }
 
     }
@@ -1264,7 +1268,10 @@ public class BusinessServiceImpl implements BusinessService {
                                 SysOrgPo sysOrgPo = sysOrgDao.findByCode(ordermap.get(orderBusinessPo.getOrderId()).getOrgcode());
                                 String appId = sysOrgPo.getAppKey();
                                 String appSecret = sysOrgPo.getAppSecret();
+                                orderReceive(ordermap.get(orderBusinessPo.getOrderId()).getOrderid(),appId,appSecret);
+                                logger.info("mt接单。。。。。。。");
                                 orderDelivering(ordermap.get(orderBusinessPo.getOrderId()).getOrderid(),appId,appSecret);
+                                logger.info("mt派送中。。。。。。。");
                             }catch (Exception e){
                                 logger.error("mt error:{}",e);
                                 throw new PublicException("网络开小差，请联系管理员");
@@ -1299,6 +1306,28 @@ public class BusinessServiceImpl implements BusinessService {
                 }
             }
         }
+    }
+
+    private void orderReceive(String orderid, String appId, String appSecret) {
+        SystemParam systemParam = new SystemParam(appId, appSecret);
+        OrderConfirmRequest request = new OrderConfirmRequest(systemParam);
+        request.setOrder_id(orderid);
+        SgOpenResponse sgOpenResponse;
+        try {
+            sgOpenResponse = request.doRequest();
+        } catch (SgOpenException e) {
+            e.printStackTrace();
+            return;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return;
+        }
+        //发起请求时的sig，用来联系美团员工排查问题时使用
+        String requestSig = sgOpenResponse.getRequestSig();
+        System.out.println(requestSig);
+        //请求返回的结果，按照官网的接口文档自行解析即可
+        String requestResult = sgOpenResponse.getRequestResult();
+        System.out.println(requestResult);
     }
 
     public static String getUUID() {
@@ -1359,7 +1388,7 @@ public class BusinessServiceImpl implements BusinessService {
         SendWxMessage2.sendNewOrder(orderDto,ProductDto,users);
     }
 
-    private void cancelOrder(ChangeOrderReq changeOrder, String orderStatus, String preOrderStatus) {
+    private void cancelOrder(ChangeOrderReq changeOrder, String orderStatus, String preOrderStatus) throws UnsupportedEncodingException {
         if (Objects.isNull(changeOrder.getOrderId())){
             throw new PublicException("参数不全");
         }
@@ -1416,14 +1445,14 @@ public class BusinessServiceImpl implements BusinessService {
                         orgJson.put("orderId",waterOrderPo.getOrderid());
                         orgJson.put("operator",user.getUserName());
                         orgJson.put("isAgreed",true);
-                        orgJson.put("remark",changeOrder.getRemark());
+                        orgJson.put("remark","同意");
                         //根据orgcode获取
                         SysOrgPo sysOrgPo = sysOrgDao.findByCode(waterOrderPo.getOrgcode());
                         orgJson.put("app_key",sysOrgPo.getAppKey());
                         orgJson.put("app_secret",sysOrgPo.getAppSecret());
                         orgJson.put("token",sysOrgPo.getToken());
                         try {
-                            String s = JddjOrderUtil.sendOrderCancelOperate(orgJson,waterOrderPo.getOrderid(), true, user.getUserName(), URLEncoder.encode(changeOrder.getRemark(),"UTF-8"));
+                            String s = JddjOrderUtil.sendOrderCancelOperate(orgJson,waterOrderPo.getOrderid(), true, user.getUserName(), URLEncoder.encode("同意","UTF-8"));
                             logger.info("return jd :{}",s);
                             com.alibaba.fastjson.JSONObject jsonObject = com.alibaba.fastjson.JSONObject.parseObject(s);
                             if (!"0".equals(jsonObject.get("code").toString())){
@@ -1441,7 +1470,7 @@ public class BusinessServiceImpl implements BusinessService {
                             SysOrgPo sysOrgPo = sysOrgDao.findByCode(waterOrderPo.getOrgcode());
                             String appId = sysOrgPo.getAppKey();
                             String appSecret = sysOrgPo.getAppSecret();
-                            orderRefundAgree(waterOrderPo.getOrderid(),URLEncoder.encode(changeOrder.getRemark(),"UTF-8"),appId,appSecret);
+                            orderRefundAgree(waterOrderPo.getOrderid(),URLEncoder.encode("同意","UTF-8"),appId,appSecret);
                         }catch (Exception e){
                             logger.error("mt error:{}",e);
                             throw new PublicException("网络开小差，请重试");

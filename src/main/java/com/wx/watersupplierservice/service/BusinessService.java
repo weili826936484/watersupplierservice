@@ -7,6 +7,7 @@ import com.wx.watersupplierservice.dto.WatersPageDto;
 import com.wx.watersupplierservice.po.SysShopPo;
 import com.wx.watersupplierservice.req.*;
 
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 /**
@@ -25,7 +26,7 @@ public interface BusinessService {
 
     UseroOrderPageDto getOrderList(OrderListReq getOrderListReq);
 
-    void changeOrder(ChangeOrderReq changeOrder);
+    void changeOrder(ChangeOrderReq changeOrder) throws UnsupportedEncodingException;
 
     void updateUserShop(SysShopPo sysShopPo);
 
