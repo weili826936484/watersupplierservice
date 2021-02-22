@@ -917,7 +917,7 @@ public class BusinessServiceImpl implements BusinessService {
         param.setRefuse_reason(remark);
         param.setRefund_order_id(starOrderid);
         orderDisagreerefundParam.setBody(param);
-        BizResultWrapper<OrderDisagreerefundResult> result = apiExecutor.execute(orderDisagreerefundParam, accessToken);
+        BizResultWrapper<OrderDisagreerefundResult> result = apiExecutor.execute(orderDisagreerefundParam);
         String s = JSON.toJSONString(result);
         logger.info("eleme result:{}",s);
         com.alibaba.fastjson.JSONObject jsonObject = com.alibaba.fastjson.JSONObject.parseObject(s);
@@ -1547,7 +1547,7 @@ public class BusinessServiceImpl implements BusinessService {
         param.setOrder_id(orderid);
         param.setRefund_order_id(starOrderid);
         orderAgreerefundParam.setBody(param);
-        BizResultWrapper<OrderAgreerefundResult> result = apiExecutor.execute(orderAgreerefundParam, accessToken);
+        BizResultWrapper<OrderAgreerefundResult> result = apiExecutor.execute(orderAgreerefundParam);
         String s = JSON.toJSONString(result);
         logger.info("eleme result:{}",s);
         com.alibaba.fastjson.JSONObject jsonObject = com.alibaba.fastjson.JSONObject.parseObject(s);
