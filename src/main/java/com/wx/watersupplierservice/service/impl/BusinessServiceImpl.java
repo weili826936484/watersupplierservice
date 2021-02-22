@@ -473,7 +473,7 @@ public class BusinessServiceImpl implements BusinessService {
         System.out.println(requestSig);
         //请求返回的结果，按照官网的接口文档自行解析即可
         String requestResult = sgOpenResponse.getRequestResult();
-        System.out.println(requestResult);
+        System.out.println("orderId: "+orderId+"mt: "+requestResult);
     }
 
     private void okOrder(ChangeOrderReq changeOrder, String orderStatus, String preOrderStatus) {
@@ -635,7 +635,7 @@ public class BusinessServiceImpl implements BusinessService {
         System.out.println(requestSig);
         //请求返回的结果，按照官网的接口文档自行解析即可
         String requestResult = sgOpenResponse.getRequestResult();
-        System.out.println(requestResult);
+        System.out.println("orderId: "+orderid+"mt: "+requestResult);
     }
 
     @Override
@@ -948,7 +948,7 @@ public class BusinessServiceImpl implements BusinessService {
         System.out.println(requestSig);
         //请求返回的结果，按照官网的接口文档自行解析即可
         String requestResult = sgOpenResponse.getRequestResult();
-        System.out.println(requestResult);
+        System.out.println("orderId: "+orderId+"mt: "+requestResult);
     }
 
 
@@ -1282,8 +1282,12 @@ public class BusinessServiceImpl implements BusinessService {
                         if (elmflag){
                             try {
                                 SysOrgPo sysOrgPo = sysOrgDao.findByCode(ordermap.get(orderBusinessPo.getOrderId()).getOrgcode());
+                                logger.info("elm 练货中");
                                 String appId = sysOrgPo.getAppKey();
                                 String appSecret = sysOrgPo.getAppSecret();
+                                ApiExecutor apiExecutor2 = new ApiExecutor(appId,appSecret);
+                                orderPickcompleteELM(ordermap.get(orderBusinessPo.getOrderId()).getOrderid(),apiExecutor2);
+                                logger.info("elm 派送中");
                                 ApiExecutor apiExecutor = new ApiExecutor(appId,appSecret);
                                 orderDeliveringELM(ordermap.get(orderBusinessPo.getOrderId()).getOrderid(),apiExecutor,sysOrgPo.getOrgTel());
                             }catch (Exception e){
@@ -1293,19 +1297,42 @@ public class BusinessServiceImpl implements BusinessService {
                         }
                         break;
                 }
-
+            }
+            updateOrderBusinessPos.forEach(e->{
                 //todo 微信推送order_business信息
                 OrderListReq req = new OrderListReq();
-                req.setOrderId(orderBusinessPo.getOrderId());
+                req.setOrderId(e.getOrderId());
                 List<OrderDto> orgOrderList = waterOrderDao.getOrgOrderList(req);
                 OrderDto orderDto = orgOrderList.get(0);
-                Integer siteId = orderBusinessPo.getSiteId();
+                Integer siteId = e.getSiteId();
                 List<String> users = sysSiteUserDao.getuserbysite(siteId);
                 if(users != null  && !users.isEmpty()){
                     SendWxMessage2.sendNewOrder(orderDto,orderDto.getProductList(),users);
                 }
-            }
+            });
         }
+    }
+
+    private void orderPickcompleteELM(String orderid, ApiExecutor apiExecutor) throws IOException {
+        String accessToken = "{the access token}";
+        OrderPickcompleteParam orderPickcompleteParam = new OrderPickcompleteParam();
+        RequestPolicy oceanRequestPolicy = new RequestPolicy();
+        oceanRequestPolicy.setHttpMethod(RequestPolicy.HttpMethodPolicy.POST)
+                .setUseHttps(true).setUseSignture(true);
+        orderPickcompleteParam.setTicket(getUUID());
+        orderPickcompleteParam.setOceanRequestPolicy(oceanRequestPolicy);
+        MeEleRetailOrderPickcompleteInputParam param = new MeEleRetailOrderPickcompleteInputParam();
+        param.setOrder_id(orderid);
+        orderPickcompleteParam.setBody(param);
+        BizResultWrapper<OrderPickcompleteResult> result = apiExecutor.execute(orderPickcompleteParam, accessToken);
+        String s = JSON.toJSONString(result);
+        logger.info("eleme result:{}",s);
+//        com.alibaba.fastjson.JSONObject jsonObject = com.alibaba.fastjson.JSONObject.parseObject(s);
+//        com.alibaba.fastjson.JSONObject body1 = jsonObject.getJSONObject("body");
+//        if (!body1.getString("errno").equals("0")){
+//            logger.error(body1.getString("error"));
+//            throw new PublicException(body1.getString("error"));
+//        }
     }
 
     private void orderReceive(String orderid, String appId, String appSecret) {
@@ -1327,7 +1354,7 @@ public class BusinessServiceImpl implements BusinessService {
         System.out.println(requestSig);
         //请求返回的结果，按照官网的接口文档自行解析即可
         String requestResult = sgOpenResponse.getRequestResult();
-        System.out.println(requestResult);
+        System.out.println("orderId: "+orderid+"mt: "+requestResult);
     }
 
     public static String getUUID() {
@@ -1377,7 +1404,7 @@ public class BusinessServiceImpl implements BusinessService {
         System.out.println(requestSig);
         //请求返回的结果，按照官网的接口文档自行解析即可
         String requestResult = sgOpenResponse.getRequestResult();
-        System.out.println(requestResult);
+        System.out.println("orderId: "+orderId+"mt: "+requestResult);
     }
 
     public static void main(String[] args) {
@@ -1470,7 +1497,18 @@ public class BusinessServiceImpl implements BusinessService {
                             SysOrgPo sysOrgPo = sysOrgDao.findByCode(waterOrderPo.getOrgcode());
                             String appId = sysOrgPo.getAppKey();
                             String appSecret = sysOrgPo.getAppSecret();
-                            orderRefundAgree(waterOrderPo.getOrderid(),URLEncoder.encode("同意","UTF-8"),appId,appSecret);
+                            String message = orderRefundAgree(waterOrderPo.getOrderid(), URLEncoder.encode("同意", "UTF-8"), appId, appSecret);
+//                            if (StringUtils.isNotBlank(message)){
+//                                com.alibaba.fastjson.JSONObject jsonObject = JSON.parseObject(message);
+//                                com.alibaba.fastjson.JSONObject error = jsonObject.getJSONObject("error");
+//                                if (error != null){
+//                                    if (){
+//
+//                                    }
+//                                }
+//                            } else {
+//                                throw new PublicException("美团调用有问题，反回null，orderid:"+waterOrderPo.getOrderid());
+//                            }
                         }catch (Exception e){
                             logger.error("mt error:{}",e);
                             throw new PublicException("网络开小差，请重试");
@@ -1540,7 +1578,7 @@ public class BusinessServiceImpl implements BusinessService {
         return JSON.toJSONString(result);
 
     }
-    public void orderRefundAgree (String orderId, String reason,String appId,String appSecret){
+    public String orderRefundAgree (String orderId, String reason,String appId,String appSecret){
         SystemParam systemParam = new SystemParam(appId, appSecret);
         OrderRefundAgreeRequest request = new OrderRefundAgreeRequest(systemParam);
         request.setOrder_id(orderId);
@@ -1550,17 +1588,18 @@ public class BusinessServiceImpl implements BusinessService {
             sgOpenResponse = request.doRequest();
         } catch (SgOpenException e) {
             e.printStackTrace();
-            return;
+            return null;
         } catch (Exception e) {
             e.printStackTrace();
-            return;
+            return null;
         }
         //发起请求时的sig，用来联系美团员工排查问题时使用
         String requestSig = sgOpenResponse.getRequestSig();
         System.out.println(requestSig);
         //请求返回的结果，按照官网的接口文档自行解析即可
         String requestResult = sgOpenResponse.getRequestResult();
-        System.out.println(requestResult);
+        System.out.println("orderId: "+orderId+"mt: "+requestResult);
+        return requestResult;
     }
 
     private UseroOrderPageDto getSenderOrderList(OrderListReq orderListReq, UseroOrderPageDto useroOrderPageDto) {
