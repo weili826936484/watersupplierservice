@@ -331,7 +331,7 @@ public class BusinessServiceImpl implements BusinessService {
             if (orderBusinessPo == null){
                 OrderBusinessPo po = new OrderBusinessPo();
                 po.setOrderId(waterOrderPo.getId());
-                po.setOptCode(OPTStatusEnum.SITE_SEND_BACK_ORDER.getCode());
+                po.setOptCode(OPTStatusEnum.SITE_CANCEL.getCode());
                 po.setPlatform(waterOrderPo.getPlatform());
                 po.setCreateBy(changeOrder.getUserId());
                 orderBusinessPos.add(po);
@@ -341,7 +341,7 @@ public class BusinessServiceImpl implements BusinessService {
                 }
                 orderBusinessPo = orderBusinessPos.get(0);
             } else {
-                orderBusinessPo.setOptCode(OPTStatusEnum.SITE_SEND_BACK_ORDER.getCode());
+                orderBusinessPo.setOptCode(OPTStatusEnum.SITE_CANCEL.getCode());
                 orderBusinessDao.update(orderBusinessPo);
             }
 
@@ -349,7 +349,7 @@ public class BusinessServiceImpl implements BusinessService {
             OrderBusinessProcessPo orderBusinessProcessPo = new OrderBusinessProcessPo();
             orderBusinessProcessPo.setBusinessId(orderBusinessPo.getId());
             orderBusinessProcessPo.setCreateBy(changeOrder.getUserId());
-            orderBusinessProcessPo.setOptCode(OPTStatusEnum.SITE_SEND_BACK_ORDER.getCode());
+            orderBusinessProcessPo.setOptCode(OPTStatusEnum.SITE_CANCEL.getCode());
             orderBusinessProcessPo.setUpdateTime(new Date());
             if (StringUtils.isNotBlank(changeOrder.getRemark())){
                 orderBusinessProcessPo.setResultInfo(changeOrder.getRemark());

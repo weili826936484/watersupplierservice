@@ -187,7 +187,7 @@ public class SendWxMessage2 {
         jsc.put("keyword1", keyword1);
         
         JSONObject keyword2 = new JSONObject();
-        keyword2.put("value", "订单分配错了");  
+        keyword2.put("value", "用户要求取消订单");
         keyword2.put("color", "#173177");
         jsc.put("keyword2", keyword2);
 
@@ -220,23 +220,26 @@ public class SendWxMessage2 {
         String templatId = Cfg.getConfig("templatId_reSendOrder");
         String clickUrl = "";
 
-        if ("L10".equals(orderInfo.getOptCode())) {
-            //水站未接单  跳转到水站新订单页面
-            clickUrl = Cfg.getConfig("web.url") + "/wx/siteNewOrder.html";
-        }
-        if ("L20".equals(orderInfo.getOptCode())) {
-            //水站接单  跳转到水站配送中页面
-            clickUrl = Cfg.getConfig("web.url") + "/wx/siteSendingOrder.html";
-        }
-
         //拼接推送消息模板
         String topColor = "";
         JSONObject jsc = new JSONObject();
 
-        JSONObject first = new JSONObject();
-        first.put("value", "您收到了一条催单提醒，请及时处理！");
-        first.put("color", "#173177");
-        jsc.put("first", first);
+        if ("L10".equals(orderInfo.getOptCode())) {
+            //水站未接单  跳转到水站新订单页面
+            clickUrl = Cfg.getConfig("web.url") + "/wx/siteNewOrder.html";
+            JSONObject first = new JSONObject();
+            first.put("value", "您有一条订单未接单，请及时接单！");
+            first.put("color", "#173177");
+            jsc.put("first", first);
+        }
+        if ("L20".equals(orderInfo.getOptCode())) {
+            //水站接单  跳转到水站配送中页面
+            clickUrl = Cfg.getConfig("web.url") + "/wx/siteSendingOrder.html";
+            JSONObject first = new JSONObject();
+            first.put("value", "您有一条客户催单请尽快回电，如送达及时点击完成！");
+            first.put("color", "#173177");
+            jsc.put("first", first);
+        }
 
         JSONObject keyword1 = new JSONObject();
         keyword1.put("value", orderInfo.getOrderid());
