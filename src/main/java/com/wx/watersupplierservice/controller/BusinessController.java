@@ -8,10 +8,14 @@ import com.wx.watersupplierservice.po.SysShopPo;
 import com.wx.watersupplierservice.req.*;
 import com.wx.watersupplierservice.resp.ObjectResults;
 import com.wx.watersupplierservice.service.BusinessService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.UnsupportedEncodingException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -31,6 +35,7 @@ import java.util.concurrent.TimeUnit;
 @RequestMapping("/api/business")
 public class BusinessController {
 
+    private final Logger logger= LoggerFactory.getLogger(BusinessController.class);
 
     @Autowired
     private BusinessService businessService;
@@ -97,6 +102,9 @@ public class BusinessController {
      */
     @PostMapping("/changeOrder")
     public ObjectResults changeOrder(@RequestBody ChangeOrderReq changeOrder) throws UnsupportedEncodingException {
+        Date now = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        logger.info("----------------------请求时间：{},参数：{}",sdf.format(now),changeOrder.toString());
         businessService.changeOrder(changeOrder);
         return ObjectResults.createSuccessResult();
     }
