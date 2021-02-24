@@ -92,6 +92,9 @@ public class BusinessController {
      */
     @PostMapping("/getOrderList")
     public ObjectResults<UseroOrderPageDto> getOrderList(@RequestBody OrderListReq orderListReq){
+        Date now = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        logger.info("----------------------请求时间：{},参数：{}",sdf.format(now),orderListReq.toString());
         return ObjectResults.createSuccessResult(businessService.getOrderList(orderListReq));
     }
 

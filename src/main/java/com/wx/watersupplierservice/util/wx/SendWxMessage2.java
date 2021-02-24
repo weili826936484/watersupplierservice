@@ -192,7 +192,7 @@ public class SendWxMessage2 {
         jsc.put("keyword2", keyword2);
 
         JSONObject remark = new JSONObject();
-        remark.put("value", "客户信息：" + orderDto.getBuyerfullname() + orderDto.getBuyertelephone());
+        remark.put("value", "客户信息：" + orderDto.getBuyerfullname() + orderDto.getBuyertelephone()+".配送地址："+orderDto.getBuyerfulladdress());
         remark.put("color", "#173177");
         jsc.put("remark", remark);
 
@@ -257,7 +257,7 @@ public class SendWxMessage2 {
         jsc.put("keyword3", keyword3);
 
         JSONObject remark = new JSONObject();
-        remark.put("value", orderInfo.getBuyerfullname() + orderInfo.getBuyertelephone());
+        remark.put("value", orderInfo.getBuyerfullname() + orderInfo.getBuyertelephone()+".配送地址："+orderInfo.getBuyerfulladdress());
         remark.put("color", "#173177");
         jsc.put("remark", remark);
 
