@@ -1180,7 +1180,9 @@ public class BusinessServiceImpl implements BusinessService {
                 if (old != null){
                     old.setOptCode(changeOrder.getOptCode());
                     old.setUpdateBy(changeOrder.getUserId());
+                    old.setSiteId(orderSiteMap.get(po.getId()));
                     old.setRemand(-1);
+                    old.setCreateBy(changeOrder.getUserId());
                     updateOrderBusinessPos.add(old);
                 }else {
                     OrderBusinessPo orderBusinessPo = new OrderBusinessPo();
