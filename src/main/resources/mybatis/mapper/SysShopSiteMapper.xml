@@ -201,5 +201,9 @@
                 AND ss.site_status = #{siteStatus}
             </if>
         GROUP BY ss.site_id
+        ORDER BY
+        ss.site_status ASC,
+        ss.site_name ASC,
+        ss.site_id ASC
     </select>
 </mapper>
