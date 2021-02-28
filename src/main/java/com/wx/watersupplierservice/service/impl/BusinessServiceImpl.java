@@ -28,6 +28,8 @@ import com.xdf.pscommon.mybatis.rt.PMLO;
 import com.xdf.pscommon.mybatis.rt.QueryFilter;
 import me.ele.retail.param.*;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.hssf.usermodel.*;
+import org.apache.poi.ss.util.CellRangeAddress;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,6 +42,7 @@ import org.springframework.util.CollectionUtils;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -1178,6 +1181,9 @@ public class BusinessServiceImpl implements BusinessService {
                 //查询是否已经有记录了
                 OrderBusinessPo old = orderBusinessDao.findByOrderId(po.getId());
                 if (old != null){
+                    if (OPTStatusEnum.SITE_FENDAN.getCode().equals(old.getOptCode())){
+                        throw new PublicException("该订单已分单,无需重复分单！");
+                    }
                     old.setOptCode(changeOrder.getOptCode());
                     old.setUpdateBy(changeOrder.getUserId());
                     old.setSiteId(orderSiteMap.get(po.getId()));
@@ -1882,4 +1888,338 @@ public class BusinessServiceImpl implements BusinessService {
         return userShopList;
     }
 
+    private List<OrderDto> getOrgOrderListfordownload(OrderListReq orderListReq) {
+        //获取商家基本信息
+        List<SysOrgPojo> sysOrgPoList = sysOrgUserDao.getOrgBaseInfo(orderListReq.getUserId());
+        if (CollectionUtils.isEmpty(sysOrgPoList)){
+            throw new PublicException("用户角色异常,该用户非商户");
+        }
+        if (CollectionUtils.isEmpty(sysOrgPoList)){
+            throw new PublicException("该用户权限不足");
+        }
+        List<Integer> orgids = sysOrgPoList.stream().map(SysOrgPojo::getOrgId).collect(Collectors.toList());
+        //根据商户code和平台类型查询订单
+
+        orderListReq.setIdlist(orgids);
+
+        List<OrderDto> orders = waterOrderDao.getOrgOrderList(orderListReq);
+        if (orders == null || orders.isEmpty()){
+            return new ArrayList<>();
+        }
+        //获取所有订单的操作
+        List<Integer> orderIds = orders.stream().map(OrderDto::getId).collect(Collectors.toList());
+        Map<Integer, OrderBusinessPo> orderBusinessPoMap = null;
+        Map<Integer, SysSitePo> sysSitePoMap = null;
+        if (!orderIds.isEmpty()){
+            List<QueryFilter> qfs2 = new ArrayList<>();
+            qfs2.add(new QueryFilter("order_id" ,PMLO.IN, orderIds));
+            List<OrderBusinessPo> orderBusinessPos = orderBusinessDao.find(OrderBusinessPo.class, qfs2.toArray(new QueryFilter[]{}));
+            if (orderBusinessPos != null && !orderBusinessPos.isEmpty()){
+                orderBusinessPoMap = orderBusinessPos.stream().collect(Collectors.toMap(OrderBusinessPo::getOrderId, OrderBusinessPo -> OrderBusinessPo, (a, b) -> b));
+                List<Integer> sites = orderBusinessPos.stream().map(OrderBusinessPo::getSiteId).collect(Collectors.toList());
+                List<QueryFilter> qfs3 = new ArrayList<>();
+                qfs3.add(new QueryFilter("site_id" ,PMLO.IN, sites));
+                List<SysSitePo> sysSitePos = sysSiteDao.find(SysSitePo.class, qfs3.toArray(new QueryFilter[]{}));
+                sysSitePoMap = sysSitePos.stream().collect(Collectors.toMap(SysSitePo::getSiteId, sysSitePo -> sysSitePo, (a, b) -> b));
+            }
+        }
+
+        List<String> customs = orders.stream().map(OrderDto::getBuyerpin).collect(Collectors.toList());
+        List<QueryFilter> qfs2 = new ArrayList<>();
+        qfs2.add(new QueryFilter("platform_userId",PMLO.IN, customs));
+        List<SysCustomerPo> sysCustomerPos = sysCustomerDao.find(SysCustomerPo.class, qfs2.toArray(new QueryFilter[]{}));
+        if (sysCustomerPos == null || sysCustomerPos.isEmpty()){
+            orders.forEach(e-> e.setBatchSplitStatus(-1));
+        }else {
+            Map<String, List<SysCustomerPo>> collect = sysCustomerPos.stream().collect(Collectors.groupingBy(SysCustomerPo::getPlatformUserid));
+            orders.forEach(e->{
+                //根据id和地址获取
+                if (collect.containsKey(e.getBuyerpin())){
+                    List<SysCustomerPo> sysCustomerPos1 = collect.get(e.getBuyerpin());
+                    SysCustomerPo sysCustomerPo = sysCustomerPos1.get(0);
+                    e.setTimes(sysCustomerPo.getConsumeCount());
+                    if (e.getBuyerfulladdress().equals(sysCustomerPo.getCustomerAddress())){
+                        e.setBatchSplitStatus(1);
+                    } else {
+                        e.setBatchSplitStatus(-1);
+                    }
+                    //获取改用户前两次订单信息
+                    List<OrderDto.OrderSiteBefor> orderSiteBefors = waterOrderDao.getOrderSiteBeforsList(e.getBuyerpin());
+                    if (orderSiteBefors == null || orderSiteBefors.isEmpty()){
+                        e.setBatchSplitStatus(-1);
+                    }else {
+                        e.setOrderSiteBeforList(orderSiteBefors);
+                    }
+                } else {
+                    e.setBatchSplitStatus(-1);
+                }
+            });
+        }
+        Map<Integer, OrderBusinessPo> finalOrderBusinessPoMap = orderBusinessPoMap;
+        Map<Integer, SysSitePo> finalSysSitePoMap = sysSitePoMap;
+        orders.forEach(e->{
+            e.setPlatformName(PlatformStatusEnum.getName(e.getPlatform()));
+            e.setOrderStatusName(OrderStatusEnum.getName(e.getOrderstatus()));
+            if(finalOrderBusinessPoMap != null && finalOrderBusinessPoMap.containsKey(e.getId())){
+                e.setOptCodeName(OPTStatusEnum.getName(finalOrderBusinessPoMap.get(e.getId()).getOptCode()));
+                if (finalOrderBusinessPoMap.get(e.getId()).getSiteId() != null){
+                    e.setSiteName(finalSysSitePoMap.get(finalOrderBusinessPoMap.get(e.getId()).getSiteId()).getSiteName());
+                    e.setSiteTel(finalSysSitePoMap.get(finalOrderBusinessPoMap.get(e.getId()).getSiteId()).getSiteTel());
+                } else {
+                    e.setSiteName("无");
+                }
+                e.setRemand(finalOrderBusinessPoMap.get(e.getId()).getRemand());
+            } else {
+                e.setOptCodeName("待分单");
+                e.setSiteName("无");
+                e.setRemand(-1);
+            }
+            long diff=(e.getOrderpreenddeliverytime().getTime() - System.currentTimeMillis())/1000/60;
+            e.setLessTime(diff);
+        });
+        return orders;
+    }
+    private List<OrderDto> getShopOrderListfordownload(OrderListReq orderListReq) {
+        //获取门店基本信息
+        List<UserShopDto> userShopList = sysShopUserDao.getUserShopList(orderListReq.getUserId());
+        if (CollectionUtils.isEmpty(userShopList)){
+            throw new PublicException("用户角色异常,该用户非门店");
+        }
+        List<String> shopids = userShopList.stream().map(UserShopDto::getShopCode).collect(Collectors.toList());
+        orderListReq.setShoplist(shopids);
+        List<OrderDto> orders = waterOrderDao.getOrgOrderList(orderListReq);
+
+        if (orders == null || orders.isEmpty()){
+            return new ArrayList<>();
+        }
+        List<String> customs = orders.stream().map(OrderDto::getBuyerpin).collect(Collectors.toList());
+        List<Integer> orderIds = orders.stream().map(OrderDto::getId).collect(Collectors.toList());
+        Map<Integer, OrderBusinessPo> orderBusinessPoMap = null;
+        Map<Integer, SysSitePo> sysSitePoMap = null;
+        if (!orderIds.isEmpty()){
+            List<QueryFilter> qfs2 = new ArrayList<>();
+            qfs2.add(new QueryFilter("order_id" ,PMLO.IN, orderIds));
+            List<OrderBusinessPo> orderBusinessPos = orderBusinessDao.find(OrderBusinessPo.class, qfs2.toArray(new QueryFilter[]{}));
+            if (orderBusinessPos != null && !orderBusinessPos.isEmpty()){
+                orderBusinessPoMap = orderBusinessPos.stream().collect(Collectors.toMap(OrderBusinessPo::getOrderId, OrderBusinessPo -> OrderBusinessPo, (a, b) -> b));
+                List<Integer> sites = orderBusinessPos.stream().map(OrderBusinessPo::getSiteId).collect(Collectors.toList());
+                List<QueryFilter> qfs3 = new ArrayList<>();
+                qfs3.add(new QueryFilter("site_id" ,PMLO.IN, sites));
+                List<SysSitePo> sysSitePos = sysSiteDao.find(SysSitePo.class, qfs3.toArray(new QueryFilter[]{}));
+                sysSitePoMap = sysSitePos.stream().collect(Collectors.toMap(SysSitePo::getSiteId, sysSitePo -> sysSitePo, (a, b) -> b));
+            }
+        }
+        List<QueryFilter> qfs2 = new ArrayList<>();
+        qfs2.add(new QueryFilter("platform_userId",PMLO.IN, customs));
+        List<SysCustomerPo> sysCustomerPos = sysCustomerDao.find(SysCustomerPo.class, qfs2.toArray(new QueryFilter[]{}));
+        if (sysCustomerPos == null || sysCustomerPos.isEmpty()){
+            orders.forEach(e->e.setBatchSplitStatus(-1));
+        }else {
+            Map<String, List<SysCustomerPo>> collect = sysCustomerPos.stream().collect(Collectors.groupingBy(SysCustomerPo::getPlatformUserid));
+            orders.forEach(e->{
+                //根据id和地址获取
+                if (collect.containsKey(e.getBuyerpin())){
+                    List<SysCustomerPo> sysCustomerPos1 = collect.get(e.getBuyerpin());
+                    SysCustomerPo sysCustomerPo = sysCustomerPos1.get(0);
+                    e.setTimes(sysCustomerPo.getConsumeCount());
+                    if (e.getBuyerfulladdress().equals(sysCustomerPo.getCustomerAddress())){
+                        e.setBatchSplitStatus(1);
+                    } else {
+                        e.setBatchSplitStatus(-1);
+                    }
+                    //获取改用户前两次订单信息
+                    List<OrderDto.OrderSiteBefor> orderSiteBefors = waterOrderDao.getOrderSiteBeforsList(e.getBuyerpin());
+                    if (orderSiteBefors == null || orderSiteBefors.isEmpty()){
+                        e.setBatchSplitStatus(-1);
+                    }else {
+                        e.setOrderSiteBeforList(orderSiteBefors);
+                    }
+                } else {
+                    e.setBatchSplitStatus(-1);
+                }
+
+            });
+        }
+        Map<Integer, OrderBusinessPo> finalOrderBusinessPoMap = orderBusinessPoMap;
+        Map<Integer, SysSitePo> finalSysSitePoMap = sysSitePoMap;
+        orders.forEach(e->{
+            e.setPlatformName(PlatformStatusEnum.getName(e.getPlatform()));
+            e.setOrderStatusName(OrderStatusEnum.getName(e.getOrderstatus()));
+            if(finalOrderBusinessPoMap != null && finalOrderBusinessPoMap.containsKey(e.getId())){
+                e.setOptCodeName(OPTStatusEnum.getName(finalOrderBusinessPoMap.get(e.getId()).getOptCode()));
+                if (finalOrderBusinessPoMap.get(e.getId()).getSiteId() != null){
+                    e.setSiteName(finalSysSitePoMap.get(finalOrderBusinessPoMap.get(e.getId()).getSiteId()).getSiteName());
+                    e.setSiteTel(finalSysSitePoMap.get(finalOrderBusinessPoMap.get(e.getId()).getSiteId()).getSiteTel());
+                } else {
+                    e.setSiteName("无");
+                }
+                e.setRemand(finalOrderBusinessPoMap.get(e.getId()).getRemand());
+            } else {
+                e.setOptCodeName("待分单");
+                e.setSiteName("无");
+                e.setRemand(-1);
+            }
+            long diff=(e.getOrderpreenddeliverytime().getTime()- System.currentTimeMillis())/1000/60;
+            e.setLessTime(diff);
+        });
+        return orders;
+    }
+
+    @Override
+    public HSSFWorkbook download(OrderListReq orderListReq) {
+
+        if (Objects.isNull(orderListReq) || Objects.isNull(orderListReq.getUserId())){
+            throw new PublicException("参数不全...");
+        }
+        //根据用户角色返回不同数据
+        SysUserPo user = sysUserDao.findById(SysUserPo.class, orderListReq.getUserId());
+        if (Objects.isNull(user) || 1 != user.getUserStatus()){
+            throw new PublicException("员工已离职");
+        }
+        List<OrderDto> orders = null;
+        if (UserRoleEnum.isORG_MANAGER(user.getRoleCode())){
+            orders = getOrgOrderListfordownload(orderListReq);
+        }else if(UserRoleEnum.isSHOP_MANAGER(user.getRoleCode())){
+            orders = getShopOrderListfordownload(orderListReq);
+        }else {
+            throw new PublicException("用户角色异常");
+        }
+
+
+        HSSFWorkbook book = new HSSFWorkbook();
+        HSSFSheet sheet = book.createSheet();
+        //订单id,订单号,平台,水站id,水站,订单状态,配送状态,客户地址,总付款,下单时间,送达时间,商品名称,数量,单价
+        sheet.setColumnWidth(0, 12 * 256);
+        sheet.setColumnWidth(1, 22 * 256);
+        sheet.setColumnWidth(2, 12 * 256);
+        sheet.setColumnWidth(3, 8 * 256);
+        sheet.setColumnWidth(4, 25 * 256);
+        sheet.setColumnWidth(5, 14 * 256);
+        sheet.setColumnWidth(6, 14 * 256);
+        sheet.setColumnWidth(7, 55 * 256);
+        sheet.setColumnWidth(8, 14 * 256);
+        sheet.setColumnWidth(9, 32 * 256);
+        sheet.setColumnWidth(10, 32 * 256);
+        sheet.setColumnWidth(11, 55 * 256);
+        sheet.setColumnWidth(12, 8 * 256);
+        sheet.setColumnWidth(13, 14 * 256);
+        // 第三步，在sheet中添加表头第0行,注意老版本poi对Excel的行数列数有限制
+        HSSFRow row = sheet.createRow(0);
+        // 第四步，创建单元格，并设置值表头 设置表头居中
+        HSSFCellStyle style1 = book.createCellStyle();
+        style1.setAlignment(HSSFCellStyle.ALIGN_CENTER); // 创建一个居中格式
+        style1.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);//垂直居中
+        HSSFFont font = book.createFont();
+        font.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);
+        font.setFontHeightInPoints((short)13);
+        style1.setFont(font);
+        HSSFCellStyle style = book.createCellStyle();
+        style.setAlignment(HSSFCellStyle.ALIGN_CENTER); // 创建一个居中格式
+        style.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);//垂直居中
+        //声明列对象
+        HSSFCell cell = null;
+
+        String headerStr = "订单id,订单号,平台,水站id,水站,订单状态,配送状态,客户地址,总付款,下单时间,送达时间,商品名称,数量,单价";
+        String[] titlearr = headerStr.split(",");
+        for(int i = 0 ; i < titlearr.length ; i++){
+            cell = row.createCell(i);
+            cell.setCellValue(titlearr[i]);
+            cell.setCellStyle(style1);
+        }
+
+        int firstRow1 = 1;
+        int lastRow1 = 0;
+        int firstColumn1 = 0;
+        int lastColumn1 = 0;
+        int firstRow = 1;
+        int lastRow = 0;
+        for(int i = 0 ; i < orders.size() ; i++){
+            OrderDto orderDto = orders.get(i);
+            List<OrderDto.ProductDto> productList = orderDto.getProductList();
+            if(productList.isEmpty()){
+                lastRow1 = firstRow1;
+            }else{
+                lastRow1 = firstRow1 + productList.size() - 1;
+            }
+            for(int z = 0 ; z < 11 ; z++){
+                firstColumn1 = z;
+                lastColumn1 = z;
+                CellRangeAddress cellRangeAddress = new CellRangeAddress(firstRow1,lastRow1,firstColumn1,lastColumn1);//起始行,结束行,起始列,结束列
+                sheet.addMergedRegion(cellRangeAddress);
+            }
+            firstRow1 = lastRow1 + 1;
+        }
+        HSSFRow contentRow = null;
+        HSSFRow contentLessonRow = null;
+        for(int i = 0 ; i < orders.size() ; i++){
+            OrderDto orderDto = orders.get(i);
+            List<OrderDto.ProductDto> productList = orderDto.getProductList();
+            if(productList.isEmpty()){
+                lastRow = firstRow;
+            }else{
+                lastRow = firstRow + productList.size() - 1;
+            }
+            //填充班级数据
+            contentRow = sheet.getRow(firstRow);
+            if(contentRow == null){
+                contentRow = sheet.createRow(firstRow);
+            }
+            //订单id,订单号,平台,水站id,水站,订单状态,配送状态,客户地址,总付款,下单时间,商品名称,数量,单价
+            HSSFCell cell1 = contentRow.createCell(0);
+            cell1.setCellStyle(style);
+            cell1.setCellValue(orderDto.getId().toString());
+            HSSFCell cell2 = contentRow.createCell(1);
+            cell2.setCellStyle(style);
+            cell2.setCellValue(orderDto.getOrderid());
+            HSSFCell cell3 = contentRow.createCell(2);
+            cell3.setCellStyle(style);
+            cell3.setCellValue(orderDto.getPlatform());
+            HSSFCell cell4 = contentRow.createCell(3);
+            cell4.setCellStyle(style);
+            cell4.setCellValue(orderDto.getSiteId()==null?"":orderDto.getSiteId().toString());
+            HSSFCell cell5 = contentRow.createCell(4);
+            cell5.setCellStyle(style);
+            cell5.setCellValue(orderDto.getSiteName()==null?"":orderDto.getSiteName());
+            HSSFCell cell6 = contentRow.createCell(5);
+            cell6.setCellStyle(style);
+            cell6.setCellValue(OrderStatusEnum.getName(orderDto.getOrderstatus()));
+            HSSFCell cell7 = contentRow.createCell(6);
+            cell7.setCellStyle(style);
+            cell7.setCellValue(StringUtils.isBlank(orderDto.getOptCode())?"待分单":OPTStatusEnum.getName(orderDto.getOptCode()));
+            HSSFCell cell8 = contentRow.createCell(7);
+            cell8.setCellStyle(style);
+            cell8.setCellValue(orderDto.getBuyerfulladdress());
+            HSSFCell cell9 = contentRow.createCell(8);
+            cell9.setCellStyle(style);
+            float money = Long.parseLong(orderDto.getOrderbuyerpayablemoney());
+            cell9.setCellValue(money/100f+"");
+            HSSFCell cell10 = contentRow.createCell(9);
+            cell10.setCellStyle(style);
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            cell10.setCellValue(sdf.format(orderDto.getOrderstarttime()));
+            HSSFCell cell11 = contentRow.createCell(10);
+            cell11.setCellStyle(style);
+            cell11.setCellValue(sdf.format(orderDto.getOrderpreenddeliverytime()));
+            //填充小课程数据
+            int lessonRow = firstRow;
+
+            for(int p = 0 ; p <productList.size() ; p++){
+                contentLessonRow = sheet.getRow(lessonRow);
+                if(contentLessonRow == null){
+                    contentLessonRow = sheet.createRow(lessonRow);
+                }
+                OrderDto.ProductDto productDto = productList.get(p);
+                HSSFCell cell111 = contentLessonRow.createCell(11);
+                cell111.setCellValue(productDto.getSkuName());
+                HSSFCell cell121 = contentLessonRow.createCell(12);
+                cell121.setCellValue(productDto.getSkuCount());
+                HSSFCell cell131 = contentLessonRow.createCell(13);
+                float money2 = Long.parseLong(orderDto.getOrderbuyerpayablemoney());
+                cell131.setCellValue(money2/100f+"");
+                lessonRow++;
+            }
+            firstRow=lastRow+1;
+        }
+        return book;
+    }
 }

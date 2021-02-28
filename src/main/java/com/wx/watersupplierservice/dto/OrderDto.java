@@ -51,6 +51,7 @@ public class OrderDto {
     private String optCode;
     private String optCodeName;
 
+    private Integer siteId;
     private String siteName;
     private String siteTel;
     private int times;

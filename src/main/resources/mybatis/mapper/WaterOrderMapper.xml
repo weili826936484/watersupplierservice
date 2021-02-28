@@ -151,6 +151,7 @@
         <result column="orderBusinessId" property="orderBusinessId"/>
         <result column="optCode" property="optCode"/>
         <result column="remand" property="remand"/>
+        <result column="siteId" property="siteId"/>
         <collection property="productList" ofType="com.wx.watersupplierservice.dto.OrderDto$ProductDto"
                     select="getProducts" column="id" fetchType="eager" >
             <id column="productId" property="productId"/>
@@ -1457,7 +1458,8 @@
         wo.orderNum,
         ob.id AS orderBusinessId,
         ob.opt_code as optCode,
-        ob.remand
+        ob.remand,
+        ob.site_id as siteId
     FROM
         water_order wo
         LEFT JOIN order_business ob ON wo.id = ob.order_id
@@ -1523,6 +1525,9 @@
                 </if>
                 <if test='status == "20020"'>
                     AND wo.orderStatus in ('20020','20031')
+                </if>
+                <if test='status == "90000"'>
+                    AND wo.orderStatus in ('33060','90000')
                 </if>
             </if>
             <if test="searchAddress != null and searchAddress != ''">

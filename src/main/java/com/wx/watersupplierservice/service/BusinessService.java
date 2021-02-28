@@ -6,6 +6,7 @@ import com.wx.watersupplierservice.dto.UseroOrderPageDto;
 import com.wx.watersupplierservice.dto.WatersPageDto;
 import com.wx.watersupplierservice.po.SysShopPo;
 import com.wx.watersupplierservice.req.*;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 
 import java.io.UnsupportedEncodingException;
 import java.util.List;
@@ -35,4 +36,6 @@ public interface BusinessService {
     List<UserShopSites.UserShopSiteDto> getShopSiteList(ShopsSiteReq shopsSiteReq);
 
     void updateShopSite(UserShopSites.UserShopSiteDto userShopSiteDto);
+
+    HSSFWorkbook download(OrderListReq orderListReq);
 }
