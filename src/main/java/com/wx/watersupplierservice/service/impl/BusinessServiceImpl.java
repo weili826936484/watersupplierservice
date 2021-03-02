@@ -2218,7 +2218,7 @@ public class BusinessServiceImpl implements BusinessService {
                 HSSFCell cell121 = contentLessonRow.createCell(13);
                 cell121.setCellValue(productDto.getSkuCount());
                 HSSFCell cell131 = contentLessonRow.createCell(14);
-                float money2 = Long.parseLong(orderDto.getSkuJdPrice());
+                float money2 = Long.parseLong(productDto.getSkuJdPrice());
                 cell131.setCellValue(money2/100f+"");
                 lessonRow++;
             }
