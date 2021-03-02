@@ -2088,13 +2088,14 @@ public class BusinessServiceImpl implements BusinessService {
 
         HSSFWorkbook book = new HSSFWorkbook();
         HSSFSheet sheet = book.createSheet();
+        logger.info("excel creating....orders_size:{}",orders.size());
         //订单id,订单号,平台,水站id,水站,订单状态,配送状态,客户地址,总付款,下单时间,送达时间,商品名称,数量,单价
         sheet.setColumnWidth(0, 12 * 256);
         sheet.setColumnWidth(1, 22 * 256);
         sheet.setColumnWidth(2, 12 * 256);
         sheet.setColumnWidth(3, 28 * 256);
         sheet.setColumnWidth(4, 8 * 256);
-        sheet.setColumnWidth(5, 25 * 256);
+        sheet.setColumnWidth(5, 36 * 256);
         sheet.setColumnWidth(6, 14 * 256);
         sheet.setColumnWidth(7, 14 * 256);
         sheet.setColumnWidth(8, 55 * 256);

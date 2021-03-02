@@ -84,6 +84,7 @@ public class DownloadController {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		if (StringUtils.isNotBlank(startTime)){
 			try {
+				startTime = startTime+" 00:00:00";
 				orderListReq.setStartTime(sdf.parse(startTime));
 			} catch (ParseException e) {
 				orderListReq.setStartTime(null);
@@ -91,7 +92,8 @@ public class DownloadController {
 		}
 		if (StringUtils.isNotBlank(endTime)){
 			try {
-				orderListReq.setEndTime(sdf.parse(startTime));
+				endTime = endTime+" 00:00:00";
+				orderListReq.setEndTime(sdf.parse(endTime));
 			} catch (ParseException e) {
 				orderListReq.setEndTime(null);
 			}
