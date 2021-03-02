@@ -2092,17 +2092,18 @@ public class BusinessServiceImpl implements BusinessService {
         sheet.setColumnWidth(0, 12 * 256);
         sheet.setColumnWidth(1, 22 * 256);
         sheet.setColumnWidth(2, 12 * 256);
-        sheet.setColumnWidth(3, 8 * 256);
-        sheet.setColumnWidth(4, 25 * 256);
-        sheet.setColumnWidth(5, 14 * 256);
+        sheet.setColumnWidth(3, 28 * 256);
+        sheet.setColumnWidth(4, 8 * 256);
+        sheet.setColumnWidth(5, 25 * 256);
         sheet.setColumnWidth(6, 14 * 256);
-        sheet.setColumnWidth(7, 55 * 256);
-        sheet.setColumnWidth(8, 14 * 256);
-        sheet.setColumnWidth(9, 32 * 256);
+        sheet.setColumnWidth(7, 14 * 256);
+        sheet.setColumnWidth(8, 55 * 256);
+        sheet.setColumnWidth(9, 14 * 256);
         sheet.setColumnWidth(10, 32 * 256);
-        sheet.setColumnWidth(11, 55 * 256);
-        sheet.setColumnWidth(12, 8 * 256);
-        sheet.setColumnWidth(13, 14 * 256);
+        sheet.setColumnWidth(11, 32 * 256);
+        sheet.setColumnWidth(12, 55 * 256);
+        sheet.setColumnWidth(13, 8 * 256);
+        sheet.setColumnWidth(14, 14 * 256);
         // 第三步，在sheet中添加表头第0行,注意老版本poi对Excel的行数列数有限制
         HSSFRow row = sheet.createRow(0);
         // 第四步，创建单元格，并设置值表头 设置表头居中
@@ -2119,7 +2120,7 @@ public class BusinessServiceImpl implements BusinessService {
         //声明列对象
         HSSFCell cell = null;
 
-        String headerStr = "订单id,订单号,平台,水站id,水站,订单状态,配送状态,客户地址,总付款,下单时间,送达时间,商品名称,数量,单价";
+        String headerStr = "订单id,订单号,平台,门店,水站id,水站,订单状态,配送状态,客户地址,总付款,下单时间,送达时间,商品名称,数量,单价";
         String[] titlearr = headerStr.split(",");
         for(int i = 0 ; i < titlearr.length ; i++){
             cell = row.createCell(i);
@@ -2141,7 +2142,7 @@ public class BusinessServiceImpl implements BusinessService {
             }else{
                 lastRow1 = firstRow1 + productList.size() - 1;
             }
-            for(int z = 0 ; z < 11 ; z++){
+            for(int z = 0 ; z < 12 ; z++){
                 firstColumn1 = z;
                 lastColumn1 = z;
                 CellRangeAddress cellRangeAddress = new CellRangeAddress(firstRow1,lastRow1,firstColumn1,lastColumn1);//起始行,结束行,起始列,结束列
@@ -2174,30 +2175,33 @@ public class BusinessServiceImpl implements BusinessService {
             HSSFCell cell3 = contentRow.createCell(2);
             cell3.setCellStyle(style);
             cell3.setCellValue(orderDto.getPlatform());
-            HSSFCell cell4 = contentRow.createCell(3);
+            HSSFCell cell24 = contentRow.createCell(3);
+            cell24.setCellStyle(style);
+            cell24.setCellValue(orderDto.getDeliverystationname());
+            HSSFCell cell4 = contentRow.createCell(4);
             cell4.setCellStyle(style);
             cell4.setCellValue(orderDto.getSiteId()==null?"":orderDto.getSiteId().toString());
-            HSSFCell cell5 = contentRow.createCell(4);
+            HSSFCell cell5 = contentRow.createCell(5);
             cell5.setCellStyle(style);
             cell5.setCellValue(orderDto.getSiteName()==null?"":orderDto.getSiteName());
-            HSSFCell cell6 = contentRow.createCell(5);
+            HSSFCell cell6 = contentRow.createCell(6);
             cell6.setCellStyle(style);
             cell6.setCellValue(OrderStatusEnum.getName(orderDto.getOrderstatus()));
-            HSSFCell cell7 = contentRow.createCell(6);
+            HSSFCell cell7 = contentRow.createCell(7);
             cell7.setCellStyle(style);
             cell7.setCellValue(StringUtils.isBlank(orderDto.getOptCode())?"待分单":OPTStatusEnum.getName(orderDto.getOptCode()));
-            HSSFCell cell8 = contentRow.createCell(7);
+            HSSFCell cell8 = contentRow.createCell(8);
             cell8.setCellStyle(style);
             cell8.setCellValue(orderDto.getBuyerfulladdress());
-            HSSFCell cell9 = contentRow.createCell(8);
+            HSSFCell cell9 = contentRow.createCell(9);
             cell9.setCellStyle(style);
             float money = Long.parseLong(orderDto.getOrderbuyerpayablemoney());
             cell9.setCellValue(money/100f+"");
-            HSSFCell cell10 = contentRow.createCell(9);
+            HSSFCell cell10 = contentRow.createCell(10);
             cell10.setCellStyle(style);
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             cell10.setCellValue(sdf.format(orderDto.getOrderstarttime()));
-            HSSFCell cell11 = contentRow.createCell(10);
+            HSSFCell cell11 = contentRow.createCell(11);
             cell11.setCellStyle(style);
             cell11.setCellValue(sdf.format(orderDto.getOrderpreenddeliverytime()));
             //填充小课程数据
@@ -2209,11 +2213,11 @@ public class BusinessServiceImpl implements BusinessService {
                     contentLessonRow = sheet.createRow(lessonRow);
                 }
                 OrderDto.ProductDto productDto = productList.get(p);
-                HSSFCell cell111 = contentLessonRow.createCell(11);
+                HSSFCell cell111 = contentLessonRow.createCell(12);
                 cell111.setCellValue(productDto.getSkuName());
-                HSSFCell cell121 = contentLessonRow.createCell(12);
+                HSSFCell cell121 = contentLessonRow.createCell(13);
                 cell121.setCellValue(productDto.getSkuCount());
-                HSSFCell cell131 = contentLessonRow.createCell(13);
+                HSSFCell cell131 = contentLessonRow.createCell(14);
                 float money2 = Long.parseLong(orderDto.getOrderbuyerpayablemoney());
                 cell131.setCellValue(money2/100f+"");
                 lessonRow++;
