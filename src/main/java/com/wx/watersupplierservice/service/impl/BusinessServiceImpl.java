@@ -424,7 +424,7 @@ public class BusinessServiceImpl implements BusinessService {
                     }
                     break;
                 default:
-                    throw new PublicException("订单来源平台有误");
+                    logger.info("自建订单操作");
             }
             //给水站发送拒单消息
 
@@ -590,7 +590,7 @@ public class BusinessServiceImpl implements BusinessService {
                         }
                         break;
                     default:
-                        throw new PublicException("订单来源平台有误");
+                        logger.info("自建订单操作");
                 }
             }
         }
@@ -902,7 +902,7 @@ public class BusinessServiceImpl implements BusinessService {
                     }
                     break;
                 default:
-                    throw new PublicException("订单来源平台有误");
+                    logger.info("自建订单操作");
             }
         }
     }
@@ -1116,7 +1116,7 @@ public class BusinessServiceImpl implements BusinessService {
                         }
                         break;
                     default:
-                        throw new PublicException("订单来源平台有误");
+                        logger.info("自建订单操作");
                 }
             }
         }
@@ -1538,7 +1538,7 @@ public class BusinessServiceImpl implements BusinessService {
                     }
                     break;
                 default:
-                    throw new PublicException("订单来源平台有误");
+                    logger.info("自建订单操作");
             }
         }
     }
