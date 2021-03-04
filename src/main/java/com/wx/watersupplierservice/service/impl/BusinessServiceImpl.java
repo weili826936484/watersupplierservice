@@ -392,7 +392,6 @@ public class BusinessServiceImpl implements BusinessService {
                             }
                         } catch (Exception e) {
                             logger.error("jd error:{}",e);
-                            throw new PublicException("服务开小差，请重试");
                         }
                     }
                     break;
