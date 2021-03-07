@@ -824,7 +824,7 @@ public class BusinessServiceImpl implements BusinessService {
                 }
                 orderBusinessPo = orderBusinessPos.get(0);
             }else {
-                orderBusinessPo.setOptCode(OPTStatusEnum.SITE_default.getCode());
+                orderBusinessPo.setUpdateTime(new Date());
                 orderBusinessDao.update(orderBusinessPo);
             }
             //如操作明细表

@@ -31,7 +31,7 @@ public enum OPTStatusEnum {
     SITE_CANCEL_REQ("B91","订单取消申请"),
     SITE_CANCEL_RETUIRN("B92","驳回取消申请"),
     SITE_CANCEL("B90","商家同意取消申请"),
-    SITE_SEND_BACK_ORDER("B93","同意用户拒单"),
+    SITE_SEND_BACK_ORDER("B93","拒单"),
     SITE_OK("L90","配送完成"),
     ORDER_OK("L100","订单完成");
 
