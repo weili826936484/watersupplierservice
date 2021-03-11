@@ -1052,15 +1052,16 @@ public class BusinessServiceImpl implements BusinessService {
                     sysCustomerPo.setCustomerName(waterOrderPo.getBuyerfullname());
                     sysCustomerDao.update(sysCustomerPo);
                 }
-                //for循环更新order表
-                int index = waterOrderDao.updateStatusById(waterOrderPo.getId(),preOrderStatus,waterOrderPo.getVersion(),changeOrder.getUserId());
-                if (index == 0 ){
-                    throw new PublicException("选中订单状态有变化，请重新选择");
-                }
                 //todo 向京东推送已妥投
                 switch (platform) {
                     case "JDDJ":
                         if (jdflag){
+                            //for循环更新order表
+                            int index = waterOrderDao.updateStatusById(waterOrderPo.getId(),preOrderStatus,waterOrderPo.getVersion(),changeOrder.getUserId());
+                            if (index == 0 ){
+                                throw new PublicException("选中订单状态有变化，请重新选择");
+                            }
+
                             JSONObject orgJson = new JSONObject();
                             orgJson.put("orderId",waterOrderPo.getOrderid());
                             orgJson.put("operPin",waterOrderPo.getBuyerpin());
@@ -1088,7 +1089,7 @@ public class BusinessServiceImpl implements BusinessService {
                         }
                         break;
                     case "MT":
-                        if (mtflag){
+                        if (false){
                             try {
                                 SysOrgPo sysOrgPo = sysOrgDao.findByCode(waterOrderPo.getOrgcode());
                                 String appId = sysOrgPo.getAppKey();
@@ -1101,7 +1102,7 @@ public class BusinessServiceImpl implements BusinessService {
                         }
                         break;
                     case "ELEME":
-                        if (elmflag){
+                        if (false){
                             try {
                                 SysOrgPo sysOrgPo = sysOrgDao.findByCode(waterOrderPo.getOrgcode());
                                 String appId = sysOrgPo.getAppKey();
@@ -1115,6 +1116,11 @@ public class BusinessServiceImpl implements BusinessService {
                         }
                         break;
                     default:
+                        //for循环更新order表
+                        int index = waterOrderDao.updateStatusById(waterOrderPo.getId(),preOrderStatus,waterOrderPo.getVersion(),changeOrder.getUserId());
+                        if (index == 0 ){
+                            throw new PublicException("选中订单状态有变化，请重新选择");
+                        }
                         logger.info("自建订单操作");
                 }
             }
@@ -1824,11 +1830,7 @@ public class BusinessServiceImpl implements BusinessService {
                     List<SysCustomerPo> sysCustomerPos1 = collect.get(e.getBuyerpin());
                     SysCustomerPo sysCustomerPo = sysCustomerPos1.get(0);
                     e.setTimes(sysCustomerPo.getConsumeCount());
-                    if (e.getBuyerfulladdress().equals(sysCustomerPo.getCustomerAddress())){
-                        e.setBatchSplitStatus(1);
-                    } else {
-                        e.setBatchSplitStatus(-1);
-                    }
+                    e.setBatchSplitStatus(1);
                     //获取改用户前两次订单信息
                     List<OrderDto.OrderSiteBefor> orderSiteBefors = waterOrderDao.getOrderSiteBeforsList(e.getBuyerpin());
                     if (orderSiteBefors == null || orderSiteBefors.isEmpty()){
@@ -2021,11 +2023,7 @@ public class BusinessServiceImpl implements BusinessService {
                     List<SysCustomerPo> sysCustomerPos1 = collect.get(e.getBuyerpin());
                     SysCustomerPo sysCustomerPo = sysCustomerPos1.get(0);
                     e.setTimes(sysCustomerPo.getConsumeCount());
-                    if (e.getBuyerfulladdress().equals(sysCustomerPo.getCustomerAddress())){
-                        e.setBatchSplitStatus(1);
-                    } else {
-                        e.setBatchSplitStatus(-1);
-                    }
+                    e.setBatchSplitStatus(1);
                     //获取改用户前两次订单信息
                     List<OrderDto.OrderSiteBefor> orderSiteBefors = waterOrderDao.getOrderSiteBeforsList(e.getBuyerpin());
                     if (orderSiteBefors == null || orderSiteBefors.isEmpty()){
