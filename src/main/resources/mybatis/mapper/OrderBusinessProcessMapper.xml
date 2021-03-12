@@ -190,4 +190,16 @@
         for update
     </select>
 
+    <select id="getfinalrefuse" resultType="java.lang.String">
+        SELECT
+            result_info
+        FROM
+            order_business_process
+        WHERE
+            business_id = #{id}
+            AND opt_code = 'L21'
+        ORDER BY
+            process_id DESC
+            LIMIT 1
+    </select>
 </mapper>

@@ -1463,10 +1463,14 @@
     FROM
         water_order wo
         LEFT JOIN order_business ob ON wo.id = ob.order_id
+        LEFT JOIN sys_site ss on ob.site_id = ss.id
     WHERE
         1=1
         <if test="orderId != null">
         AND wo.id = #{orderId}
+        </if>
+        <if test= "siteName != null and siteName != ''">
+            AND ss.siteName like CONCAT('%',#{siteName},'%')
         </if>
         <if test="orderId == null">
             <if test="shoplist != null and shoplist.size() != 0">
@@ -1673,10 +1677,14 @@
         FROM
         water_order wo
         LEFT JOIN order_business ob ON wo.id = ob.order_id
+        LEFT JOIN sys_site ss on ob.site_id = ss.id
         WHERE
         1=1
         <if test="orderId != null">
             AND wo.id = #{orderId}
+        </if>
+        <if test= "siteName != null and siteName != ''">
+            AND ss.siteName like CONCAT('%',#{siteName},'%')
         </if>
         <if test="orderId == null">
             <if test="shoplist != null and shoplist.size() != 0">

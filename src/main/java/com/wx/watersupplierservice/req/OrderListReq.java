@@ -35,6 +35,8 @@ public class OrderListReq {
 
     private String searchName;
 
+    private String siteName;
+
     private Integer pageSize;
 
     private Integer pageIndex;

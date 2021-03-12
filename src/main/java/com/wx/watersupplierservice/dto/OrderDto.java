@@ -53,6 +53,8 @@ public class OrderDto {
 
     private Integer siteId;
     private String siteName;
+
+    private String reason;
     private String siteTel;
     private int times;
     private Integer remand;

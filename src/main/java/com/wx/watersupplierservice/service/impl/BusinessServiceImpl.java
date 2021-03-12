@@ -1751,6 +1751,9 @@ public class BusinessServiceImpl implements BusinessService {
                     e.setSiteName("无");
                 }
                 e.setRemand(finalOrderBusinessPoMap.get(e.getId()).getRemand());
+                //放水站拒单原因
+                String reason = orderBusinessProcessDao.getfinalrefuse(finalOrderBusinessPoMap.get(e.getId()).getId());
+                e.setReason(reason);
             } else {
                 e.setOptCodeName("待分单");
                 e.setSiteName("无");
@@ -1857,6 +1860,9 @@ public class BusinessServiceImpl implements BusinessService {
                     e.setSiteName("无");
                 }
                 e.setRemand(finalOrderBusinessPoMap.get(e.getId()).getRemand());
+                //放水站拒单原因
+                String reason = orderBusinessProcessDao.getfinalrefuse(finalOrderBusinessPoMap.get(e.getId()).getId());
+                e.setReason(reason);
             } else {
                 e.setOptCodeName("待分单");
                 e.setSiteName("无");

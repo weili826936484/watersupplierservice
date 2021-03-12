@@ -4,6 +4,7 @@ import com.wx.watersupplierservice.po.OrderBusinessProcessPo;
 import com.xdf.pscommon.aop.DataSourceType;
 import com.xdf.pscommon.aop.VPSDataSource;
 import com.xdf.pscommon.dao.base.BaseMapper;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -32,4 +33,6 @@ public interface  OrderBusinessProcessDao extends BaseMapper {
 	List<OrderBusinessProcessPo> selectList(OrderBusinessProcessPo record);
 
 	OrderBusinessProcessPo selectForUpdate(OrderBusinessProcessPo record);
+
+    String getfinalrefuse(@Param("id") Integer id);
 }

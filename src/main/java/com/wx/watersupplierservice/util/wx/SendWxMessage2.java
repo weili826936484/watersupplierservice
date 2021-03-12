@@ -144,7 +144,7 @@ public class SendWxMessage2 {
         
         
         JSONObject remark = new JSONObject();
-        remark.put("value", "请重新分配水站，或致电客人说明原因");
+        remark.put("value", orderDto.getBuyerfulladdress());
         remark.put("color", "#173177");
         jsc.put("remark", remark);
 
