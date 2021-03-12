@@ -1470,7 +1470,7 @@
         AND wo.id = #{orderId}
         </if>
         <if test= "siteName != null and siteName != ''">
-            AND ss.siteName like CONCAT('%',#{siteName},'%')
+            AND ss.site_name like CONCAT('%',#{siteName},'%')
         </if>
         <if test="orderId == null">
             <if test="shoplist != null and shoplist.size() != 0">
@@ -1684,7 +1684,7 @@
             AND wo.id = #{orderId}
         </if>
         <if test= "siteName != null and siteName != ''">
-            AND ss.siteName like CONCAT('%',#{siteName},'%')
+            AND ss.site_name like CONCAT('%',#{siteName},'%')
         </if>
         <if test="orderId == null">
             <if test="shoplist != null and shoplist.size() != 0">
