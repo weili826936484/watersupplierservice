@@ -1463,7 +1463,7 @@
     FROM
         water_order wo
         LEFT JOIN order_business ob ON wo.id = ob.order_id
-        LEFT JOIN sys_site ss on ob.site_id = ss.id
+        LEFT JOIN sys_site ss on ob.site_id = ss.site_id
     WHERE
         1=1
         <if test="orderId != null">
@@ -1677,7 +1677,7 @@
         FROM
         water_order wo
         LEFT JOIN order_business ob ON wo.id = ob.order_id
-        LEFT JOIN sys_site ss on ob.site_id = ss.id
+        LEFT JOIN sys_site ss on ob.site_id = ss.site_id
         WHERE
         1=1
         <if test="orderId != null">
