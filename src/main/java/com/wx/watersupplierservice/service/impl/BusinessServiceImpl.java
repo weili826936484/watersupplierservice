@@ -1186,7 +1186,10 @@ public class BusinessServiceImpl implements BusinessService {
                 //查询是否已经有记录了
                 OrderBusinessPo old = orderBusinessDao.findByOrderId(po.getId());
                 if (old != null){
-                    if (OPTStatusEnum.SITE_FENDAN.getCode().equals(old.getOptCode())){
+                    if (OPTStatusEnum.SITE_FENDAN.getCode().equals(old.getOptCode()) || OPTStatusEnum.SITE_RECEIVE_REMAND.getCode().equals(old.getOptCode())
+                            || OPTStatusEnum.SITE_JIEDAN.getCode().equals(old.getOptCode()) || OPTStatusEnum.SITE_CANCEL_REQ.getCode().equals(old.getOptCode())
+                            || OPTStatusEnum.SITE_CANCEL_RETUIRN.getCode().equals(old.getOptCode()) || OPTStatusEnum.SITE_CANCEL.getCode().equals(old.getOptCode())
+                            || OPTStatusEnum.SITE_OK.getCode().equals(old.getOptCode()) || OPTStatusEnum.SITE_REMAND.getCode().equals(old.getOptCode())){
                         throw new PublicException("该订单已分单,无需重复分单！");
                     }
                     old.setOptCode(changeOrder.getOptCode());
