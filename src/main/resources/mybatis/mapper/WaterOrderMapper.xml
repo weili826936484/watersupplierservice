@@ -1556,7 +1556,7 @@
                 AND wo.orderPreEndDeliveryTime >= #{startTime}
             </if>
             ORDER BY
-                wo.orderPreEndDeliveryTime
+                wo.orderPreEndDeliveryTime asc ,wo.id asc
             <if test="offset != null and pageSize != null">
                 LIMIT #{offset},#{pageSize}
             </if>

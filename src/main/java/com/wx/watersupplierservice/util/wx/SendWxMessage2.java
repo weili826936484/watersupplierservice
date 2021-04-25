@@ -108,6 +108,8 @@ public class SendWxMessage2 {
             clickUrl = Cfg.getConfig("web.url") + "/wx/orderNewMT.html";
         } else if("ELEME".equals(orderDto.getPlatform())) {
             clickUrl = Cfg.getConfig("web.url") + "/wx/orderNewELEME.html";
+        } else if("SJZJ".equals(orderDto.getPlatform())) {
+            clickUrl = Cfg.getConfig("web.url") + "/wx/orderNewSJZJ.html";
         }
 
 		//拼接推送消息模板				
